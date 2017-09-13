@@ -23,7 +23,6 @@ ff7 = 0.992		#landing
 a_sound = 574		#knots (speed of sound @40 K-ft)
 V_kts = M*a_sound	#knots = nm/hr (flight speed)
 
-# print(V_kts)
 
 #calculating cruise fuel fraction
 ff5 = np.exp(-R/LD*c/V_kts)	#solving breguet equation
@@ -44,21 +43,13 @@ w_0 = 80000.0		#lbs (weight guess)
 tolerance = 0.1				#Adjust for acccuracy
 converged = 0				#False
 
-# print(C)
-# print(A*w_0)
-# print(w_0**C)
-# print(A*w_0**C)
 
 while (converged == 0):
-	# print(w_0)
 	emptyWeightFraction = A*w_0**C
 	fuelFraction = ff
 	w_0new = (w_crew+w_payload)/(1-fuelFraction-emptyWeightFraction)
    
-	# print((w_crew+w_payload))
-	# print(fuelFraction,emptyWeightFraction)
-	# print((1-fuelFraction-emptyWeightFraction))
-
+			
 
 	if (abs(w_0new - w_0) <= tolerance):
    		converged = 1
@@ -69,3 +60,6 @@ while (converged == 0):
 
 	
 print(w_0)
+print(w_0*fuelFraction)
+print(w_0*emptyWeightFraction)
+print(w_crew + w_payload)
