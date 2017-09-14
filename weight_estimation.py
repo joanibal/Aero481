@@ -1,4 +1,6 @@
 import numpy as np
+from regression import regression
+import matplotlib.pyplot as plt
 # import math
 
 #human weights (project specs)
@@ -34,17 +36,23 @@ ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7
 # print(ff)
 
 #Raymer Equation constants
-A = 1.02
+# A = 1.02
+# C = -0.06
+(A, C) = regression()
+A = 1.10
 C = -0.06
 
+print (A, C)
+
 #solving for MTOW
-w_0 = 80000.0		#lbs (weight guess)
+w_0 = 190000	#lbs (weight guess)
 
 tolerance = 0.1				#Adjust for acccuracy
 converged = 0				#False
 
 
-while (converged == 0):
+#while (converged == 0):
+for i in range(20):
 	emptyWeightFraction = A*w_0**C
 	fuelFraction = ff
 	w_0new = (w_crew+w_payload)/(1-fuelFraction-emptyWeightFraction)
@@ -55,11 +63,16 @@ while (converged == 0):
    		converged = 1
 	w_0 += 0.1*(w_0new - w_0)
 	# w_0 = w_0new
-
-	# converged = 1
-
+	print w_0
 	
-print(w_0)
-print(w_0*fuelFraction)
-print(w_0*emptyWeightFraction)
-print(w_crew + w_payload)
+
+	#converged = 1
+	plt.plot(i, w_0, 'o')
+
+
+plt.show()
+	
+# print(w_0)
+# print(w_0*fuelFraction)
+# print(w_0*emptyWeightFraction)
+# print(w_crew + w_payload)

@@ -9,4 +9,6 @@ def regression():
 
 	c = a_lin-1
 	a = 10**b_lin
-	return a, c
+
+	# print (a, c)
+	return a/2, c/2
