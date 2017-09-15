@@ -46,9 +46,9 @@ def calcWeights(R,L_D, c , M=0.85):
 	print(ff)
 
 	#Raymer Equation constants
-	A = 1.02
-	C = -0.06
-	# (A, C) = regression()
+	# A = 1.02
+	# C = -0.06 
+	(A, C) = regression()
 	# A = 1.10
 	# C = -0.06
 
