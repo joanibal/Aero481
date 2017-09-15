@@ -8,8 +8,8 @@ def calcWeights(R,L_D, c , M=0.85):
 	w_crew = 3.0*(180+60)		#lbs (crew weight + luggage)
 	w_payload = 8.0*(180+60)	#lbs (passenger weight + luggage)
 	# w_payload = 35000	#lbs (passenger weight + luggage)
-	w_payload += 10000
-	print(w_payload + w_crew)
+	# w_payload += 1000
+	# print(w_payload + w_crew)
 	#flight conditions (project specs)
 	# M = 0.85 			#cruise mach
 	# R = 5000 + 200		#nautical miles (range + divert extra)
@@ -28,7 +28,7 @@ def calcWeights(R,L_D, c , M=0.85):
 	ff6 = 0.99 		#descent
 	ff7 = 0.992		#landing
 
-	# ff_loiter = 0.92
+	ff_loiter = 0.97
 
 	#unit conversion
 	a_sound = 574		#knots (speed of sound @40 K-ft)
@@ -38,12 +38,12 @@ def calcWeights(R,L_D, c , M=0.85):
 	#calculating cruise fuel fraction
 	ff5 = np.exp(-R/L_D*c/V_kts)	#solving breguet equation
 
-	print(ff5)
+	# print(ff5)
 
 	#total fuel fraction
-	# ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7*ff_loiter
-	ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7
-	print(ff)
+	ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7*ff_loiter
+	# ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7
+	# print(ff)
 
 	#Raymer Equation constants
 	# A = 1.02
@@ -75,7 +75,7 @@ def calcWeights(R,L_D, c , M=0.85):
 			break
 		w_0 += 0.1*(w_0new - w_0)
 		# w_0 = w_0new
-		print(w_0)
+		# print(w_0)
 		
 
 		# converged = 1
@@ -98,9 +98,18 @@ if __name__ == '__main__':
 	# c = 0.75				#1/hrs, based on Roskam (TSFC)
 
 	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),16, 0.5, M=0.85)
+	print('w_0      ', '      w_empty      ', ' w_fuel      ', 'w_payload  ' )
+
+	print(w_0, w_empty, w_fuel, w_payload )
+	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+500),16, 0.5, M=0.85)
+
+	print(w_0, w_empty, w_fuel, w_payload )
+	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),17, 0.5, M=0.85)
+
+	print(w_0, w_empty, w_fuel, w_payload )
+	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),16, 0.7, M=0.85)
 	# w_0, w_empty, w_fuel, w_payload = calcWeights(1620,16, 0.5, M=0.82) # 737
 	
-	print('w_0   ', '   w_empty   ', '   w_fuel   ', '   w_payload  ' )
 
 	print(w_0, w_empty, w_fuel, w_payload )
 	# plt.show()

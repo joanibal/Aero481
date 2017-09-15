@@ -15,7 +15,7 @@ def regression():
 	c = a_lin-1
 	a = 10**b_lin
 
-	print (a, c)
+	# print (a, c)
 
 	# plt.plot(np.log10(WTO), np.log10(WE), 'o', label='Original data', markersize=10)
 	# plt.plot(np.log10(WTO), a_lin*np.log10(WTO) + b_lin, 'r', label='Fitted line')
