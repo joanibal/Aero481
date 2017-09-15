@@ -6,7 +6,7 @@ WE = np.array([50861, 43500, 36100, 102100, 54000])
 
 A = np.vstack([np.log10(WE), np.ones(len(WE))]).T
 
-B, A = np.linalg.lstsq(A, np.log10(WTO))[0]
+B, A = np.linalg.lstsq(A, np.log10(WTO))[0] 
 
 print(A, B)
 
