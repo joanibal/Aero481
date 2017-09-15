@@ -97,14 +97,14 @@ if __name__ == '__main__':
 	# L_D = 8				#based on Roskam (L/D)
 	# c = 0.75				#1/hrs, based on Roskam (TSFC)
 
-	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+300),15, 0.657, M=0.85)
-	print('w_0      ', '      w_empty      ', ' w_fuel      ', 'w_payload  ' )
+	# w_0, w_empty, w_fuel, w_payload = calcWeights((5000+300),15, 0.657, M=0.85)
+	# print('w_0      ', '      w_empty      ', ' w_fuel      ', 'w_payload  ' )
 
 	print(w_0, w_empty, w_fuel, w_payload )
 	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),15, 0.657, M=0.85)
 
-	print(w_0, w_empty, w_fuel, w_payload )
-	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+100),15, 0.657, M=0.85)
+	# print(w_0, w_empty, w_fuel, w_payload )
+	# w_0, w_empty, w_fuel, w_payload = calcWeights((5000+100),15, 0.657, M=0.85)
 
 	print(w_0, w_empty, w_fuel, w_payload )
 	# w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),16, 0.8, M=0.85)
