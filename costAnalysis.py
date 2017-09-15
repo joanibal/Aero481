@@ -1,17 +1,18 @@
 #Cost Analysis
 
 import math
+from weight_estimation import calcWeights 
 
 #Define constants
 b_year = 1993					#Base year
 t_year = 2017					#Then year
-MTOW = 90000					#Maximum Takeoff Weight
+MTOW, _, W_f, _ = calcWeights((5000+200),15, 0.657, M=0.85)				#Maximum Takeoff Weight
 t_b = 10.5						#Estimated flight time (assuming 1 stage mission)
 nCrew = 2						#Number of crew members
 n_attd = 1						#Number of attendants
 P_f = 6							#Price/gal of Jet A fuel
 rho_f = 6.71					#lb/gal of Jet A fuel at 15 deg C
-W_f	= 10000						#Fuel weight
+# W_f	= 10000						#Fuel weight
 W_oil = 0.0125*W_f*(t_b/100) 	#Assuming 100 block per oil change
 P_oil = 53.89					#Cost per gallon of oil
 rho_oil = 8.37461337			#Oil density
