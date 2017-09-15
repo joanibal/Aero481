@@ -28,7 +28,7 @@ def calcWeights(R,L_D, c , M=0.85):
 	ff6 = 0.99 		#descent
 	ff7 = 0.992		#landing
 
-	ff_loiter = 0.97
+	# ff_loiter = 0.97
 
 	#unit conversion
 	a_sound = 574		#knots (speed of sound @40 K-ft)
@@ -41,7 +41,7 @@ def calcWeights(R,L_D, c , M=0.85):
 	# print(ff5)
 
 	#total fuel fraction
-	ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7*ff_loiter
+	ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7
 	# ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7
 	# print(ff)
 
@@ -54,7 +54,7 @@ def calcWeights(R,L_D, c , M=0.85):
 
 
 	#solving for MTOW
-	w_0 = 1e7	#lbs (weight guess)
+	w_0 = 1e6	#lbs (weight guess)
 
 	tolerance = 0.1				#Adjust for acccuracy
 	converged = 0				#False
@@ -97,21 +97,21 @@ if __name__ == '__main__':
 	# L_D = 8				#based on Roskam (L/D)
 	# c = 0.75				#1/hrs, based on Roskam (TSFC)
 
-	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),16, 0.5, M=0.85)
+	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+300),15, 0.657, M=0.85)
 	print('w_0      ', '      w_empty      ', ' w_fuel      ', 'w_payload  ' )
 
 	print(w_0, w_empty, w_fuel, w_payload )
-	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+500),16, 0.5, M=0.85)
+	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),15, 0.657, M=0.85)
 
 	print(w_0, w_empty, w_fuel, w_payload )
-	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),17, 0.5, M=0.85)
+	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+100),15, 0.657, M=0.85)
 
 	print(w_0, w_empty, w_fuel, w_payload )
-	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),16, 0.7, M=0.85)
+	# w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),16, 0.8, M=0.85)
 	# w_0, w_empty, w_fuel, w_payload = calcWeights(1620,16, 0.5, M=0.82) # 737
 	
 
-	print(w_0, w_empty, w_fuel, w_payload )
+	# print(w_0, w_empty, w_fuel, w_payload )
 	# plt.show()
 
 	# calcWeights((5000+200),8, 0.75, M=0.85)
