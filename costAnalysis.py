@@ -77,3 +77,7 @@ C_ML = (0.645 + (0.05*T0/10**4)) * (0.566 + 0.434/t_b) * R_L
 C_MM = (25+(18*T0/10**4)) * (0.62+0.38/t_b) * CEF
 C_engMaint = n_eng*(C_ML + C_MM)*t_b
 print('Total engine maintenance cost: $' + str(C_engMaint))
+
+#Total COC
+COC = (2*spCrew) + C_attd + C_f + C_oil + C_airport+ C_nav + C_airframeMaintenance + C_engMaint
+print('Total COC: $' + str(COC))

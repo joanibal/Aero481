@@ -100,9 +100,10 @@ if __name__ == '__main__':
 	# w_0, w_empty, w_fuel, w_payload = calcWeights((5000+300),15, 0.657, M=0.85)
 	# print('w_0      ', '      w_empty      ', ' w_fuel      ', 'w_payload  ' )
 
-	print(w_0, w_empty, w_fuel, w_payload )
+	# print(w_0, w_empty, w_fuel, w_payload )
 	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),15, 0.657, M=0.85)
 
+	# w_0, w_empty, w_fuel, w_payload = calcWeights((6750),18, 0.657, M=0.80) #for G650 comparison
 	# print(w_0, w_empty, w_fuel, w_payload )
 	# w_0, w_empty, w_fuel, w_payload = calcWeights((5000+100),15, 0.657, M=0.85)
 
