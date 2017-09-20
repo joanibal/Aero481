@@ -83,8 +83,8 @@ def calcWeights(R,L_D, c , M=0.85):
 
 
 		
-	print('w_0', w_0)
-	print('w_f', w_0*fuelFraction)
+	#print('w_0', w_0)
+	#print('w_f', w_0*fuelFraction)
 	return w_0, w_0*emptyWeightFraction, w_0*fuelFraction, w_crew + w_payload
 	# print(w_0*emptyWeightFraction)
 	# print(w_crew + w_payload)
