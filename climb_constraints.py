@@ -1,6 +1,7 @@
 import numpy as np
 from calcDragPolar import DragPolar
 import constants
+from weight_estimation import calcWeights
 
 def TWcalc(CL_max, CD0, ks, K, G):
 	TW = ks**2/CL_max*CD0 + CL_max/ks**2*K + G
@@ -9,8 +10,26 @@ def TWcalc(CL_max, CD0, ks, K, G):
 def TWcorrection(max_cont_thrust, OEI, landing, TW):
 
 	#correction conditions
-	if max_cont_thrust
+	#modifier for max continuous thrust
+	if max_cont_thrust == 1:	# 1 - true
+		thrust_coeff = 1/0.94
+	else:						#else - max cont. thrust false
+		thrust_coeff = 1
 
+	#modifier for OEI
+	if OEI == 1: 		# 1 - true
+		eng_coeff = constants.numEngines/(1 - constants.numEngines)
+	else:				# else - OEI false
+		eng_coeff = 1		
+
+	#modifier for landing
+	if landing == 1: 	# 1 - true
+		CTOL_coeff = 1
+	else:				# else - landing false
+		CTOL_coeff = 1
+	
+	#adjusted T/W
+	TW_corrected = 1/0.80 * thrust_coeff * eng_coeff * CTOL_coeff * TW
 
 	return TW_corrected
 
