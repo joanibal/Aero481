@@ -1,5 +1,5 @@
 runLength = 4948   # ft
-alt = 400000       # ft
+alt = 40000       # ft
 R = 5200           # nMi
 machCruise = 0.85
 SFC = 0.657        # 1/hr
