@@ -3,7 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+
 Cd_0 = 0.01597
+Cd_0_climb = 0.01597
 N = 100
 W_S = np.linspace(0, 350, N)
 CL_max = 2.5
@@ -13,8 +15,10 @@ T_W_cruise = 1.0/(0.2826**0.6)*(228.8*0.01597)/W_S + (W_S)*1/(228.8*np.pi)
 
 
 # Ceiling 
-T_W_ceiling = 1/(Density_Ceilng/Density_SL )**0.6 * ( 0.001 + 2*np.sqrt(Cd_0/(np.pi*9.8*0.85)))  
+T_W_ceiling = 1/(Density_Ceilng/Density_SL )**0.6 * ( 0.001 + 2*np.sqrt(Cd_0['cruise']/(np.pi*9.8*0.85)))  
 
+T_W = k**2/CL_max*Cd_0_climb + CL_max/(k**2 * np.pi * )
+numEngines/(numEngines - 1)
 
 #takeoff 
 T_W_Takeoff = W_S/(1*CL_max* 4948/37.5)
