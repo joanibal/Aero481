@@ -27,7 +27,6 @@ cd_0 = {'takeoff':{'gearUp':0.0400,
 
 ceiling = 51000     # ft
 T_Ceiling = 216.650  # K
- 
 # T_SL
 P_Ceiling = 11053.0  # Pa
 # P_SL
