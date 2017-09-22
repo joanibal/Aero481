@@ -1,6 +1,7 @@
 import numpy as np
 from regression import regression
 import matplotlib.pyplot as plt
+import constants
 # import math
 
 def calcWeights(R,L_D, c , M=0.85):
@@ -101,7 +102,7 @@ if __name__ == '__main__':
 	# print('w_0      ', '      w_empty      ', ' w_fuel      ', 'w_payload  ' )
 
 	# print(w_0, w_empty, w_fuel, w_payload )
-	w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),15, 0.657, M=0.85)
+	w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R,constants.L_D, constants.SFC, M=constants.machCruise)
 
 	# w_0, w_empty, w_fuel, w_payload = calcWeights((6750),18, 0.657, M=0.80) #for G650 comparison
 	# print(w_0, w_empty, w_fuel, w_payload )
