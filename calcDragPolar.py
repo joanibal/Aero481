@@ -1,7 +1,8 @@
 #Drag Polar Calculation
 
 import math
-import numpy as np
+import numpy
+import matplotlib.pyplot as plt
 from weight_estimation import calcWeights
 
 def DragPolar():
@@ -41,16 +42,42 @@ def DragPolar():
 	k_takeoff = 1/(math.pi*AR*e_tof)
 	k_landing = 1/(math.pi*AR*e_lf)
 
-	#return
-	return C_d0_clean, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_landing_flaps_gear_down, C_d0_landing_flaps_gear_up, k_clean, k_takeoff, k_landing
-
-if __name__ == '__main__':
-
-	C_d0_clean, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_landing_flaps_gear_down, C_d0_landing_flaps_gear_up, k_clean, k_takeoff, k_landing = DragPolar()
-
 	#Print CD per flight mode
 	print("Clean: CD = " + str(C_d0_clean) + " + " + str(k_clean) + " * CL^2")
 	print("Takeoff flaps, gear up: CD = " + str(C_d0_takeoff_flaps_gear_up) + " + " + str(k_takeoff) + " * CL^2")
 	print("Takeoff flaps, gear down: CD = " + str(C_d0_takeoff_flaps_gear_down) + " + " + str(k_takeoff) + " * CL^2")
 	print("Landing flaps, gear up: CD = " + str(C_d0_landing_flaps_gear_up) + " + " + str(k_landing) + " * CL^2")
 	print("Landing flaps, gear down: CD = " + str(C_d0_landing_flaps_gear_down) + " + " + str(k_landing) + " * CL^2")
+
+	#Display the graph
+	plt.clf()
+	plt.cla()
+	plt.close()
+
+	#Need to update with appropriate CL limits
+	CL_range = numpy.linspace(-1.5, 1.5, 100)
+	CD_clean = C_d0_clean + k_clean*CL_range**2
+	CD_takeoff_flaps_gear_down = C_d0_takeoff_flaps_gear_down + k_takeoff*CL_range**2
+	CD_takeoff_flaps_gear_up = C_d0_takeoff_flaps_gear_up + k_takeoff*CL_range**2
+	CD_landing_flaps_gear_down = C_d0_landing_flaps_gear_down + k_landing*CL_range**2
+	CD_landing_flaps_gear_up = C_d0_landing_flaps_gear_up + k_landing*CL_range**2
+
+	plt.plot(CD_clean, CL_range)
+	plt.plot(CD_takeoff_flaps_gear_down, CL_range)
+	plt.plot(CD_takeoff_flaps_gear_up, CL_range)
+	plt.plot(CD_landing_flaps_gear_up, CL_range)
+	plt.plot(CD_landing_flaps_gear_down, CL_range)
+	plt.ylabel('CL')
+	plt.xlabel('CD')
+	plt.show()
+
+
+	'''CL_range = numpy.array(-1.5, 1.5, 100)
+	CD_clean = C_d0_clean + k_clean*CL_range**2'''
+
+	#return
+	return C_d0_clean, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_landing_flaps_gear_down, C_d0_landing_flaps_gear_up, k_clean, k_takeoff, k_landing
+
+if __name__ == '__main__':
+
+	C_d0_clean, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_landing_flaps_gear_down, C_d0_landing_flaps_gear_up, k_clean, k_takeoff, k_landing = DragPolar()
