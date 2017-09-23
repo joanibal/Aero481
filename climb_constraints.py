@@ -4,6 +4,8 @@ import constants
 from weight_estimation import calcWeights
 
 def TWcalc(CL_max, CD0, ks, K, G):
+	if constants.numEngines == 3: #adjusts the G if 3 engines instead of two
+		G = G+0.003
 	TW = ks**2/CL_max*CD0 + CL_max/ks**2*K + G
 	return TW
 
@@ -67,5 +69,5 @@ if __name__ == '__main__':
 		TW_corrected_array = np.append(TW_corrected_array, TW_corrected)
 
 	# print TW_array
-	print TW_corrected_array
+	# print TW_corrected_array
 	# print C_d0_array
