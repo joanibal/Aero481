@@ -7,6 +7,12 @@ machCruise = 0.85
 SFC = 0.657        # 1/hr
 L_D = 15 			#used in weight_estimation
 
+# # G550 specs
+# machCruise = 0.8
+# SFC = 0.65 # 1/hr
+# L_D = 18
+# R = 6750 # nmi
+
 numEngines = 2
 
 
