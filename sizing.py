@@ -9,7 +9,6 @@ C_d0_clean, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_landi
 #sorting data into arrays for each stage
 #order of climbs: TO, transition seg, 2nd seg, enroute, balked landing, balked landing (OEI)
 #used in calculating T/W (uncorrected)
-CL_max_array = np.array([1.8, 1.8, 1.8, 1.2, 2.0, 2.0*0.85]) #based on Roskam
 C_d0_array = np.array([C_d0_takeoff_flaps_gear_up, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_clean, C_d0_landing_flaps_gear_down, (C_d0_landing_flaps_gear_down+C_d0_takeoff_flaps_gear_down)/2])
 ks_array = np.array([1.2, 1.15, 1.2, 1.25, 1.3, 1.5])
 K_array = np.array([k_takeoff, k_takeoff, k_takeoff, k_clean, k_landing, k_landing])
@@ -27,7 +26,7 @@ TW_array = np.empty([6,6])
 TW_corrected_array = np.empty([6,1])
 #calculating uncorrected climb
 for i in range(0,6):
-    TW = TWcalc(CL_max_array[i], C_d0_array[i], ks_array[i], K_array[i], G_array[i])
+    TW = TWcalc(CL_max[i], C_d0_array[i], ks_array[i], K_array[i], G_array[i])
     # print TW
     TW_corrected = TWcorrection(thrust_mod_array[i], eng_mod_array[i], CTOL_mod_array[i], TW)
     # print TW_corrected
@@ -40,11 +39,11 @@ for i in range(0,6):
 
 # print TW_array
 
-Cd_0 = 0.01597
-Cd_0_climb = 0.01597
+# Cd_0 = 0.01597
+# Cd_0_climb = 0.01597
 N = 100
 W_S = np.linspace(0, 350, N)
-CL_max = 2.5
+# CL_max = 2.5
 
 # crusie 
 T_W_cruise = 1.0/(0.2826**0.6)*(228.8*0.01597)/W_S + (W_S)*1/(228.8*np.pi)
@@ -57,9 +56,25 @@ T_W_ceiling = 1/(Density_Ceilng/Density_SL )**0.6 * ( 0.001 + 2*np.sqrt(Cd_0['cr
 numEngines/(numEngines - 1)
 
 #takeoff 
-T_W_Takeoff = W_S/(1*CL_max* 4948/37.5)
+T_W_Takeoff = W_S/(1*CL_max[0]* 4948/37.5)
 
-plt.plot(W_S, np.ones(N)*T_W_ceiling, 'r--')
-plt.plot(W_S, T_W_cruise, 'r--')
-plt.plot(W_S, T_W_Takeoff, 'g--')
+
+# landing
+W_S_landing = (runLength/1.6 - 00)*CL_max[4]*1/80.0 
+print W_S_landing
+
+
+
+
+
+
+
+plt.plot(W_S, np.ones(N)*T_W_ceiling, '--')
+plt.plot(W_S, T_W_cruise, '--')
+plt.plot(W_S, T_W_Takeoff, '--')
+for i in range(0,6):
+	plt.plot(W_S, np.ones(np.shape(W_S))*TW_corrected_array[i],'--')
+
+plt.plot([W_S_landing, W_S_landing], [ 0, 1], '--')
+plt.axis((W_S[0], W_S[-1], 0, 1))	
 plt.show()

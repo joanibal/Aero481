@@ -1,3 +1,5 @@
+import numpy as np
+
 runLength = 4948   # ft
 alt = 40000       # ft
 R = 5200           # nMi
@@ -14,7 +16,7 @@ e = {'takeoff':{'gearUp':0.775,
      'landing':{'gearUp':0.725,
                 'geardown':0.725}}
 
-cd_0 = {'takeoff':{'gearUp':0.0400,
+Cd_0 = {'takeoff':{'gearUp':0.0400,
                 'geardown':0.0600},
      'cruise':0.0250,
      'landing':{'gearUp':0.0850,
@@ -34,3 +36,7 @@ P_Ceiling = 11053.0  # Pa
 Density_Ceilng = 0.178     # kg/M^3
 Density_SL  = 1.225       # kg/M^3
 a_Ceiling = 573.57          # knots
+
+
+
+CL_max = np.array([1.8, 1.8, 1.8, 1.2, 2.1, 2.0*0.85]) #based on Roskam
