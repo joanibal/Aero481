@@ -40,7 +40,7 @@ if __name__ == '__main__':
 	#sorting data into arrays for each stage
 	#order of climbs: TO, transition seg, 2nd seg, enroute, balked landing, balked landing (OEI)
 	#used in calculating T/W (uncorrected)
-	CL_max_array = np.array([1.8, 1.8, 1.8, 1.2, 2.0, 2.0*0.85]) #based on Roskam
+	CL_max_array = constants.CL_max
 	C_d0_array = np.array([C_d0_takeoff_flaps_gear_up, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_clean, C_d0_landing_flaps_gear_down, (C_d0_landing_flaps_gear_down+C_d0_takeoff_flaps_gear_down)/2])
 	ks_array = np.array([1.2, 1.15, 1.2, 1.25, 1.3, 1.5])
 	K_array = np.array([k_takeoff, k_takeoff, k_takeoff, k_clean, k_landing, k_landing])
