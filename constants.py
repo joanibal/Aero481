@@ -1,3 +1,5 @@
+import numpy as np
+
 runLength = 4948   # ft
 alt = 40000       # ft
 R = 5200           # nMi
