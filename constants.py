@@ -7,7 +7,7 @@ machCruise = 0.85
 SFC = 0.657        # 1/hr
 L_D = 15 			#used in weight_estimation
 
-# # G550 specs
+# G550 specs
 # machCruise = 0.8
 # SFC = 0.65 # 1/hr
 # L_D = 18
@@ -46,3 +46,10 @@ a_Ceiling = 573.57          # knots
 
 
 CL_max = np.array([1.8, 1.8, 1.8, 1.2, 2.1, 2.0*0.85]) #based on Roskam
+
+
+# Empennage Constants
+c_VT =  0.09
+c_HT = 1
+Sref = 127.59 #m^2 (wing area)
+b = 33.89 #m (span)
