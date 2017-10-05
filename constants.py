@@ -51,5 +51,18 @@ CL_max = np.array([1.8, 1.8, 1.8, 1.2, 2.1, 2.0*0.85]) #based on Roskam
 # Empennage Constants
 c_VT =  0.09
 c_HT = 1
+
+#Horizontal Stabilizer Properties
+
+# Wing Properties
 Sref = 127.59 #m^2 (wing area)
 b = 33.89 #m (span)
+c_root = 9.41 #m
+w_lambda = 0.26 #(taper ratio)
+
+#Fuselage Properties
+fuse_length = 101.2 #ft
+
+#A/C Properties
+CG = 0.6*fuse_length #ft
+static_margin = 0.15
