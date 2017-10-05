@@ -1,14 +1,14 @@
 from constants import *
 import numpy as np
 
-root = 14 #ft
-ratio = 0.7
+root = 14.5 #ft
+ratio = 0.75
 sweep = 0.628319 #radians (36 degrees)
 ratio2 = 0.66666666666
 MAC1 = (root + ratio*root - (root*root*ratio)/(root+root*ratio))
 MAC = MAC1*ratio2
 x = MAC*np.tan(sweep)
-Lvt = (fuse_length-CG)-root+x
+Lvt = (101.2-63.97)-root+x
 print(Lvt) #in ft
 
 Lvt = Lvt*0.3048 #moment arm in m
