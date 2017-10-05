@@ -49,7 +49,7 @@ CL_max = np.array([1.8, 1.8, 1.8, 1.2, 2.1, 2.0*0.85]) #based on Roskam
 
 
 # Empennage Constants
-c_VT =  0.09
+c_VT =  0.041
 c_HT = 1
 Sref = 127.59 #m^2 (wing area)
 b = 33.89 #m (span)
