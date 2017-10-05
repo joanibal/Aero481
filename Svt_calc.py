@@ -1,13 +1,14 @@
 from constants import *
 import numpy as np
+from horizontal_surf_sizing import MAC
 
 root = 14.5 #ft
 ratio = 0.75
 sweep = 0.628319 #radians (36 degrees)
-ratio2 = 0.66666666666
-MAC1 = (root + ratio*root - (root*root*ratio)/(root+root*ratio))
-MAC = MAC1*ratio2
-x = MAC*np.tan(sweep)
+
+c_MAC, _ = MAC(root, ratio, 0)
+
+x = c_MAC*np.tan(sweep)
 Lvt = (101.2-63.97)-root+x
 print(Lvt) #in ft
 
@@ -23,3 +24,7 @@ print span
 
 AR = span*span/Svt
 print(AR)
+
+_, y_MAC = MAC(root, ratio, span)
+
+print c_MAC, y_MAC
