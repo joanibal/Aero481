@@ -27,4 +27,4 @@ print(AR)
 
 _, y_MAC = MAC(root, ratio, span)
 
-print c_MAC, y_MAC
+print c_MAC*0.3048 , y_MAC #m

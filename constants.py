@@ -53,6 +53,14 @@ c_VT =  0.041
 c_HT = 1
 
 #Horizontal Stabilizer Properties
+L_HT = 14.25 #m
+c_root_HT = 3.5 #m
+taper_HT = 0.41
+
+L_c = 16 #m
+Sref_c = 20 #m^2
+c_root_c = 3.5 #m
+taper_c = 0.25
 
 # Wing Properties
 Sref = 127.59 #m^2 (wing area)
