@@ -1,7 +1,6 @@
 #Cost Analysis
-
-import math
-from weight_estimation import calcWeights 
+import numpy as np
+from Weight.weight_estimation import calcWeights 
 
 #Define constants
 b_year = 1993					#Base year
@@ -56,15 +55,15 @@ bCEF_nav = 5.17053 + 0.104981*(b_year_nav - 2006)
 CEF_nav = tCEF/bCEF_nav
 
 #Calculate nav fees
-C_nav = 0.5*CEF_nav*(1.852*R/t_b)*math.sqrt(0.00045359237*MTOW/50)
+C_nav = 0.5*CEF_nav*(1.852*R/t_b)*np.sqrt(0.00045359237*MTOW/50)
 print('Navigational Fees: $' + str(C_nav))
 						
 #Maintenance reference
 #https://www.avjobs.com/salaries-wages-pay/hourly-aviation-pay.asp
 
 #Solve for airframe maintenance
-C_aircraft = 10**(3.3191+0.8043*math.log10(MTOW))*CEF
-C_engines = 10**(2.3044+0.8858*math.log10(MTOW))*CEF
+C_aircraft = 10**(3.3191+0.8043*np.log10(MTOW))*CEF
+C_engines = 10**(2.3044+0.8858*np.log10(MTOW))*CEF
 C_airframe = C_aircraft - C_engines
 W_AMPR = MTOW										#Assume W_AMPR is equal to MTOW
 C_ML = 1.03*(3+(0.067*W_AMPR/1000))*R_L				#Labor Cost

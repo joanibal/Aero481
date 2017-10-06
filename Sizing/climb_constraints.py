@@ -1,7 +1,7 @@
 import numpy as np
-from calcDragPolar import DragPolar
+from Aero.calcDragPolar import DragPolar
 import constants
-from weight_estimation import calcWeights
+from Weight.weight_estimation import calcWeights
 
 def TWcalc(CL_max, CD0, ks, K, G):
 	if constants.numEngines == 3: #adjusts the G if 3 engines instead of two

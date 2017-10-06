@@ -1,9 +1,9 @@
 #Drag Polar Calculation
 
 import math
-import numpy
+import numpy as np
 import matplotlib.pyplot as plt
-from weight_estimation import calcWeights
+from Weight.weight_estimation import calcWeights
 
 def DragPolar():
 	#Define w_0
@@ -38,9 +38,9 @@ def DragPolar():
 	C_d0_landing_flaps_gear_down = C_d0 + delC_d0_lf + delC_d0_lg
 
 	#Calculate k per flight mode
-	k_clean = 1/(math.pi*AR*e_clean)
-	k_takeoff = 1/(math.pi*AR*e_tof)
-	k_landing = 1/(math.pi*AR*e_lf)
+	k_clean = 1/(np.pi*AR*e_clean)
+	k_takeoff = 1/(np.pi*AR*e_tof)
+	k_landing = 1/(np.pi*AR*e_lf)
 
 	#Print CD per flight mode
 	# print("Clean: CD = " + str(C_d0_clean) + " + " + str(k_clean) + " * CL^2")
@@ -55,7 +55,7 @@ def DragPolar():
 	# plt.close()
 
 	#Need to update with appropriate CL limits
-	CL_range = numpy.linspace(-1.5, 1.5, 100)
+	CL_range = np.linspace(-1.5, 1.5, 100)
 	CD_clean = C_d0_clean + k_clean*CL_range**2
 	CD_takeoff_flaps_gear_down = C_d0_takeoff_flaps_gear_down + k_takeoff*CL_range**2
 	CD_takeoff_flaps_gear_up = C_d0_takeoff_flaps_gear_up + k_takeoff*CL_range**2
@@ -72,7 +72,7 @@ def DragPolar():
 	# plt.show()
 
 
-	'''CL_range = numpy.array(-1.5, 1.5, 100)
+	'''CL_range = np.array(-1.5, 1.5, 100)
 	CD_clean = C_d0_clean + k_clean*CL_range**2'''
 
 	#return

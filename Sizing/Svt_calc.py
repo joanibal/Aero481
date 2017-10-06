@@ -1,6 +1,6 @@
 from constants import *
 import numpy as np
-from horizontal_surf_sizing import MAC
+from Sizing.horizontal_surf_sizing import MAC
 
 root = 14.5 #ft
 ratio = 0.75

@@ -1,4 +1,4 @@
-from clmax_climb import *
+from Aerodynanics.clmax_climb import *
 
 wl = 90
 seg = 1
