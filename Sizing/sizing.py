@@ -1,8 +1,14 @@
+import os,sys,inspect
+
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+from climb_constraints import *
 from constants import *
+
+from Aerodynamics.calcDragPolar import DragPolar
+
 import numpy as np
 import matplotlib.pyplot as plt
 from Aerodynamics.calcDragPolar import DragPolar
-from Aerodynamics.climb_constraints import *
 #import C_d0 and K data
 C_d0_clean, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_landing_flaps_gear_down, C_d0_landing_flaps_gear_up, k_clean, k_takeoff, k_landing = DragPolar()
 

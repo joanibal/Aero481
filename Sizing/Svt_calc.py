@@ -1,3 +1,7 @@
+import os,sys,inspect
+
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+
 from constants import *
 import numpy as np
 from Sizing.horizontal_surf_sizing import MAC

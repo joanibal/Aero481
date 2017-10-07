@@ -1,5 +1,5 @@
 import numpy as np
-from Aero.calcDragPolar import DragPolar
+from Aerodynamics.calcDragPolar import DragPolar
 import constants
 from Weight.weight_estimation import calcWeights
 
