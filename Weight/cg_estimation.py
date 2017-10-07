@@ -1,5 +1,10 @@
+import os,sys,inspect
+
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+
 import numpy as np 
-# import constants
+import constants
+import Weight.weight_estimation
 
 #constants from CAD 
 # - overestimated because does not account for intersection
@@ -21,9 +26,9 @@ w_fuse = 1.4*Swet_fuse
 
 print w_wing, w_HT, w_VT, w_c, w_fuse
 
-# w_0, _, _, _ = calcWeights(constants.R,constants.L_D, constants.SFC, M=constants.machCruise)
+w_0, _, _, _ = Weight.weight_estimation.calcWeights(constants.R,constants.L_D, constants.SFC, M=constants.machCruise)
 
-w_0 = 94965.0 #lb
+# w_0 = 94965.0 #lb
 w_landing_gear = w_0*0.057 #lb
 w_nose_gear = w_landing_gear*0.15 #lb
 w_main_gear = 0.85*w_landing_gear/2.0 #lb
