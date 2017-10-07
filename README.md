@@ -24,7 +24,7 @@ the code in this repository is used for the design and analysis of a regional bu
 
 # Authors 
 Aaron Lu  
-Saif Jamel   
+Saif Jamal   
 Becky Hill  
 Josh Anibal   
 
