@@ -13,7 +13,7 @@ sweep = 0.628319 #radians (36 degrees)
 c_MAC, _ = MAC(root, ratio, 0)
 
 x = c_MAC*np.tan(sweep)
-Lvt = (101.2-63.97)-root+x
+Lvt = (fuse_length-63.97)-root+x
 print(Lvt) #in ft
 
 Lvt = Lvt*0.3048 #moment arm in m
