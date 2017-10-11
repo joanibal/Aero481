@@ -75,5 +75,5 @@ fuse_length = 105.2 #ft
 Swet_fuse = 2389.0744993 #ft^2
 
 #A/C Properties
-CG = 0.4*fuse_length #ft
-static_margin = 0.15
+CG = 0.6*fuse_length #ft
+static_margin = 0.15 
