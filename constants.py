@@ -15,6 +15,7 @@ L_D = 15 			#used in weight_estimation
 # R = 6750 # nmi
 
 numEngines = 2
+engine_thrust = 16096.3201 #lbs
 
 
 e = {'takeoff':{'gearUp':0.775,
@@ -70,8 +71,9 @@ c_root = 9.41 #m
 w_lambda = 0.26 #(taper ratio)
 
 #Fuselage Properties
-fuse_length = 101.2 #ft
+fuse_length = 105.2 #ft
+Swet_fuse = 2389.0744993 #ft^2
 
 #A/C Properties
-CG = 0.6*fuse_length #ft
+CG = 0.4*fuse_length #ft
 static_margin = 0.15
