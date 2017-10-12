@@ -74,6 +74,7 @@ Sref = 127.59 								# m^2 (wing area)
 b = 33.89 									# m (span)
 c_root = 9.41 								# m
 w_lambda = 0.26 							# main wing taper ratio
+AR = 9
 
 # Fuselage Properties
 fuse_length = 105.2*0.3048 					# m
