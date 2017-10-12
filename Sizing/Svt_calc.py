@@ -2,33 +2,65 @@ import os,sys,inspect
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from constants import *
+import constants
 import numpy as np
 from Sizing.horizontal_surf_sizing import MAC
 
-root = 14.5 #ft
-ratio = 0.75
-sweep = 0.628319 #radians (36 degrees)
+def cMAC(c_root_VT, taper_VT, b):
+	c_MAC, _ = MAC(c_root_VT, taper_VT, b)
+	return c_MAC
 
-c_MAC, _ = MAC(root, ratio, 0)
+def calcL_VT(c_MAC, sweep_VT, fuse_length, CGpos, c_root_VT):
+	x = c_MAC*np.tan(sweep_VT)
+	L_VT = (fuse_length-CGpos)-c_root_VT+x
+	return L_VT
 
-x = c_MAC*np.tan(sweep)
-Lvt = (fuse_length-63.97)-root+x
-print(Lvt) #in ft
+def calcS_VT(L_VT, c_VT, b, Sref):
+	S_VT = c_VT*b*Sref/L_VT
+	return S_VT
 
-Lvt = Lvt*0.3048 #moment arm in m
-Svt = c_VT*b*Sref/Lvt
-print(Svt)
+def calcTipChord(c_VT, taper_VT):
+	c_tip_VT = c_VT*taper_VT
+	return c_tip_VT
 
-base = root*0.3048 #convert to m
-tip = base*ratio #m
-print base
-span = 2*Svt/(base+tip)
-print span
+def calcb_VT(S_VT, c_root_VT, c_tip_VT):
+	b_VT = 2*S_VT/(c_root_VT+c_tip_VT)
+	return b_VT
 
-AR = span*span/Svt
-print(AR)
+def calcAR_VT(b_VT, S_VT):
+	AR_VT = b_VT**2/S_VT
+	return AR_VT
 
-_, y_MAC = MAC(root, ratio, span)
+def calcyMAC(c_root_VT, taper_VT, b):
+	_, y_MAC = MAC(c_root_VT, taper_VT, b_VT)
+	return y_MAC
 
-print c_MAC*0.3048 , y_MAC #m
+if __name__ == '__main__':
+
+	# Calculate Chord Mac
+	c_MAC = cMAC(constants.c_root_VT, constants.taper_VT, 0) 			
+	print("Chord MAC: " + str(c_MAC) + " m")							
+
+	# Calculate Vertical Tail Moment Arm
+	L_VT = calcL_VT(c_MAC, constants.sweep_VT, constants.fuse_length, constants.CGpos, constants.c_root_VT)
+	print("VT Arm Length: " + str(L_VT) + " m")
+
+	# Calculate Vertical Tail Reference Area
+	S_VT = calcS_VT(L_VT, constants.c_VT, constants.b, constants.Sref)
+	print("VT Sref: " + str(S_VT) + " m^2")
+
+	# Calculate Tip Chord Length
+	c_tip_VT = calcTipChord(constants.c_VT, constants.taper_VT)
+	print("VT Tip Chord: " + str(c_tip_VT) + " m")
+
+	# Calculate Vertical Tail Span
+	b_VT = calcb_VT(S_VT, constants.c_root_VT, c_tip_VT)
+	print("VT Span: " + str(b_VT) + " m")
+
+	# Calculate Horizontal Tail Aspect Ratio
+	AR_VT = calcAR_VT(b_VT, S_VT)
+	print("BT Aspect Ratio:" + str(AR_VT))
+
+	# Calculate yMAC
+	y_MAC = calcyMAC(constants.c_root_VT, constants.taper_VT, b_VT)
+	print("y MAC: " + str(y_MAC) + " m")
