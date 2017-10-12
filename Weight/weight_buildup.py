@@ -6,6 +6,7 @@ import numpy as np
 import constants
 import Weight.weight_estimation
 import Sizing.horizontal_surf_sizing
+import Sizing.Svt_calc
 
 def prelim_weight(Sref_wing, T0): #Sref in ft^2, T0 in lbs
 
@@ -19,8 +20,8 @@ def prelim_weight(Sref_wing, T0): #Sref in ft^2, T0 in lbs
 	#weight calcuations (constants = lb/ft^2)
 	w_wing = 2.5*Sref_wing
 	w_HT = 2.0*S_HT*10.7639
-	# w_VT = 2.0*S_VT*10.7639
-	w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
+	w_VT = 2.0*Sizing.Svt_calc.calcS_VT(constants.L_VT, constants.c_VT, constants.b, Sref_wing)*10.7639
+	# w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
 	w_c = 2.0*constants.Sref_c*10.7639
 	w_fuse = 1.4*constants.Swet_fuse
 

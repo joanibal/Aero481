@@ -68,6 +68,7 @@ taper_c = 0.25
 c_root_VT = 14.5*0.3048						# m
 taper_VT = 0.75								# vertical tail taper ratiop
 sweep_VT = 0.628319							# radians (36 degrees)
+L_VT = L_HT - 4.5
 
 # Wing Properties
 Sref = 127.59 								# m^2 (wing area)
