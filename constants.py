@@ -64,7 +64,6 @@ Sref_c = 20	 								# m^2
 c_root_c = 3.5 								# m
 taper_c = 0.25
 
-<<<<<<< HEAD
 # Vertical Stabilizer Properties
 c_root_VT = 14.5*0.3048						# m
 taper_VT = 0.75								# vertical tail taper ratiop
@@ -85,11 +84,11 @@ Swet_fuse = 2389.0744993*0.092903 			# m^2
 CGpos = 63.97*0.3048						# m (This is used in SVT calculations)
 CG = 0.4*fuse_length 						# m
 static_margin = 0.15
-=======
+
 # Wing Properties
 Sref = 127.59 #m^2 (wing area)
 b = 33.89 #m (span)
-c_root = 9.41 #m
+c_root = 5.98 #m
 w_lambda = 0.26 #(taper ratio
 #Fuselage Properties
 fuse_length = 105.2 #ft
@@ -98,7 +97,6 @@ Swet_fuse = 2389.0744993 #ft^2
 #A/C Properties
 CG = 0.6*fuse_length #ft
 static_margin = 0.15
->>>>>>> e765a24a21dfc9b278eea3a68365db55073268b8
 
 # Properties exclusing wings
 Swet_rest = 368 #m^2

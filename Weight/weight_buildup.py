@@ -27,7 +27,7 @@ def prelim_weight(Sref_wing, T0): #Sref in ft^2, T0 in lbs
 	# engine weight calculations (lbs)
 	w_eng_dry = 0.521*(T0)**0.9
 	w_eng_oil = 0.082*(T0)**0.65
-	w_eng_rev = 0.034*(T0)
+	w_eng_rev = 0.034*(T0)	
 	w_eng_control = 0.26*(T0)**0.5
 	w_eng_start = 9.33*(w_eng_dry/1000.0)**1.078
 	w_eng = w_eng_dry + w_eng_oil + w_eng_rev + w_eng_control + w_eng_start
@@ -62,4 +62,4 @@ def prelim_weight(Sref_wing, T0): #Sref in ft^2, T0 in lbs
 	return w_0
 
 if __name__ == '__main__':
-	MTOW = prelim_weight(constants.Sref*10.7639, constants.engine_thrust)
+	MTOW = prelim_weight(constants.Sref*10.7639, 2.0*constants.engine_thrust)
