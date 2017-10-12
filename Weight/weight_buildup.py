@@ -7,6 +7,7 @@ import constants
 import Weight.weight_estimation
 import Sizing.horizontal_surf_sizing
 import Sizing.Svt_calc
+import Weight.cruiseFuel
 
 def prelim_weight(Sref_wing, T0): #Sref in ft^2, T0 in lbs
 
@@ -40,7 +41,7 @@ def prelim_weight(Sref_wing, T0): #Sref in ft^2, T0 in lbs
 
 	while True:
 	# for i in range(1000):
-		fuel_fraction  = 0.41 #needs fuel fraction calculation
+		fuel_fraction  = Weight.cruiseFuel.fuel_fraction(constants.SFC, Sref_wing)	#fuel fraction calculation
 		w_f = fuel_fraction*w_0
 		w_landing_gear = w_0*0.057 #lb
 		w_nose_gear = w_landing_gear*0.15 #lb
