@@ -80,7 +80,7 @@ fuse_length = 105.2*0.3048 					# m
 Swet_fuse = 2389.0744993*0.092903 			# m^2
 
 # A/C Properties
-CGpos = 63.97*0.3048						# m (This is used in SVT calculations)			
+CGpos = 63.97*0.3048						# m (This is used in SVT calculations)
 CG = 0.4*fuse_length 						# m
 static_margin = 0.15
 =======
@@ -95,5 +95,9 @@ Swet_fuse = 2389.0744993 #ft^2
 
 #A/C Properties
 CG = 0.6*fuse_length #ft
-static_margin = 0.15 
+static_margin = 0.15
 >>>>>>> e765a24a21dfc9b278eea3a68365db55073268b8
+
+# Properties exclusing wings
+Swet_rest = 368 #m^2
+C_f = 0.0045 #Skin-friction coefficient based on equivalent skin-friction coefficients
