@@ -1,3 +1,7 @@
+import os,sys,inspect
+
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+
 import numpy as np
 from regression import regression
 import matplotlib.pyplot as plt
@@ -83,7 +87,7 @@ def calcWeights(R,L_D, c , M=0.85):
 		plt.plot(i, w_0, 'o')
 
 
-		
+	# print fuelFraction	
 	#print('w_0', w_0)
 	#print('w_f', w_0*fuelFraction)
 	return w_0, w_0*emptyWeightFraction, w_0*fuelFraction, w_crew + w_payload

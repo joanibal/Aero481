@@ -68,8 +68,7 @@ taper_c = 0.25
 Sref = 127.59 #m^2 (wing area)
 b = 33.89 #m (span)
 c_root = 9.41 #m
-w_lambda = 0.26 #(taper ratio)
-
+w_lambda = 0.26 #(taper ratio
 #Fuselage Properties
 fuse_length = 105.2 #ft
 Swet_fuse = 2389.0744993 #ft^2
