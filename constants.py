@@ -7,6 +7,7 @@ R = 5200           							# nMi
 machCruise = 0.85
 SFC = 0.657        							# 1/hr
 L_D = 15 									#used in weight_estimation
+speed_kts = 566.7279
 
 # G550 specs
 # machCruise = 0.8
