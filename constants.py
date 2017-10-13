@@ -19,17 +19,17 @@ numEngines = 2
 engine_thrust = 16096.3201 #lbs
 
 
-e = {'takeoff':{'gearUp':0.775,
-                'geardown':0775},
-     'cruise':0.835,
-     'landing':{'gearUp':0.725,
-                'geardown':0.725}}
+# e = {'takeoff':{'gearUp':0.775,
+#                 'geardown':0775},
+#      'cruise':0.835,
+#      'landing':{'gearUp':0.725,
+#                 'geardown':0.725}}
 
-Cd_0 = {'takeoff':{'gearUp':0.0400,
-                'geardown':0.0600},
-     'cruise':0.0250,
-     'landing':{'gearUp':0.0850,
-                'geardown':0.1050}}
+# Cd_0 = {'takeoff':{'gearUp':0.0400,
+#                 'geardown':0.0600},
+#      'cruise':0.0250,
+#      'landing':{'gearUp':0.0850,
+#                 'geardown':0.1050}}
 
 
 # runLength_Denver =
@@ -46,8 +46,14 @@ Density_Ceilng = 0.178     					# kg/M^3
 Density_SL  = 1.225       					# kg/M^3
 a_Ceiling = 573.57          				# knots
 
-CL_max = np.array([1.8, 1.8, 1.8, 1.2, 2.1, 2.0*0.85]) #based on Roskam
-CL_cruise = 0.6657
+
+CL_max_climb = {
+    'takeoff': 1.8
+    'cruise':  1.2
+    'landing': 2.1 
+    'balked landing': 2.0*0.85	
+}
+
 
 # Empennage Constants
 c_VT =  0.041
