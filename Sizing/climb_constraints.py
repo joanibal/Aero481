@@ -15,37 +15,46 @@ def TWcalc(CL_max, CD0, ks, K, G):
 
 	if constants.numEngines == 3: #adjusts the G if 3 engines instead of two
 		G = G+0.003
-		TW = ks**2/CL_max*CD0 + CL_max/ks**2*K + G
+	
+	
+	TW = ks**2/CL_max*CD0 + CL_max/ks**2*K + G
 
 	return TW
 
 def TWcorrection(max_cont_thrust, OEI, landing, TW):
+    	
+	
+	#used in calculating T/W (corrected), 0-1 indicate condition active or not
+	max_cont_thrust = np.array([0, 0, 0, 1, 1, 1])
+	OEI = np.array([1, 1, 1, 1, 0, 1])
+	landing = np.array([0, 0, 0, 0, 1, 1])
+
 
 	#correction conditions
 	#modifier for max continuous thrust
 	if max_cont_thrust == 1:	# 1 - true
-	thrust_coeff = 1/0.94
+		thrust_coeff = 1/0.94
 	else:						#else - max cont. thrust false
-	thrust_coeff = 1
+		thrust_coeff = 1
 
 	#modifier for OEI
 	if OEI == 1: 		# 1 - true
-	eng_coeff = constants.numEngines/(constants.numEngines -1)
+		eng_coeff = constants.numEngines/(constants.numEngines -1)
 	else:				# else - OEI false
-	eng_coeff = 1		
+		eng_coeff = 1		
 
 	#modifier for landing
 	if landing == 1: 	# 1 - true
-	CTOL_coeff = 0.65 	#estimate (high estimate, from notes)
+		CTOL_coeff = 0.65 	#estimate (high estimate, from notes)
 	else:				# else - landing false
-	CTOL_coeff = 1
+		CTOL_coeff = 1
 
 	#adjusted T/W
 	TW_corrected = 1/0.80 * thrust_coeff * eng_coeff * CTOL_coeff * TW
 
 	return TW_corrected
 
-	if __name__ == '__main__':
+if __name__ == '__main__':
 	#import C_d0 and K data
 	C_d0_clean, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_landing_flaps_gear_down, C_d0_landing_flaps_gear_up, k_clean, k_takeoff, k_landing = DragPolar()
 
