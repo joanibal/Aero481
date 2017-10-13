@@ -1,18 +1,4 @@
-# =========================== Standard Packages ============================== #
-
-import os,sys,inspect
-
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-import numpy as np
-import matplotlib.pyplot as plt
-# ========================== 481  Packages =================================== #
-import constants as consts
-
-from Aerodynamics.calcDragPolar import DragPolar
-from climb_constraints import calcTWClimb
-
 # ----------------------------- Climb ---------------------------------------- #
-
 def calcTWClimb(CL_max, CD0, k, numEngines):
 	'''
 	CL_max: dict
@@ -105,15 +91,14 @@ def calcTWClimb(CL_max, CD0, k, numEngines):
 
 	return T_W
 
-
-# CL_max = 2.5
 # ---------------------------- Cruise ---------------------------------------- #
 def calcTWCruise(W_S):
     return 1.0/(0.2826**0.6)*(228.8*0.01597)/W_S + (W_S)*1/(228.8*np.pi)
 
 # ---------------------------- Ceiling --------------------------------------- #
 def calcTWCeilng(desCeilng_to_densSL, Cd_0):
-    return 1/(desCeilng_to_densSL )**0.6 * ( 0.001 + 2*np.sqrt(Cd_0/(np.pi*9.8*0.85)))  
+    return 1/(desCeilng_to_densSL )**0.6 *\
+           ( 0.001 + 2*np.sqrt(Cd_0/(np.pi*9.8*0.85)))  
 
 # ---------------------------- Takeoff --------------------------------------- #
 def calcTWTakeoff(CL_max):
@@ -126,41 +111,56 @@ def calcWSLanding(runLength, Cl_max):
 
 
 if __name__ == '__main__':
-    
+	# ======================== Standard Packages ============================= #
+	import os,sys,inspect
 
-    N = 10000
-    W_S = np.linspace(0, 350, N)
+	sys.path.insert(1, os.path.join(sys.path[0], '..'))
+	import numpy as np
+	import matplotlib.pyplot as plt
+	# ========================== 481  Packages ===============+=============== #
+	import constants as consts
+
+	from Aerodynamics.calcDragPolar import DragPolar
+	from Weight.weight_estimation import calcWeights
+	# from climb_constraints import calcTWClimb
 
 
-    w_0 = calcWeights((5000+200),15, 0.657)[0]	 # [0] <-- only use the first 
-    C_d0, k = DragPolar(w_0, plot=True)[0:2] # [0:2] <-- only use the first two ouputs 
+	N = 10000
+	W_S = np.linspace(0, 350, N)
+	w_0 = calcWeights((5000+200),15, 0.657)[0]	 # [0] <-- only use the first 
+	Cd_0, k = DragPolar(w_0)[0:2] # [0:2] <-- only use the first two ouputs 
 
 
+	ceiling, = plt.plot(W_S, np.ones(N)*calcTWCeilng(consts.Density_Ceilng/consts.Density_SL, Cd_0['clean']), label='Ceiling')
+	cruise, = plt.plot(W_S, calcTWCruise(W_S), label='Cruise')
+	takeoff, = plt.plot(W_S, calcTWTakeoff(consts.CL_max['takeoff']), label='Takeoff')
+	landing, = plt.plot([calcWSLanding(consts.runLength,consts.Cl_max['landing'])]*2, [ 0, 1], label='Landing')
 
-    ceiling, = plt.plot(W_S, np.ones(N)*T_W_ceiling, label='Ceiling')
-    cruise, = plt.plot(W_S, T_W_cruise, label='Cruise')
-    takeoff, = plt.plot(W_S, T_W_Takeoff, label='Takeoff')
-    A = []
+	quit()
 
-    for i in range(0,6):
-        A.append(plt.plot(W_S, np.ones(np.shape(W_S))*TW_corrected_array[i],'--', label=('Climb '+str(i+1))))
+	T_W_climb = calcTWClimb(consts.CL_max, CD0,k,consts.numEngines)
 
-    landing, = plt.plot([W_S_landing, W_S_landing], [ 0, 1], label='Landing')
 
-    a = np.logical_and(T_W_cruise>=TW_corrected_array[5], T_W_Takeoff<=TW_corrected_array[5])
-    b = np.logical_and(np.logical_not(a), T_W_Takeoff<=TW_corrected_array[5])
-    c = np.logical_and(T_W_Takeoff>=TW_corrected_array[5], W_S<=W_S_landing)
+	for key in T_W_climb.keys():
+			
+		A.append(plt.plot(W_S, np.ones(np.shape(W_S))*TW_corrected_array[i],'--', label=('Climb '+str(i+1))))
 
-    plt.fill_between(W_S,T_W_cruise,1,where=a     ,interpolate=True, color='b')
-    plt.fill_between(W_S,np.ones(np.shape(W_S))*TW_corrected_array[5],1,where=b,interpolate=True, color='b')
-    plt.fill_between(W_S,T_W_Takeoff,1,where=c,interpolate=True, color='b')
+	lines = []
+	labels = [ x._label for x in lines]
+	a = np.logical_and(T_W_cruise>=TW_corrected_array[5], T_W_Takeoff<=TW_corrected_array[5])
+	b = np.logical_and(np.logical_not(a), T_W_Takeoff<=TW_corrected_array[5])
+	c = np.logical_and(T_W_Takeoff>=TW_corrected_array[5], W_S<=W_S_landing)
 
-    plt.axis((W_S[0], W_S[-1], 0, 1))	
+	plt.fill_between(W_S,T_W_cruise,1,where=a     ,interpolate=True, color='b')
+	plt.fill_between(W_S,np.ones(np.shape(W_S))*TW_corrected_array[5],1,where=b,interpolate=True, color='b')
+	plt.fill_between(W_S,T_W_Takeoff,1,where=c,interpolate=True, color='b')
 
-    plt.legend(handles=[ceiling, cruise, takeoff, landing, A[0][0], A[1][0], A[2][0], A[3][0], A[4][0], A[5][0]])
-    plt.legend(loc = 'upper right')
+	plt.axis((W_S[0], W_S[-1], 0, 1))	
 
-    plt.ylabel('T/W')
-    plt.xlabel('W/S')
-    # plt.title('')
-    plt.show()
+	plt.legend(handles=[ceiling, cruise, takeoff, landing, A[0][0], A[1][0], A[2][0], A[3][0], A[4][0], A[5][0]])
+	plt.legend(loc = 'upper right')
+
+	plt.ylabel('T/W')
+	plt.xlabel('W/S')
+	# plt.title('')
+	plt.show()

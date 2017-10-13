@@ -48,10 +48,10 @@ a_Ceiling = 573.57          				# knots
 
 
 CL_max_climb = {
-    'takeoff': 1.8
-    'cruise':  1.2
-    'landing': 2.1 
-    'balked landing': 2.0*0.85	
+    'takeoff': 1.8,
+    'cruise':  1.2,
+    'landing': 2.1 ,
+    'balked landing': 2.0*0.85,
 }
 
 

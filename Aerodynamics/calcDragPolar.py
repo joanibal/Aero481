@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from Weight.weight_estimation import calcWeights
 
-def DragPolar(W_0, plot=False):
+def DragPolar(w_0, plot=False):
 
 	#Define regression constants for wetted area
 	c = 0.0199

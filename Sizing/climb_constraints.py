@@ -1,6 +1,3 @@
-import numpy as np
-import constants
-
 # from Weight.weight_estimation import calcWeights
 # from Aerodynamics.calcDragPolar import DragPolar
 
@@ -8,7 +5,7 @@ import constants
 
 
 
-def TWcalc(CL_max, CD0, k, numEngines):
+def calcTWClimb(CL_max, CD0, k, numEngines):
 	'''
 	CL_max: dict
 		CL max for the relevant flight conditions
@@ -165,7 +162,7 @@ def TWcalc(CL_max, CD0, k, numEngines):
 
 # 	#calculating uncorrected climb
 # 	for i in range(0,6):
-# 	TW = TWcalc(CL_max_array[i], C_d0_array[i], ks_array[i], K_array[i], G_array[i])
+# 	TW = calcTWClimb(CL_max_array[i], C_d0_array[i], ks_array[i], K_array[i], G_array[i])
 # 	# print TW
 # 	TW_corrected = TWcorrection(thrust_mod_array[i], eng_mod_array[i], CTOL_mod_array[i], TW)
 # 	# print TW_corrected
