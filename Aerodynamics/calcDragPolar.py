@@ -27,22 +27,52 @@ def DragPolar():
 	delC_d0_tof = 0.015
 	delC_d0_lf = 0.06
 	delC_d0_lg = 0.020
+
+	k = {
+	'takeoff':1/(np.pi*AR*e_tof),
+	'clean':1/(np.pi*AR*e_clean),
+	'landing':1/(np.pi*AR*e_lf)
+	}
 	e_clean = 0.825
 	e_tof = 0.775
 	e_lf = 0.725
-	e_lg = 1
+	# e_lg = 1
 
 	#Calculate parasite drag coefficients
-	C_d0_clean = C_d0 + delC_d0_clean
-	C_d0_takeoff_flaps_gear_up = C_d0 + delC_d0_tof
-	C_d0_takeoff_flaps_gear_down = C_d0 + delC_d0_lg + delC_d0_tof
-	C_d0_landing_flaps_gear_up = C_d0 + delC_d0_lf
-	C_d0_landing_flaps_gear_down = C_d0 + delC_d0_lf + delC_d0_lg
+	# C_d0_clean = C_d0 + delC_d0_clean
+	# C_d0_takeoff_flaps_gear_up = C_d0 + delC_d0_tof
+	# C_d0_takeoff_flaps_gear_down = C_d0 + delC_d0_lg + delC_d0_tof
+	# C_d0_landing_flaps_gear_up = C_d0 + delC_d0_lf
+	# C_d0_landing_flaps_gear_down = C_d0 + delC_d0_lf + delC_d0_lg
 
-	#Calculate k per flight mode
-	k_clean = 1/(np.pi*AR*e_clean)
-	k_takeoff = 1/(np.pi*AR*e_tof)
-	k_landing = 1/(np.pi*AR*e_lf)
+	Cd_0 = 
+		{
+		'takeoff':{'gearUp':C_d0 + delC_d0_tof,
+				   'geardown': C_d0 + delC_d0_lg + delC_d0_tof},
+		'clean':C_d0 + delC_d0_clean,
+		'landing':{'gearUp': C_d0 + delC_d0_lf,
+				   'geardown':delC_d0_lf + delC_d0_lg}
+		}
+
+	# #Calculate k per flight mode
+	# k_clean = 1/(np.pi*AR*e_clean)
+	# k_takeoff = 1/(np.pi*AR*e_tof)
+	# k_landing = 1/(np.pi*AR*e_lf)
+
+		
+	k = {
+		'takeoff':1/(np.pi*AR*e_tof),
+		'clean':1/(np.pi*AR*e_clean),
+		'landing':1/(np.pi*AR*e_lf)
+		}
+
+Cd_0 = {
+	'clean':
+	'takeoff':{'gearUp':0.0400,
+                'geardown':0.0600},
+     'cruise':0.0250,
+     'landing':{'gearUp':0.0850,
+                'geardown':0.1050}}
 
 	#Print CD per flight mode
 	# print("Clean: CD = " + str(C_d0_clean) + " + " + str(k_clean) + " * CL^2")
@@ -76,6 +106,8 @@ def DragPolar():
 
 	'''CL_range = np.array(-1.5, 1.5, 100)
 	CD_clean = C_d0_clean + k_clean*CL_range**2'''
+
+
 
 	#return
 	return C_d0_clean, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_landing_flaps_gear_down, C_d0_landing_flaps_gear_up, k_clean, k_takeoff, k_landing

@@ -24,10 +24,12 @@ T_guess = 4400
 S = np.linspace(100, 350, 10)
 T = np.empty(len(S))
 T_ceiling = np.empty(len(S))
+T_ceiling = np.empty(len(S))
 
 for i in range(len(S)):
 	S_0 = S[i]
 	T[i] = T_guess
+	T_ceiling[i] = T_guess
 	T_ceiling[i] = T_guess
 	tolerance = 0.1
 	converged = True
