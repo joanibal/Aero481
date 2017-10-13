@@ -1,12 +1,22 @@
 import numpy as np
-from Aerodynamics.calcDragPolar import DragPolar
 import constants
-from Weight.weight_estimation import calcWeights
+
+# from Weight.weight_estimation import calcWeights
+# from Aerodynamics.calcDragPolar import DragPolar
+
+
+
+
 
 def TWcalc(CL_max, CD0, ks, K, G):
+	'''
+	CL_max: 
+	'''
+
 	if constants.numEngines == 3: #adjusts the G if 3 engines instead of two
 		G = G+0.003
-	TW = ks**2/CL_max*CD0 + CL_max/ks**2*K + G
+		TW = ks**2/CL_max*CD0 + CL_max/ks**2*K + G
+
 	return TW
 
 def TWcorrection(max_cont_thrust, OEI, landing, TW):
@@ -14,31 +24,31 @@ def TWcorrection(max_cont_thrust, OEI, landing, TW):
 	#correction conditions
 	#modifier for max continuous thrust
 	if max_cont_thrust == 1:	# 1 - true
-		thrust_coeff = 1/0.94
+	thrust_coeff = 1/0.94
 	else:						#else - max cont. thrust false
-		thrust_coeff = 1
+	thrust_coeff = 1
 
 	#modifier for OEI
 	if OEI == 1: 		# 1 - true
-		eng_coeff = constants.numEngines/(constants.numEngines -1)
+	eng_coeff = constants.numEngines/(constants.numEngines -1)
 	else:				# else - OEI false
-		eng_coeff = 1		
+	eng_coeff = 1		
 
 	#modifier for landing
 	if landing == 1: 	# 1 - true
-		CTOL_coeff = 0.65 	#estimate (high estimate, from notes)
+	CTOL_coeff = 0.65 	#estimate (high estimate, from notes)
 	else:				# else - landing false
-		CTOL_coeff = 1
-	
+	CTOL_coeff = 1
+
 	#adjusted T/W
 	TW_corrected = 1/0.80 * thrust_coeff * eng_coeff * CTOL_coeff * TW
 
 	return TW_corrected
 
-if __name__ == '__main__':
+	if __name__ == '__main__':
 	#import C_d0 and K data
 	C_d0_clean, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_landing_flaps_gear_down, C_d0_landing_flaps_gear_up, k_clean, k_takeoff, k_landing = DragPolar()
-	
+
 	#sorting data into arrays for each stage
 	#order of climbs: TO, transition seg, 2nd seg, enroute, balked landing, balked landing (OEI)
 	#used in calculating T/W (uncorrected)
@@ -59,15 +69,25 @@ if __name__ == '__main__':
 
 	#calculating uncorrected climb
 	for i in range(0,6):
-		TW = TWcalc(CL_max_array[i], C_d0_array[i], ks_array[i], K_array[i], G_array[i])
-		# print TW
-		TW_corrected = TWcorrection(thrust_mod_array[i], eng_mod_array[i], CTOL_mod_array[i], TW)
-		# print TW_corrected
-		# print TW, TW_corrected
+	TW = TWcalc(CL_max_array[i], C_d0_array[i], ks_array[i], K_array[i], G_array[i])
+	# print TW
+	TW_corrected = TWcorrection(thrust_mod_array[i], eng_mod_array[i], CTOL_mod_array[i], TW)
+	# print TW_corrected
+	# print TW, TW_corrected
 
-		TW_array = np.append(TW_array,TW)
-		TW_corrected_array = np.append(TW_corrected_array, TW_corrected)
+	TW_array = np.append(TW_array,TW)
+	TW_corrected_array = np.append(TW_corrected_array, TW_corrected)
 
 	# print TW_array
 	# print TW_corrected_array
 	# print C_d0_array
+
+
+
+
+
+
+
+
+
+

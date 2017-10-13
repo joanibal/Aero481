@@ -10,14 +10,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 from Aerodynamics.calcDragPolar import DragPolar
 #import C_d0 and K data
-C_d0_clean, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_landing_flaps_gear_down, C_d0_landing_flaps_gear_up, k_clean, k_takeoff, k_landing = DragPolar()
+
+w_0 = calcWeights((5000+200),15, 0.657, M=0.85)[0]	 # [0] <-- only use the first 
+C_d0, k = DragPolar(w_0, plot=True)[0:2] # [0:2] <-- only use the first two ouputs 
+
+
+
+# C_d0_clean, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_landing_flaps_gear_down, C_d0_landing_flaps_gear_up, k_clean, k_takeoff, k_landing = DragPolar()
 
 #sorting data into arrays for each stage
 #order of climbs: TO, transition seg, 2nd seg, enroute, balked landing, balked landing (OEI)
 #used in calculating T/W (uncorrected)
-C_d0_array = np.array([C_d0_takeoff_flaps_gear_up, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_clean, C_d0_landing_flaps_gear_down, (C_d0_landing_flaps_gear_down+C_d0_takeoff_flaps_gear_down)/2])
+# C_d0_array = np.array([C_d0_takeoff_flaps_gear_up, C_d0_takeoff_flaps_gear_down, C_d0_takeoff_flaps_gear_up, C_d0_clean, C_d0_landing_flaps_gear_down, (C_d0_landing_flaps_gear_down+C_d0_takeoff_flaps_gear_down)/2])
 ks_array = np.array([1.2, 1.15, 1.2, 1.25, 1.3, 1.5])
-K_array = np.array([k_takeoff, k_takeoff, k_takeoff, k_clean, k_landing, k_landing])
+# K_array = np.array([k_takeoff, k_takeoff, k_takeoff, k_clean, k_landing, k_landing])
 G_array = np.array([0.012, 0.00, 0.024, 0.012, 0.032, 0.021])
 
 #used in calculating T/W (corrected), 0-1 indicate condition active or not
