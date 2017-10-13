@@ -84,7 +84,7 @@ def calcWeights(R,L_D, c , M=0.85):
 		
 
 		# converged = 1
-		plt.plot(i, w_0, 'o')
+		# plt.plot(i, w_0, 'o')
 
 
 	# print fuelFraction	

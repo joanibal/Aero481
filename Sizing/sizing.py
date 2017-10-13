@@ -70,35 +70,36 @@ W_S_landing = (runLength/1.6 - 00)*CL_max[4]*1/80.0
 print W_S_landing
 
 
+if __name__ == '__main__':
+    
 
 
 
 
+    ceiling, = plt.plot(W_S, np.ones(N)*T_W_ceiling, label='Ceiling')
+    cruise, = plt.plot(W_S, T_W_cruise, label='Cruise')
+    takeoff, = plt.plot(W_S, T_W_Takeoff, label='Takeoff')
+    A = []
 
-ceiling, = plt.plot(W_S, np.ones(N)*T_W_ceiling, label='Ceiling')
-cruise, = plt.plot(W_S, T_W_cruise, label='Cruise')
-takeoff, = plt.plot(W_S, T_W_Takeoff, label='Takeoff')
-A = []
+    for i in range(0,6):
+        A.append(plt.plot(W_S, np.ones(np.shape(W_S))*TW_corrected_array[i],'--', label=('Climb '+str(i+1))))
 
-for i in range(0,6):
-	A.append(plt.plot(W_S, np.ones(np.shape(W_S))*TW_corrected_array[i],'--', label=('Climb '+str(i+1))))
+    landing, = plt.plot([W_S_landing, W_S_landing], [ 0, 1], label='Landing')
 
-landing, = plt.plot([W_S_landing, W_S_landing], [ 0, 1], label='Landing')
+    a = np.logical_and(T_W_cruise>=TW_corrected_array[5], T_W_Takeoff<=TW_corrected_array[5])
+    b = np.logical_and(np.logical_not(a), T_W_Takeoff<=TW_corrected_array[5])
+    c = np.logical_and(T_W_Takeoff>=TW_corrected_array[5], W_S<=W_S_landing)
 
-a = np.logical_and(T_W_cruise>=TW_corrected_array[5], T_W_Takeoff<=TW_corrected_array[5])
-b = np.logical_and(np.logical_not(a), T_W_Takeoff<=TW_corrected_array[5])
-c = np.logical_and(T_W_Takeoff>=TW_corrected_array[5], W_S<=W_S_landing)
+    plt.fill_between(W_S,T_W_cruise,1,where=a     ,interpolate=True, color='b')
+    plt.fill_between(W_S,np.ones(np.shape(W_S))*TW_corrected_array[5],1,where=b,interpolate=True, color='b')
+    plt.fill_between(W_S,T_W_Takeoff,1,where=c,interpolate=True, color='b')
 
-plt.fill_between(W_S,T_W_cruise,1,where=a     ,interpolate=True, color='b')
-plt.fill_between(W_S,np.ones(np.shape(W_S))*TW_corrected_array[5],1,where=b,interpolate=True, color='b')
-plt.fill_between(W_S,T_W_Takeoff,1,where=c,interpolate=True, color='b')
+    plt.axis((W_S[0], W_S[-1], 0, 1))	
 
-plt.axis((W_S[0], W_S[-1], 0, 1))	
+    plt.legend(handles=[ceiling, cruise, takeoff, landing, A[0][0], A[1][0], A[2][0], A[3][0], A[4][0], A[5][0]])
+    plt.legend(loc = 'upper right')
 
-plt.legend(handles=[ceiling, cruise, takeoff, landing, A[0][0], A[1][0], A[2][0], A[3][0], A[4][0], A[5][0]])
-plt.legend(loc = 'upper right')
-
-plt.ylabel('T/W')
-plt.xlabel('W/S')
-# plt.title('')
-plt.show()
+    plt.ylabel('T/W')
+    plt.xlabel('W/S')
+    # plt.title('')
+    plt.show()

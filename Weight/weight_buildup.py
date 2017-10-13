@@ -9,7 +9,10 @@ import Sizing.horizontal_surf_sizing
 import Sizing.Svt_calc
 import Weight.cruiseFuel
 
-def prelim_weight(Sref_wing, T0): #Sref in ft^2, T0 in lbs
+def prelim_weight(Sref_wing, T0):
+	'''
+	#Sref in ft^2, T0 in lbs
+	'''
 
 	#Horizontal tail calculation
 	c_MAC_wing, _ = Sizing.horizontal_surf_sizing.MAC(constants.c_root, constants.w_lambda, constants.b) #m
@@ -54,7 +57,7 @@ def prelim_weight(Sref_wing, T0): #Sref in ft^2, T0 in lbs
 			converged = 1
 			break
 		w_0 += 0.1*(w_0new - w_0)
-		print w_0
+		# print w_0
 
 
 	# print w_nose_gear, w_main_gear, w_engine, w_all_else
@@ -65,3 +68,5 @@ def prelim_weight(Sref_wing, T0): #Sref in ft^2, T0 in lbs
 
 if __name__ == '__main__':
 	MTOW = prelim_weight(constants.Sref*10.7639, 2.0*constants.engine_thrust)
+	print MTOW
+	
