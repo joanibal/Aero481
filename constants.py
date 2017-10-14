@@ -1,5 +1,6 @@
 
 import numpy as np
+import math
 
 runLength = 4948   							# ft
 alt = 40000       							# ft
@@ -9,7 +10,7 @@ SFC = 0.657        							# 1/hr
 L_D = 15 									#used in weight_estimation
 speed_kts = 566.7279
 
-W = MTOW*9.81                               # Lift equals weight
+#W = MTOW*9.81                               # Lift equals weight
 M = 0.85                                    # Cruise Mach numnber
 T_C = -56.5                                 # Temperature (Celcius)
 T = T_C + 273.15                            # Temperature (Kelvin)
@@ -19,6 +20,8 @@ rho = p/(R*T)                               # Air Density (kg/m^3)
 a = math.sqrt(1.4*R*T)                      # Speed of Sound (m/s)
 u = M*a                                     # Airspeed (m/s)
 q = 0.5*rho*u**2                            # Dynamic Pressure
+
+print(str(q))
 
 # G550 specs
 # machCruise = 0.8
