@@ -28,6 +28,7 @@ def fuel_fraction(c, CD, R, speed, CL):
 	cruiseFrac = np.exp(R*c*CD/(speed*CL))
 	ff5 = 1/cruiseFrac
 	ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7
+	# print cruiseFrac, ff5, ff, 1-ff
 	return 1-ff
 
 
@@ -47,12 +48,12 @@ def prelim_weight(Sref_wing, T0):
 	S_HT = (S_total*consts.L_HT - consts.Sref_c*consts.L_c)/consts.L_HT #m^2
 
 	#weight calcuations (consts = lb/ft^2)
-	w_wing = 2.5*Sref_wing
-	w_HT = 2.0*S_HT*10.7639
-	w_VT = 2.0*Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing)*10.7639
+	w_wing = 10.0*Sref_wing
+	w_HT = 5.5*S_HT*10.7639
+	w_VT = 5.5*Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)*10.7639
 	# w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
-	w_c = 2.0*consts.Sref_c*10.7639
-	w_fuse = 1.4*consts.Swet_fuse
+	w_c = 5.5*consts.Sref_c*10.7639
+	w_fuse = 5.0*consts.Swet_fuse
 
 	# engine weight calculations (lbs)
 	w_eng_dry = 0.521*(T0)**0.9
@@ -69,13 +70,13 @@ def prelim_weight(Sref_wing, T0):
 
 	while True:
 	# for i in range(1000):
-		CD = calcCD(consts.C_f, consts.Swet_rest + 2.0*Sref_wing, Sref_wing,  consts.CL['cruise'], consts.e['cruise'], consts.AR )
+		CD = calcCD(consts.C_f, consts.Swet_rest*10.7639 + 2.0*Sref_wing, Sref_wing,  consts.CL['cruise'], consts.e['cruise'], consts.AR )
 		ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 		w_f = ff*w_0
-		w_landing_gear = w_0*0.057 #lb
+		w_landing_gear = w_0*0.043 #lb
 		w_nose_gear = w_landing_gear*0.15 #lb
 		w_main_gear = 0.85*w_landing_gear/2.0 #lb
-		w_xtra = 0.1*w_0 #lb
+		w_xtra = 0.17*w_0 #lb
 		w_0new = consts.numEngines*w_eng + w_wing + w_HT + w_c + w_VT + w_fuse + w_xtra + w_landing_gear + w_f + w_crew_payload
 
 		#convergence check
@@ -92,9 +93,9 @@ if __name__ == '__main__':
 	import numpy as np 
 	import constants as consts
 
-	CD = calcCD(consts.C_f, consts.Swet_rest + 2.0*consts.Sref, consts.Sref,  consts.CL['cruise'], consts.e['cruise'], consts.AR )
-	ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
-	print ff
+	# CD = calcCD(consts.C_f, consts.Swet_rest*10.7639 + 2.0*consts.Sref, consts.Sref,  consts.CL['cruise'], consts.e['cruise'], consts.AR )
+	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
+	# print ff
 
 	MTOW = prelim_weight(consts.Sref*10.7639, 2.0*consts.engine_thrust)
 	print MTOW
