@@ -23,7 +23,7 @@ rho_imperial = rho*0.00194032               # Conversion from kg/m^3 to slugs/ft
 u_imperial = u*3.28084                      # Conversion from m/s to ft/s
 q = 0.5*rho_imperial*u_imperial**2          # Dynamic Pressure (imperial)
 
-#print(str(q))
+print(str(q))
 
 # G550 specs
 # machCruise = 0.8
@@ -58,7 +58,7 @@ T_Ceiling = 216.650  						# K
 P_Ceiling = 11053.0  						# Pa
 # P_SL
 
-Density_Ceilng = 0.178     					# kg/M^3
+Density_Ceiling = 0.178     					# kg/M^3
 Density_SL  = 1.225       					# kg/M^3
 a_Ceiling = 573.57          				# knots
 
