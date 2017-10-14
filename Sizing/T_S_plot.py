@@ -132,7 +132,7 @@ for i in range(len(S)):
 				W_S = W/S[i]
 
 
-				T_W = calcTWTakeoff(W_S, consts.CL['max']['cruise'])
+				T_W = calcTWTakeoff(W_S, consts.CL['max']['landing'], consts.runLength)
 
 				T_new = T_W*W
 				print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
@@ -185,9 +185,10 @@ for i in range(len(S)):
 ceiling, = plt.plot(S, thrustCon['Ceiling'], label='Ceiling')
 cruise, = plt.plot(S, thrustCon['Cruise'], label='Cruise')
 takeoff, = plt.plot(S, thrustCon['Takeoff'], label='Takeoff')
-landing, = plt.plot(S, thrustCon['Landing'], label='Landing')
+# landing, = plt.plot(S, thrustCon['Landing'], label='Landing')
 
-lines = [ceiling, cruise, takeoff, landing]
+# lines = [ceiling, cruise, takeoff, landing]
+lines = [ceiling, cruise, takeoff]
 
 for climbCond in contraints['Climb']:
 	lines.append(plt.plot(S, thrustCon['Climb'][climbCond],'--', label=climbCond)[0])

@@ -103,8 +103,8 @@ def calcTWCeiling(densCeiling_to_densSL, Cd_0):
            ( 0.001 + 2*np.sqrt(Cd_0/(np.pi*9.8*0.85)))  
 
 # ---------------------------- Takeoff --------------------------------------- #
-def calcTWTakeoff(W_S, CL_max):
-    return W_S/(1*CL_max* 4948/37.5)
+def calcTWTakeoff(W_S, CL_max, runwayLength):
+    return W_S/(1*CL_max* runwayLength/37.5)
 
 # ---------------------------- Landing --------------------------------------- #
 def calcWSLanding(runLength, CL_max):
