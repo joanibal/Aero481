@@ -19,9 +19,11 @@ R = 287                                     # Gas Constant (J/kgK)
 rho = p/(R*T)                               # Air Density (kg/m^3)
 a = math.sqrt(1.4*R*T)                      # Speed of Sound (m/s)
 u = M*a                                     # Airspeed (m/s)
-q = 0.5*rho*u**2                            # Dynamic Pressure
+rho_imperial = rho*0.00194032               # Conversion from kg/m^3 to slugs/ft^3
+u_imperial = u*3.28084                      # Conversion from m/s to ft/s
+q = 0.5*rho_imperial*u_imperial**2          # Dynamic Pressure (imperial)
 
-print(str(q))
+#print(str(q))
 
 # G550 specs
 # machCruise = 0.8
