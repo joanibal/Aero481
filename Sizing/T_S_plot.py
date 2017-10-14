@@ -20,9 +20,9 @@ from TWconstraints import calcTWCeilng, calcTWClimb, calcTWCruise, calcTWTakeoff
 # for i in range(6)
 
 
-itermax = 100
+itermax = 1000
 T_guess = 4400
-S = np.linspace(400, 350, 10)
+S = np.linspace(315, 350, 10)
 T = np.empty(len(S))
 w_0 = calcWeights((5000+200),15, 0.657)[0]	 # [0] <-- only use the first 
 
@@ -92,15 +92,15 @@ for i in range(len(S)):
 
 				CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs 
 
-				T_W_climb = calcTWCeilng(desCeilng_to_densSL, CDO['cruise'])
+				T_W = calcTWCeilng(desCeilng_to_densSL, CDO['cruise'])
 
-				T_climb_new = T_W_climb*W
-				print(flightCond + " " +   str(i) + " " + str(np.abs(T_climb_new - thrustCon[flightCond][i])))
-				if np.abs(T_climb_new - thrustCon[flightCond][i]) <= tolerance:
+				T_new = T_W*W
+				print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
+				if np.abs(T_new - thrustCon[flightCond][i]) <= tolerance:
 					notconverged = False
 					break
 
-				thrustCon[flightCond][i] = T_climb_new
+				thrustCon[flightCond][i] = T_new
 
 			if notconverged:
 				raise ValueError(flightCond + ' didnt converge')
@@ -112,15 +112,15 @@ for i in range(len(S)):
 				W_S = W/S[i]
 
 
-				T_W_climb = calcTWCruise(W_S)
+				T_W = calcTWCruise(W_S)
 
-				T_climb_new = T_W_climb*W
-				print(flightCond + " " +   str(i) + " " + str(np.abs(T_climb_new - thrustCon[flightCond][i])))
-				if np.abs(T_climb_new - thrustCon[flightCond][i]) <= tolerance:
+				T_new = T_W*W
+				print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
+				if np.abs(T_new - thrustCon[flightCond][i]) <= tolerance:
 					notconverged = False
 					break
 
-				thrustCon[flightCond][i] = T_climb_new
+				thrustCon[flightCond][i] = T_new
 
 			if notconverged:
 				raise ValueError(flightCond + ' didnt converge')
@@ -132,15 +132,15 @@ for i in range(len(S)):
 				W_S = W/S[i]
 
 
-				T_W_climb = calcTWTakeoff(W_S, consts.CL['max']['cruise'])
+				T_W = calcTWTakeoff(W_S, consts.CL['max']['cruise'])
 
-				T_climb_new = T_W_climb*W
-				print(flightCond + " " +   str(i) + " " + str(np.abs(T_climb_new - thrustCon[flightCond][i])))
-				if np.abs(T_climb_new - thrustCon[flightCond][i]) <= tolerance:
+				T_new = T_W*W
+				print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
+				if np.abs(T_new - thrustCon[flightCond][i]) <= tolerance:
 					notconverged = False
 					break
 
-				thrustCon[flightCond][i] = T_climb_new
+				thrustCon[flightCond][i] = T_new
 
 			if notconverged:
 				raise ValueError(flightCond + ' didnt converge')
