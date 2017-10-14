@@ -22,7 +22,7 @@ from TWconstraints import calcTWCeilng, calcTWClimb, calcTWCruise, calcTWTakeoff
 
 
 T_guess = 4400
-S = np.linspace(250, 350, 10)
+S = np.linspace(1000, 1400, 10)
 T = np.empty(len(S))
 w_0 = calcWeights((5000+200),15, 0.657)[0]	 # [0] <-- only use the first 
 CD0, k = DragPolar(w_0)[0:2] # [0:2] <-- only use the first two ouputs 
@@ -192,7 +192,7 @@ for i in range(len(S)):
 
 
 	notconverged = True
-	T_upper = 15000
+	T_upper = 36000
 	T_lower = 0 
 	W_S_landing = calcWSLanding(consts.runLength, consts.CL['max']['takeoff'])
 

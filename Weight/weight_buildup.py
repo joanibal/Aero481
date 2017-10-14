@@ -81,7 +81,7 @@ def prelim_weight(Sref_wing, T0):
 		#convergence check
 		if abs(w_0new - w_0) <= tolerance:
 			converged = 1
-			break
+			break	
 		w_0 += 0.1*(w_0new - w_0)
 		# print w_0
 
