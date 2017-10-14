@@ -105,7 +105,7 @@ y_MAC = b/6.0*(1.0+2.0*w_lambda)/(1.0+w_lambda)
 
 
 #Fuselage Properties
-fuse_length = 105.2 #ft
+#fuse_length = 105.2 #ft
 Swet_fuse = 2389.0744993 #ft^2
 
 #A/C Properties
@@ -115,6 +115,3 @@ static_margin = 0.15
 # Properties exclusing wings
 Swet_rest = 368 #m^2
 C_f = 0.0045 #Skin-friction coefficient based on equivalent skin-friction coefficients
-
-
-
