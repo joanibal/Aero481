@@ -87,7 +87,7 @@ AR = 9
 
 # Fuselage Properties
 fuse_length = 105.2*0.3048 					# m
-Swet_fuse = 2389.0744993*0.092903 			# m^2
+#Swet_fuse = 2389.0744993*0.092903 			# m^2
 
 # A/C Properties
 CGpos = 63.97*0.3048						# m (This is used in SVT calculations)
@@ -109,8 +109,8 @@ y_MAC = b/6.0*(1.0+2.0*w_lambda)/(1.0+w_lambda)
 Swet_fuse = 2389.0744993 #ft^2
 
 #A/C Properties
-CG = 0.6*fuse_length #ft
-static_margin = 0.15
+#CG = 0.6*fuse_length #ft
+#static_margin = 0.15
 
 # Properties exclusing wings
 Swet_rest = 368 #m^2
