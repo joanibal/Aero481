@@ -22,7 +22,7 @@ from TWconstraints import calcTWCeilng, calcTWClimb, calcTWCruise, calcTWTakeoff
 
 itermax = 1000
 T_guess = 4400
-S = np.linspace(315, 350, 10)
+S = np.linspace(750, 1400, 10)
 T = np.empty(len(S))
 w_0 = calcWeights((5000+200),15, 0.657)[0]	 # [0] <-- only use the first 
 
