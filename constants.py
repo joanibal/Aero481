@@ -19,11 +19,11 @@ numEngines = 2
 engine_thrust = 16096.3201 #lbs
 
 
-# e = {'takeoff':{'gearUp':0.775,
-#                 'geardown':0775},
-#      'cruise':0.835,
-#      'landing':{'gearUp':0.725,
-#                 'geardown':0.725}}
+e = {'takeoff':{'gearUp':0.775,
+                'geardown':0775},
+     'cruise':0.835,
+     'landing':{'gearUp':0.725,
+                'geardown':0.725}}
 
 # Cd_0 = {'takeoff':{'gearUp':0.0400,
 #                 'geardown':0.0600},
@@ -47,13 +47,15 @@ Density_SL  = 1.225       					# kg/M^3
 a_Ceiling = 573.57          				# knots
 
 
-CL_max_climb = {
+CL= {
+    'max': {
     'takeoff': 1.8,
     'cruise':  1.2,
     'landing': 2.1 ,
     'balked landing': 2.0*0.85,
-}
-
+    },
+    'cruise': 0.5
+    }
 
 # Empennage Constants
 c_VT =  0.041
@@ -97,6 +99,11 @@ Sref = 127.59 #m^2 (wing area)
 b = 33.89 #m (span)
 c_root = 5.98 #m
 w_lambda = 0.26 #(taper ratio
+c_MAC = 2.0/3.0*c_root*(1.0+w_lambda+w_lambda**2)/(1.0+w_lambda)
+y_MAC = b/6.0*(1.0+2.0*w_lambda)/(1.0+w_lambda)
+
+
+
 #Fuselage Properties
 fuse_length = 105.2 #ft
 Swet_fuse = 2389.0744993 #ft^2
@@ -108,3 +115,6 @@ static_margin = 0.15
 # Properties exclusing wings
 Swet_rest = 368 #m^2
 C_f = 0.0045 #Skin-friction coefficient based on equivalent skin-friction coefficients
+
+
+

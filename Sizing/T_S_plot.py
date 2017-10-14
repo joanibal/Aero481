@@ -2,18 +2,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os,sys,inspect
-import sizing
 import pdb
-from Weight.weight_buildup import prelim_weight
-
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 
 # ==================== 481  Packages =============================== #
 
 from climb_constraints import *
-from constants import *
+import constants as consts
 from Aerodynamics.calcDragPolar import DragPolar
+from Weight.weight_buildup import prelim_weight
+from Weight.weight_estimation import calcWeights
+
+from TWconstraints import calcTWCeilng, calcTWClimb, calcTWCruise, calcTWTakeoff, calcWSLanding
 
 # =================== Calculations ================================= #
 # for i in range(6)
@@ -21,65 +22,228 @@ from Aerodynamics.calcDragPolar import DragPolar
 
 
 T_guess = 4400
-S = np.linspace(100, 350, 10)
+S = np.linspace(250, 350, 10)
 T = np.empty(len(S))
+w_0 = calcWeights((5000+200),15, 0.657)[0]	 # [0] <-- only use the first 
+CD0, k = DragPolar(w_0)[0:2] # [0:2] <-- only use the first two ouputs 
+
+
 T_ceiling = np.empty(len(S))
 T_ceiling = np.empty(len(S))
+T_climb1 = np.empty([len(S)])
+T_climb2 = np.empty([len(S)])
+T_climb3 = np.empty([len(S)])
+T_climb4 = np.empty([len(S)])
+T_climb5 = np.empty([len(S)])
+T_climb6 = np.empty([len(S)])
+T_takeoff = np.empty([len(S)])
+T_landing = np.empty([len(S)])
 
 for i in range(len(S)):
+	# for i in 9:
+	# i = 9
 	S_0 = S[i]
 	T[i] = T_guess
 	T_ceiling[i] = T_guess
-	T_ceiling[i] = T_guess
-	tolerance = 0.1
-	converged = True
+	T_climb1[i] = T_guess
 
-	while converged :
+	T_climb2[i] = T_guess
+	T_climb3[i] = T_guess
+	T_climb4[i] = T_guess
+	T_climb5[i] = T_guess
+	T_climb6[i] = T_guess
+	T_takeoff[i] = T_guess
+	# T_landing[i] = T_guess
+
+
+
+
+	tolerance = 0.1
+
+
+	notconverged = True
+
+	while notconverged :
 		W = prelim_weight(S_0 , T[i])
 		W_S = W/S_0
-		T_W_cruise = 1.0/(0.2826**0.6)*(228.8*0.01597)/W_S + (W_S)*1/(228.8*np.pi)
+		T_W_cruise = calcTWCruise(W_S)
 
 		T_new = T_W_cruise*W
 		print(str(i) + " " + str(np.abs(T_new - T[i])))
 		if np.abs(T_new - T[i]) <= tolerance:
-			converged = False
+			notconverged = False
 	
 		T[i] = T_new
 
-	converged = True
-	while converged :
+	notconverged = True
+	while notconverged :
 
 		W = prelim_weight(S_0 , T_ceiling[i])
 		W_S = W/S_0
-		T_W_ceiling = 1/(Density_Ceilng/Density_SL )**0.6 * ( 0.001 + 2*np.sqrt(Cd_0['cruise']/(np.pi*9.8*0.85)))  
+		T_W_ceiling = calcTWCeilng(consts.Density_Ceilng/consts.Density_SL, CD0['clean'])
 
-		T_ceilng_new = T_W_ceiling*W
-		print(str(i) + " " + str(np.abs(T_ceilng_new - T_ceiling[i])))
-		if np.abs(T_ceilng_new - T_ceiling[i]) <= tolerance:
-			converged = False
+		T_ceiling_new = T_W_ceiling*W
+		print(str(i) + " " + str(np.abs(T_ceiling_new - T_ceiling[i])))
+		if np.abs(T_ceiling_new - T_ceiling[i]) <= tolerance:
+			notconverged = False
 
-		T_ceiling[i] = T_ceilng_new
+		T_ceiling[i] = T_ceiling_new
 
-	while converged :
-    
-		W = prelim_weight(S_0 , T_ceiling[i])
+
+	notconverged = True
+	while notconverged :
+
+		W = prelim_weight(S_0 , T_climb1[i])
 		W_S = W/S_0
-		T_W_ceiling = 1/(Density_Ceilng/Density_SL )**0.6 * ( 0.001 + 2*np.sqrt(Cd_0['cruise']/(np.pi*9.8*0.85)))  
+		T_W_climb1 = calcTWClimb(consts.CL['max'], CD0, k, consts.numEngines)['takeoff climb']
 
-		T_ceilng_new = T_W_ceiling*W
-		print(str(i) + " " + str(np.abs(T_ceilng_new - T_ceiling[i])))
-		if np.abs(T_ceilng_new - T_ceiling[i]) <= tolerance:
-			converged = False
+		T_climb1_new = T_W_climb1*W
+		print(str(i) + " " + str(np.abs(T_climb1_new - T_climb1[i])))
+		if np.abs(T_climb1_new - T_climb1[i]) <= tolerance:
+			notconverged = False
 
-		T_ceiling[i] = T_ceilng_new	
+		T_climb1[i] = T_climb1_new
+
+
+	notconverged = True
+	while notconverged :
+
+		W = prelim_weight(S_0 , T_climb2[i])
+		W_S = W/S_0
+		T_W_climb2 = calcTWClimb(consts.CL['max'], CD0, k, consts.numEngines)['trans seg climb']
+
+		T_climb2_new = T_W_climb2*W
+		print(str(i) + " " + str(np.abs(T_climb2_new - T_climb2[i])))
+		if np.abs(T_climb2_new - T_climb2[i]) <= tolerance:
+			notconverged = False
+
+		T_climb2[i] = T_climb2_new
+
+	notconverged = True
+	while notconverged :
+
+		W = prelim_weight(S_0 , T_climb3[i])
+		W_S = W/S_0
+		T_W_climb3 = calcTWClimb(consts.CL['max'], CD0, k, consts.numEngines)['2nd seg climb']
+
+		T_climb3_new = T_W_climb3*W
+		print(str(i) + " " + str(np.abs(T_climb3_new - T_climb3[i])))
+		if np.abs(T_climb3_new - T_climb3[i]) <= tolerance:
+			notconverged = False
+
+		T_climb3[i] = T_climb3_new
+
+	notconverged = True
+	while notconverged :
+
+		W = prelim_weight(S_0 , T_climb4[i])
+		W_S = W/S_0
+		T_W_climb4 = calcTWClimb(consts.CL['max'], CD0, k, consts.numEngines)['enroute climb']
+
+		T_climb4_new = T_W_climb4*W
+		print(str(i) + " " + str(np.abs(T_climb4_new - T_climb4[i])))
+		if np.abs(T_climb4_new - T_climb4[i]) <= tolerance:
+			notconverged = False
+
+		T_climb4[i] = T_climb4_new
+
+	notconverged = True
+	while notconverged :
+
+		W = prelim_weight(S_0 , T_climb5[i])
+		W_S = W/S_0
+		T_W_climb5 = calcTWClimb(consts.CL['max'], CD0, k, consts.numEngines)['balked climb AEO']
+
+		T_climb5_new = T_W_climb5*W
+		print(str(i) + " " + str(np.abs(T_climb5_new - T_climb5[i])))
+		if np.abs(T_climb5_new - T_climb5[i]) <= tolerance:
+			notconverged = False
+
+		T_climb5[i] = T_climb5_new
+
+	notconverged = True
+	while notconverged :
+
+		W = prelim_weight(S_0 , T_climb6[i])
+		W_S = W/S_0
+		T_W_climb6 = calcTWClimb(consts.CL['max'], CD0, k, consts.numEngines)['balked climb OEI']
+
+		T_climb6_new = T_W_climb6*W
+		print(str(i) + " " + str(np.abs(T_climb6_new - T_climb6[i])))
+		if np.abs(T_climb6_new - T_climb6[i]) <= tolerance:
+			notconverged = False
+
+		T_climb6[i] = T_climb6_new
+
+
+	notconverged = True
+	while notconverged :
+
+		W = prelim_weight(S_0 , T_takeoff[i])
+		W_S = W/S_0
+		T_W_takeoff = calcTWTakeoff(W_S, consts.CL['max']['takeoff'])
+
+		T_takeoff_new = T_W_takeoff*W
+		print(str(i) + " " + str(np.abs(T_takeoff_new - T_takeoff[i])))
+		if np.abs(T_takeoff_new - T_takeoff[i]) <= tolerance:
+			notconverged = False
+
+		T_takeoff[i] = T_takeoff_new
+
+
+	notconverged = True
+	T_upper = 15000
+	T_lower = 0 
+	W_S_landing = calcWSLanding(consts.runLength, consts.CL['max']['takeoff'])
+
+	while notconverged :
+
+		T_landing[i] = (T_upper + T_lower)/2
+
+		W = prelim_weight(S_0 , T_landing[i])
+		W_S = W/S_0
+
+		diff_W_S = W_S - W_S_landing;
+		# binary search
+		
+		print(str(i) + " " + str((diff_W_S)))
+
+		if np.abs(diff_W_S) <= tolerance:
+    			break
+		elif diff_W_S > 0:
+    			T_upper = T_landing[i]
+		else:
+    			T_lower = T_landing[i]
+    					 
+    			
+		# print(str(i) + " " + str(np.abs(T_landing_new - T_landing[i])))
+		# if np.abs(calcWSLanding(runLength, CL_max): - T_landing[i]) 
+		# 	notconverged = False
+
+		# T_landing[i] = T_landing_new
+
+
+
+
+
+
 # pdb.set_trace()
 
 
 print(T)
-print(T_Ceiling)
+print(T_landing)
 
 plt.plot(S, T)
 plt.plot(S, T_ceiling)
+plt.plot(S, T_climb1)
+plt.plot(S, T_climb2)
+plt.plot(S, T_climb3)
+plt.plot(S, T_climb4)
+plt.plot(S, T_climb5)
+plt.plot(S, T_climb6)
+plt.plot(S, T_takeoff)
+plt.plot(S, T_landing)
+
 plt.show()
 
 

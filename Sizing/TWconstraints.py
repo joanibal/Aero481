@@ -1,3 +1,5 @@
+import numpy as np
+
 # ----------------------------- Climb ---------------------------------------- #
 def calcTWClimb(CL_max, CD0, k, numEngines):
 	'''
@@ -84,7 +86,7 @@ def calcTWClimb(CL_max, CD0, k, numEngines):
 			
 
 		T_W[flight_condition] = ks[flight_condition]**2/CL_max_climb[flight_condition]*CD0_climb[flight_condition]\
-		   + CL_max[flight_condition]/ks[flight_condition]**2*K + G
+		   + CL_max_climb[flight_condition]/ks[flight_condition]**2*k_climb[flight_condition] + G[flight_condition]
 
 		T_W[flight_condition] = 1/0.80 * thrust_coeff * eng_coeff * CTOL_coeff * T_W[flight_condition]
 
@@ -101,11 +103,11 @@ def calcTWCeilng(desCeilng_to_densSL, Cd_0):
            ( 0.001 + 2*np.sqrt(Cd_0/(np.pi*9.8*0.85)))  
 
 # ---------------------------- Takeoff --------------------------------------- #
-def calcTWTakeoff(CL_max):
+def calcTWTakeoff(W_S, CL_max):
     return W_S/(1*CL_max* 4948/37.5)
 
 # ---------------------------- Landing --------------------------------------- #
-def calcWSLanding(runLength, Cl_max):
+def calcWSLanding(runLength, CL_max):
     return (runLength/1.6 - 00)*CL_max*1/80.0 
 
 
@@ -125,39 +127,51 @@ if __name__ == '__main__':
 	# from climb_constraints import calcTWClimb
 
 
-	N = 10000
+	N = 1000
 	W_S = np.linspace(0, 350, N)
 	w_0 = calcWeights((5000+200),15, 0.657)[0]	 # [0] <-- only use the first 
 	Cd_0, k = DragPolar(w_0)[0:2] # [0:2] <-- only use the first two ouputs 
 
-
-	ceiling, = plt.plot(W_S, np.ones(N)*calcTWCeilng(consts.Density_Ceilng/consts.Density_SL, Cd_0['clean']), label='Ceiling')
-	cruise, = plt.plot(W_S, calcTWCruise(W_S), label='Cruise')
-	takeoff, = plt.plot(W_S, calcTWTakeoff(consts.CL_max['takeoff']), label='Takeoff')
-	landing, = plt.plot([calcWSLanding(consts.runLength,consts.Cl_max['landing'])]*2, [ 0, 1], label='Landing')
-
-	quit()
-
-	T_W_climb = calcTWClimb(consts.CL_max, CD0,k,consts.numEngines)
+	T_W_takeoff = calcTWTakeoff(W_S, consts.CL['max']['takeoff'])
+	T_W_cruise =  calcTWCruise(W_S)
+	T_W_ceiling = np.ones(N)*calcTWCeilng(consts.Density_Ceilng/consts.Density_SL, Cd_0['clean'])
+	T_W_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
 
 
+
+
+
+	# ---------------------------------- Plotting ------------------------------- #
+
+
+	ceiling, = plt.plot(W_S,T_W_ceiling , label='Ceiling')
+	cruise, = plt.plot(W_S, T_W_cruise, label='Cruise')
+	takeoff, = plt.plot(W_S, T_W_takeoff, label='Takeoff')
+	landing, = plt.plot([T_W_landing]*2, [ 0, 1], label='Landing')
+
+
+	T_W_climb = calcTWClimb(consts.CL['max'], Cd_0,k,consts.numEngines)
+
+	lines = [ceiling, cruise, takeoff, landing]
 	for key in T_W_climb.keys():
 			
-		A.append(plt.plot(W_S, np.ones(np.shape(W_S))*TW_corrected_array[i],'--', label=('Climb '+str(i+1))))
+		lines.append(plt.plot(W_S, np.ones(np.shape(W_S))*T_W_climb[key],'--', label=key )[0])
 
-	lines = []
+
 	labels = [ x._label for x in lines]
-	a = np.logical_and(T_W_cruise>=TW_corrected_array[5], T_W_Takeoff<=TW_corrected_array[5])
-	b = np.logical_and(np.logical_not(a), T_W_Takeoff<=TW_corrected_array[5])
-	c = np.logical_and(T_W_Takeoff>=TW_corrected_array[5], W_S<=W_S_landing)
+
+
+	a = np.logical_and(T_W_cruise>=T_W_climb['balked climb OEI'], T_W_takeoff<=T_W_climb['balked climb OEI'])
+	b = np.logical_and(np.logical_not(a), T_W_takeoff<=T_W_climb['balked climb OEI'])
+	c = np.logical_and(T_W_takeoff>=T_W_climb['balked climb OEI'], W_S<=T_W_landing)
 
 	plt.fill_between(W_S,T_W_cruise,1,where=a     ,interpolate=True, color='b')
-	plt.fill_between(W_S,np.ones(np.shape(W_S))*TW_corrected_array[5],1,where=b,interpolate=True, color='b')
-	plt.fill_between(W_S,T_W_Takeoff,1,where=c,interpolate=True, color='b')
+	plt.fill_between(W_S,np.ones(np.shape(W_S))*T_W_climb['balked climb OEI'],1,where=b,interpolate=True, color='b')
+	plt.fill_between(W_S,T_W_takeoff,1,where=c,interpolate=True, color='b')
 
-	plt.axis((W_S[0], W_S[-1], 0, 1))	
+	plt.axis((W_S[0], W_S[-1], 0, 0.5))	
 
-	plt.legend(handles=[ceiling, cruise, takeoff, landing, A[0][0], A[1][0], A[2][0], A[3][0], A[4][0], A[5][0]])
+	plt.legend(lines, labels)
 	plt.legend(loc = 'upper right')
 
 	plt.ylabel('T/W')

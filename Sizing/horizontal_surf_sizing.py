@@ -8,7 +8,6 @@ import constants
 def MAC(c_root,w_lambda, b):
 	c_MAC = 2.0/3.0*c_root*(1.0+w_lambda+w_lambda**2)/(1.0+w_lambda)
 	y_MAC = b/6.0*(1.0+2.0*w_lambda)/(1.0+w_lambda)
-
 	return c_MAC, y_MAC
 
 def hor_Sref(c_HT, c_MAC, Sref, L):

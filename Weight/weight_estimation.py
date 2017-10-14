@@ -1,28 +1,27 @@
-import os,sys,inspect
-
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-
 import numpy as np
-from regression import regression
-import matplotlib.pyplot as plt
-import constants
-# import math
+
+def regression():
+	WTO = np.array([92500, 69600, 73000, 174200, 99600, 30800, 51000, 23500, 91000, 120152, 33500, 41000, 13870, 1268000, 987000])
+	WE = np.array([50861, 43500, 36100, 102100, 54000, 18656, 30500, 14640, 48300, 70841, 24200, 20735, 8540, 610000, 485300])
+
+	# (a_lin, b_lin)= np.polyfit(np.log10(WTO[:-3]),np.log10(WE[:-3]),1)
+	(a_lin, b_lin)= np.polyfit(np.log10(WTO),np.log10(WE),1)
+
+	c = a_lin-1
+	a = 10**b_lin
+
+	# print (a, c)
+
+	# plt.plot(np.log10(WTO), np.log10(WE), 'o', label='Original data', markersize=10)
+	# plt.plot(np.log10(WTO), a_lin*np.log10(WTO) + b_lin, 'r', label='Fitted line')
+	# plt.legend()
+	# plt.show()
+	return a, c
 
 def calcWeights(R,L_D, c , M=0.85):
 	#human weights (project specs)
 	w_crew = 3.0*(180+60)		#lbs (crew weight + luggage)
 	w_payload = 8.0*(180+60)	#lbs (passenger weight + luggage)
-	# w_payload = 35000	#lbs (passenger weight + luggage)
-	# w_payload += 1000
-	# print(w_payload + w_crew)
-	#flight conditions (project specs)
-	# M = 0.85 			#cruise mach
-	# R = 5000 + 200		#nautical miles (range + divert extra)
-	# L_D = 8				#based on Roskam (L/D)
-	# c = 0.75				#1/hrs, based on Roskam (TSFC)
-
-	# L_D = 18				#based on Roskam (L/D)
-	# c = 0.35				#1/hrs, based on Roskam (TSFC)
 
 	#fuel fractions (ROSKAM)
 	ff1 = 0.99		#warmup
@@ -33,7 +32,6 @@ def calcWeights(R,L_D, c , M=0.85):
 	ff6 = 0.99 		#descent
 	ff7 = 0.992		#landing
 
-	# ff_loiter = 0.97
 
 	#unit conversion
 	a_sound = 574		#knots (speed of sound @40 K-ft)
@@ -43,82 +41,59 @@ def calcWeights(R,L_D, c , M=0.85):
 	#calculating cruise fuel fraction
 	ff5 = np.exp(-R/L_D*c/V_kts)	#solving breguet equation
 
-	# print(ff5)
-
 	#total fuel fraction
 	ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7
-	# ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7
-	# print(ff)
+
 
 	#Raymer Equation constants
-	# A = 1.02
-	# C = -0.06 
 	(A, C) = regression()
-	# A = 1.10
-	# C = -0.06
 
 
 	#solving for MTOW
-	w_0 = 1e6	#lbs (weight guess)
-
+	w_0 = 1e5	#lbs (weight guess)
+	w = 1e5
 	tolerance = 0.1				#Adjust for acccuracy
 	converged = 0				#False
 
-	# i=0
-	# while (converged == 0):
+
+
 	fuelFraction = 1- ff
 
 	for i in range(100):
-		# i += 1
-		emptyWeightFraction = A*w_0**C
-		w_0new = (w_crew+w_payload)/(1-fuelFraction-emptyWeightFraction)
-	
-				
-
-		if (abs(w_0new - w_0) <= tolerance):
-			converged = 1
-			break
-		w_0 += 0.1*(w_0new - w_0)
+		# w_0new = (w_crew+w_payload)/(1-fuelFraction-A*w_0**C)
+		# w_0 += 0.1*(w_0new - w_0)
 		# w_0 = w_0new
-		# print(w_0)
-		
 
-		# converged = 1
-		# plt.plot(i, w_0, 'o')
+		f = w - fuelFraction*w - A*w**(C+1) - (w_crew+w_payload)
+		df_dw =  1 - fuelFraction - A*(C+1)*w**C 
+
+		delw = -f/df_dw
+						
+
+		if (abs(delw) <= tolerance):
+			converged = 1
+			return w_0, w_0*A*w_0**C, w_0*fuelFraction, w_crew + w_payload
 
 
-	# print fuelFraction	
-	#print('w_0', w_0)
-	#print('w_f', w_0*fuelFraction)
-	return w_0, w_0*emptyWeightFraction, w_0*fuelFraction, w_crew + w_payload
-	# print(w_0*emptyWeightFraction)
-	# print(w_crew + w_payload)
+		w += delw
+		# print(i, w , delw, f,df_dw  )
+
+		# plt.plot(w, f, 'o')
+
+	raise Error('HiThere')
 
 
 if __name__ == '__main__':
-    		#flight conditions (project specs)
-	# M = 0.85 			#cruise mach
-	# R = 5000 + 200		#nautical miles (range + divert extra)
-	# L_D = 8				#based on Roskam (L/D)
-	# c = 0.75				#1/hrs, based on Roskam (TSFC)
+	# import matplotlib.pyplot as plt
+	import os,sys,inspect
 
-	# w_0, w_empty, w_fuel, w_payload = calcWeights((5000+300),15, 0.657, M=0.85)
-	# print('w_0      ', '      w_empty      ', ' w_fuel      ', 'w_payload  ' )
+	sys.path.insert(1, os.path.join(sys.path[0], '..'))
+	import constants
 
-	# print(w_0, w_empty, w_fuel, w_payload )
+	import numpy as np
+
+
 	w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R,constants.L_D, constants.SFC, M=constants.machCruise)
 
-	# w_0, w_empty, w_fuel, w_payload = calcWeights((6750),18, 0.657, M=0.80) #for G650 comparison
-	# print(w_0, w_empty, w_fuel, w_payload )
-	# w_0, w_empty, w_fuel, w_payload = calcWeights((5000+100),15, 0.657, M=0.85)
-
 	print(w_0, w_empty, w_fuel, w_payload )
-	# w_0, w_empty, w_fuel, w_payload = calcWeights((5000+200),16, 0.8, M=0.85)
-	# w_0, w_empty, w_fuel, w_payload = calcWeights(1620,16, 0.5, M=0.82) # 737
-	
-
-	# print(w_0, w_empty, w_fuel, w_payload )
 	# plt.show()
-
-	# calcWeights((5000+200),8, 0.75, M=0.85)
-	
