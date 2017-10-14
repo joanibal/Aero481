@@ -49,7 +49,7 @@ def calcTWClimb(CL_max, CD0, k, numEngines):
 		'enroute climb': k['clean'],
 		'balked climb AEO': k['landing'],
 		# 'balked climb OEI': (k['landing'] + k['takeoff'])/2,
-		'balked climb OEI':k['landing'],		
+		'balked climb OEI':k['landing'],
 	}
 
 	CL_max_climb = {
@@ -58,16 +58,16 @@ def calcTWClimb(CL_max, CD0, k, numEngines):
 		'2nd seg climb': CL_max['takeoff'],
 		'enroute climb': CL_max['cruise'],
 		'balked climb AEO': CL_max['landing'],
-		'balked climb OEI':CL_max['balked landing'],	
+		'balked climb OEI':CL_max['balked landing'],
 	}
 
 	if numEngines == 3: #adjusts the G if 3 engines instead of two
 		for keys in G.keys():
 			G = G+0.003
 
-	
+
 	for flight_condition in G.keys():
-    		
+
 
 		if flight_condition is 'enroute climb' or 'balked climb AEO' or 'balked climb OEI':
 				thrust_coeff = 1/0.94
@@ -78,12 +78,12 @@ def calcTWClimb(CL_max, CD0, k, numEngines):
     			eng_coeff = 1
 		else:				# else - OEI false
 			eng_coeff = numEngines/(numEngines -1.0)
-		
+
 		if flight_condition is 'balked climb AEO' or 'balked climb OEI':
 			CTOL_coeff = 0.65 	#estimate (high estimate, from notes)
 		else:				# else - landing false
 			CTOL_coeff = 1
-			
+
 
 		T_W[flight_condition] = ks[flight_condition]**2/CL_max_climb[flight_condition]*CD0_climb[flight_condition]\
 		   + CL_max_climb[flight_condition]/ks[flight_condition]**2*k_climb[flight_condition] + G[flight_condition]
@@ -100,7 +100,7 @@ def calcTWCruise(W_S):
 # ---------------------------- Ceiling --------------------------------------- #
 def calcTWCeilng(desCeilng_to_densSL, Cd_0):
     return 1/(desCeilng_to_densSL )**0.6 *\
-           ( 0.001 + 2*np.sqrt(Cd_0/(np.pi*9.8*0.85)))  
+           ( 0.001 + 2*np.sqrt(Cd_0/(np.pi*9.8*0.85)))
 
 # ---------------------------- Takeoff --------------------------------------- #
 def calcTWTakeoff(W_S, CL_max):
@@ -108,7 +108,7 @@ def calcTWTakeoff(W_S, CL_max):
 
 # ---------------------------- Landing --------------------------------------- #
 def calcWSLanding(runLength, CL_max):
-    return (runLength/1.6 - 00)*CL_max*1/80.0 
+    return (runLength/1.67 - 1000)*CL_max*1/80.0 
 
 
 
@@ -129,8 +129,8 @@ if __name__ == '__main__':
 
 	N = 1000
 	W_S = np.linspace(0, 350, N)
-	w_0 = calcWeights((5000+200),15, 0.657)[0]	 # [0] <-- only use the first 
-	Cd_0, k = DragPolar(w_0)[0:2] # [0:2] <-- only use the first two ouputs 
+	w_0 = calcWeights((5000+200),15, 0.657)[0]	 # [0] <-- only use the first
+	Cd_0, k = DragPolar(w_0)[0:2] # [0:2] <-- only use the first two ouputs
 
 	T_W_takeoff = calcTWTakeoff(W_S, consts.CL['max']['takeoff'])
 	T_W_cruise =  calcTWCruise(W_S)
@@ -154,7 +154,7 @@ if __name__ == '__main__':
 
 	lines = [ceiling, cruise, takeoff, landing]
 	for key in T_W_climb.keys():
-			
+
 		lines.append(plt.plot(W_S, np.ones(np.shape(W_S))*T_W_climb[key],'--', label=key )[0])
 
 
@@ -169,7 +169,7 @@ if __name__ == '__main__':
 	plt.fill_between(W_S,np.ones(np.shape(W_S))*T_W_climb['balked climb OEI'],1,where=b,interpolate=True, color='b')
 	plt.fill_between(W_S,T_W_takeoff,1,where=c,interpolate=True, color='b')
 
-	plt.axis((W_S[0], W_S[-1], 0, 0.5))	
+	plt.axis((W_S[0], W_S[-1], 0, 0.5))
 
 	plt.legend(lines, labels)
 	plt.legend(loc = 'upper right')
