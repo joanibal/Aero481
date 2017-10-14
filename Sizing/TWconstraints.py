@@ -108,7 +108,7 @@ def calcTWTakeoff(W_S, CL_max):
 
 # ---------------------------- Landing --------------------------------------- #
 def calcWSLanding(runLength, CL_max):
-    return (runLength/1.67 - 750)*CL_max*1/80.0 
+    return (runLength/1.67 - 1000)*CL_max*1/80.0 
 
 
 
