@@ -95,7 +95,7 @@ def calcTWClimb(CL_max, CD0, k, numEngines):
 
 # ---------------------------- Cruise ---------------------------------------- #
 def calcTWCruise(W_S, Cd_0, AR, e, q):
-    return (q* CD_0)/W_S + (W_S)*1/(q*np.pi*AR*e)
+    return (q* Cd_0)/W_S + (W_S)*1/(q*np.pi*AR*e)
 
 # ---------------------------- Ceiling --------------------------------------- #
 def calcTWCeiling(densCeiling_to_densSL, Cd_0):

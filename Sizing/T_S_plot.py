@@ -112,7 +112,7 @@ for i in range(len(S)):
 
 				CD0 = DragPolar(W)[0] # [0:2] <-- only use the first two ouputs 
 
-				T_W = calcTWCruise(W_S, Cd_0['clean'], consts.AR, consts.e, consts.q)
+				T_W = calcTWCruise(W_S, CD0['clean'], consts.AR, consts.e['cruise'], consts.q)
 
 				T_new = T_W*W
 				print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
