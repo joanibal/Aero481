@@ -94,12 +94,12 @@ def calcTWClimb(CL_max, CD0, k, numEngines):
 	return T_W
 
 # ---------------------------- Cruise ---------------------------------------- #
-def calcTWCruise(W_S):
-    return 1.0/(0.2826**0.6)*(228.8*0.01597)/W_S + (W_S)*1/(228.8*np.pi)
+def calcTWCruise(W_S, Cd_0, AR, e, q):
+    return (q* CD_0)/W_S + (W_S)*1/(q*np.pi*AR*e)
 
 # ---------------------------- Ceiling --------------------------------------- #
-def calcTWCeilng(desCeilng_to_densSL, Cd_0):
-    return 1/(desCeilng_to_densSL )**0.6 *\
+def calcTWCeiling(densCeiling_to_densSL, Cd_0):
+    return 1/(densCeiling_to_densSL )**0.6 *\
            ( 0.001 + 2*np.sqrt(Cd_0/(np.pi*9.8*0.85)))  
 
 # ---------------------------- Takeoff --------------------------------------- #
@@ -108,7 +108,7 @@ def calcTWTakeoff(W_S, CL_max):
 
 # ---------------------------- Landing --------------------------------------- #
 def calcWSLanding(runLength, CL_max):
-    return (runLength/1.6 - 00)*CL_max*1/80.0 
+    return (runLength/1.67 - 1000)*CL_max*1/80.0 
 
 
 
@@ -134,7 +134,7 @@ if __name__ == '__main__':
 
 	T_W_takeoff = calcTWTakeoff(W_S, consts.CL['max']['takeoff'])
 	T_W_cruise =  calcTWCruise(W_S)
-	T_W_ceiling = np.ones(N)*calcTWCeilng(consts.Density_Ceilng/consts.Density_SL, Cd_0['clean'])
+	T_W_ceiling = np.ones(N)*calcTWCeiling(consts.Density_Ceiling/consts.Density_SL, Cd_0['clean'])
 	T_W_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
 
 
