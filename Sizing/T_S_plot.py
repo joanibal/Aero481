@@ -22,7 +22,7 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 
 itermax = 1000
 T_guess = 4400
-S = np.linspace(750, 1400, 10)
+S = np.linspace(500, 2000, 10)
 # S = np.linspace(400, 751, 10)
 W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
 
@@ -132,7 +132,7 @@ for i in range(len(S)):
 				W_S = W/S[i]
 
 
-				T_W = calcTWTakeoff(W_S, consts.CL['max']['landing'], consts.runLength)
+				T_W = calcTWTakeoff(W_S, consts.CL['max']['takeoff'], consts.runLength)
 
 				T_new = T_W*W
 				print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
@@ -148,30 +148,30 @@ for i in range(len(S)):
 
 
 
-		elif flightCond == 'Landing':
-			for j in range(itermax):
-				thrustCon[flightCond][i] = (T_upper + T_lower)/2
+		# elif flightCond == 'Landing':
+		# 	for j in range(itermax):
+		# 		thrustCon[flightCond][i] = (T_upper + T_lower)/2
 
-				W = prelim_weight(S[i] , thrustCon[flightCond][i])
-				W_S = W/S[i]
-				diff_W_S = W_S - W_S_landing;
-				# binary search
+		# 		W = prelim_weight(S[i] , thrustCon[flightCond][i])
+		# 		W_S = W/S[i]
+		# 		diff_W_S = W_S - W_S_landing;
+		# 		# binary search
 				
-				print(str(i) + " " + str((diff_W_S)))
+		# 		print(str(i) + " " + str((diff_W_S)))
 
-				if np.abs(diff_W_S) <= tolerance:
-						notconverged = False
-						break
-
-
-				elif diff_W_S > 0:
-						T_upper = thrustCon[flightCond][i]
-				else:
-						T_lower = thrustCon[flightCond][i]
+		# 		if np.abs(diff_W_S) <= tolerance:
+		# 				notconverged = False
+		# 				break
 
 
-			if notconverged:
-				raise ValueError(flightCond + ' didnt converge')
+		# 		elif diff_W_S > 0:
+		# 				T_upper = thrustCon[flightCond][i]
+		# 		else:
+		# 				T_lower = thrustCon[flightCond][i]
+
+
+		# 	if notconverged:
+		# 		raise ValueError(flightCond + ' didnt converge')
 
 
 
