@@ -44,7 +44,6 @@ def calcWeights(R,L_D, c , M=0.85):
 	#total fuel fraction
 	ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7
 
-
 	#Raymer Equation constants
 	(A, C) = regression()
 
@@ -72,10 +71,10 @@ def calcWeights(R,L_D, c , M=0.85):
 
 		if (abs(delw) <= tolerance):
 			converged = 1
-			return w_0, w_0*A*w_0**C, w_0*fuelFraction, w_crew + w_payload
+			return w, w*A*w**C, w*fuelFraction, w_crew + w_payload
 
 
-		w += delw
+		w += 0.5*delw
 		# print(i, w , delw, f,df_dw  )
 
 		# plt.plot(w, f, 'o')
