@@ -23,7 +23,7 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 itermax = 1000
 T_guess = 4400
 
-S = np.linspace(1400, 2000, 10)
+S = np.linspace(1300, 2000, 10)
 
 # S = np.linspace(400, 751, 10)
 W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
@@ -58,8 +58,8 @@ tolerance = 0.1
 for i in range(len(S)):
 	for flightCond in contraints.keys():
 		notconverged = True
-		T_upper = 1e6
-		T_lower = 0 
+		T_upper = 1e3
+		T_lower = 0
 
 
 
@@ -69,7 +69,7 @@ for i in range(len(S)):
 					W = prelim_weight(S[i] , thrustCon['Climb'][climbCond][i])
 					# W_S = W/S[i]
 
-					CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs 
+					CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
 
 					T_W_climb = calcTWClimb(consts.CL['max'], CD0, k, consts.numEngines)[climbCond]
 
@@ -89,7 +89,7 @@ for i in range(len(S)):
 				W = prelim_weight(S[i] , thrustCon[flightCond][i])
 				W_S = W/S[i]
 
-				CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs 
+				CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
 
 				T_W = calcTWCeiling(consts.Density_Ceiling/consts.Density_SL , CD0['clean'])
 
@@ -110,7 +110,7 @@ for i in range(len(S)):
 				W = prelim_weight(S[i] , thrustCon[flightCond][i])
 				W_S = W/S[i]
 
-				CD0 = DragPolar(W)[0] # [0:2] <-- only use the first two ouputs 
+				CD0 = DragPolar(W)[0] # [0:2] <-- only use the first two ouputs
 
 				T_W = calcTWCruise(W_S, CD0['clean'], consts.AR, consts.e['cruise'], consts.q)
 
@@ -147,30 +147,30 @@ for i in range(len(S)):
 
 
 
-		elif flightCond == 'Landing':
-			for j in range(itermax):
-				thrustCon[flightCond][i] = (T_upper + T_lower)/2
+		#elif flightCond == 'Landing':
+			#for j in range(itermax):
+				#thrustCon[flightCond][i] = (T_upper + T_lower)/2
 
-				W = prelim_weight(S[i] , thrustCon[flightCond][i])
-				W_S = W/S[i]
-				diff_W_S = W_S - W_S_landing;
+				#W = prelim_weight(S[i] , thrustCon[flightCond][i])
+				#W_S = W/S[i]
+				#diff_W_S = W_S - W_S_landing;
 				# binary search
-				
-				print(str(i) + " " + str((diff_W_S)))
 
-				if np.abs(diff_W_S) <= tolerance:
-						notconverged = False
-						break
+				#print(str(i) + " " + str((diff_W_S)))
 
-
-				elif diff_W_S > 0:
-						T_upper = thrustCon[flightCond][i]
-				else:
-						T_lower = thrustCon[flightCond][i]
+				#if np.abs(diff_W_S) <= tolerance:
+					#	notconverged = False
+						#break
 
 
-			if notconverged:
-				raise ValueError(flightCond + ' didnt converge')
+			#	elif diff_W_S > 0:
+				#		T_upper = thrustCon[flightCond][i]
+				#else:
+					#	T_lower = thrustCon[flightCond][i]
+
+
+			#if notconverged:
+				#raise ValueError(flightCond + ' didnt converge')
 
 
 
@@ -214,11 +214,3 @@ plt.show()
 # plt.fill_between(W_S,T_W_cruise,1,where=a     ,interpolate=True, color='b')
 # plt.fill_between(W_S,np.ones(np.shape(W_S))*T_W_climb['balked climb OEI'],1,where=b,interpolate=True, color='b')
 # plt.fill_between(W_S,T_W_takeoff,1,where=c,interpolate=True, color='b')
-
-
-
-
-
-
-
-
