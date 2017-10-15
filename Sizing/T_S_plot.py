@@ -22,7 +22,11 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 
 itermax = 1000
 T_guess = 4400
+<<<<<<< HEAD
+S = np.linspace(800, 1400, 10)
+=======
 S = np.linspace(500, 2000, 10)
+>>>>>>> 5caf3f3c246efc5988f3f7530c06020ea52e81a8
 # S = np.linspace(400, 751, 10)
 W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
 
@@ -51,14 +55,12 @@ thrustCon = {
 
 
 tolerance = 0.1
-T_upper = 1e10
-T_lower = 0 
 
 
 for i in range(len(S)):
 	for flightCond in contraints.keys():
 		notconverged = True
-		T_upper = 1e10
+		T_upper = 1e6
 		T_lower = 0 
 
 
@@ -132,7 +134,11 @@ for i in range(len(S)):
 				W_S = W/S[i]
 
 
+<<<<<<< HEAD
+				T_W = calcTWTakeoff(W_S, consts.CL['max']['cruise'], consts.runLength)
+=======
 				T_W = calcTWTakeoff(W_S, consts.CL['max']['takeoff'], consts.runLength)
+>>>>>>> 5caf3f3c246efc5988f3f7530c06020ea52e81a8
 
 				T_new = T_W*W
 				print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
@@ -185,10 +191,10 @@ for i in range(len(S)):
 ceiling, = plt.plot(S, thrustCon['Ceiling'], label='Ceiling')
 cruise, = plt.plot(S, thrustCon['Cruise'], label='Cruise')
 takeoff, = plt.plot(S, thrustCon['Takeoff'], label='Takeoff')
-# landing, = plt.plot(S, thrustCon['Landing'], label='Landing')
+landing, = plt.plot(S, thrustCon['Landing'], label='Landing')
 
-# lines = [ceiling, cruise, takeoff, landing]
-lines = [ceiling, cruise, takeoff]
+lines = [ceiling, cruise, takeoff, landing]
+# lines = [ceiling, cruise, takeoff]
 
 for climbCond in contraints['Climb']:
 	lines.append(plt.plot(S, thrustCon['Climb'][climbCond],'--', label=climbCond)[0])
@@ -202,6 +208,8 @@ plt.legend(loc = 'upper right')
 plt.ylabel('T')
 plt.xlabel('S')
 # plt.title('')
+# plt.axis((S[0], S[-1], 0, T_guess*3))
+
 plt.show()
 
 
