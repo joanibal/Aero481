@@ -86,7 +86,7 @@ def prelim_weight(Sref_wing, T0):
 		w_0 += 0.1*(w_0new - w_0)
 		# print w_0
 
-	return w_0
+	return w_0, w_f
 
 if __name__ == '__main__':
 
