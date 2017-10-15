@@ -133,12 +133,7 @@ for i in range(len(S)):
 				W = prelim_weight(S[i] , thrustCon[flightCond][i])
 				W_S = W/S[i]
 
-
-<<<<<<< HEAD
-				T_W = calcTWTakeoff(W_S, consts.CL['max']['cruise'], consts.runLength)
-=======
 				T_W = calcTWTakeoff(W_S, consts.CL['max']['takeoff'], consts.runLength)
->>>>>>> 5caf3f3c246efc5988f3f7530c06020ea52e81a8
 
 				T_new = T_W*W
 				print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
