@@ -8,15 +8,19 @@ import matplotlib.pyplot as plt
 def fuel_weight(sref_range, t_range):
 	Z = np.empty([len(t_range), len(sref_range)])
 	X, Y = np.meshgrid(sref_range, t_range)
-	# for i in range(0, len(sref_range)-1):
-	# 	for j in range(0, len(t_range)-1):
-	# 		_, Z[j][i] = prelim_weight(sref_range[i], t_range[j])
-	# return Z
-	Z = prelim_weight(X, Y)
+	for i in range(len(sref_range)):
+		for j in range(len(t_range)):
+			_, Z[j][i] = prelim_weight(sref_range[i], t_range[j])
+	return X, Y, Z
+	# Z = prelim_weight(X, Y)
 
 if __name__ == '__main__':
-	fuel_curves = fuel_weight(np.linspace(750, 1400, 10), np.linspace(100, 30000, 20))
+	X, Y, fuel_curves = fuel_weight(np.linspace(1300, 2000), np.linspace(100, 50000))
 	# print fuel_curves
 	# X, Y = np.meshgrid(np.linspace(4000, 30000, 20), np.linspace(750, 1400, 20))
-	plt.contour(X, Y, fuel_curves)
+	CS = plt.contour(X, Y, fuel_curves)
+
+	cbar = plt.colorbar(CS)
+	cbar.ax.set_ylabel('Fuel Weight')
+
 	plt.show()
