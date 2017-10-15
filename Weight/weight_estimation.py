@@ -92,7 +92,8 @@ if __name__ == '__main__':
 	import numpy as np
 
 
-	w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R,constants.L_D, constants.SFC, M=constants.machCruise)
+	print(constants.R, constants.L_D, constants.SFC)
+	w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R, constants.L_D, constants.SFC)
 
 	print(w_0, w_empty, w_fuel, w_payload )
 	# plt.show()
