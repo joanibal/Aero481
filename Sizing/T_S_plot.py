@@ -13,7 +13,7 @@ import constants as consts
 from Aerodynamics.calcDragPolar import DragPolar
 from Weight.weight_buildup import prelim_weight
 from Weight.weight_estimation import calcWeights
-
+from Weight.fuel_weight_curves import fuel_weight
 from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeoff, calcWSLanding
 
 # =================== Calculations ================================= #
@@ -23,7 +23,7 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 itermax = 1000
 T_guess = 4400
 
-S = np.linspace(1300, 2000, 10)
+S = np.linspace(1300, 2000, 2)
 
 # S = np.linspace(400, 751, 10)
 W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
@@ -66,7 +66,7 @@ for i in range(len(S)):
 		if flightCond == 'Climb':
 			for climbCond in contraints[flightCond]:
 				for j in range(itermax):
-					W = prelim_weight(S[i] , thrustCon['Climb'][climbCond][i])
+					W = prelim_weight(S[i] , thrustCon['Climb'][climbCond][i])[0]
 					# W_S = W/S[i]
 
 					CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
@@ -86,7 +86,7 @@ for i in range(len(S)):
 
 		elif flightCond == 'Ceiling':
 			for j in range(itermax):
-				W = prelim_weight(S[i] , thrustCon[flightCond][i])
+				W = prelim_weight(S[i] , thrustCon[flightCond][i])[0]
 				W_S = W/S[i]
 
 				CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
@@ -107,7 +107,7 @@ for i in range(len(S)):
 
 		elif flightCond == 'Cruise':
 			for j in range(itermax):
-				W = prelim_weight(S[i] , thrustCon[flightCond][i])
+				W = prelim_weight(S[i] , thrustCon[flightCond][i])[0]
 				W_S = W/S[i]
 
 				CD0 = DragPolar(W)[0] # [0:2] <-- only use the first two ouputs
@@ -128,7 +128,7 @@ for i in range(len(S)):
 
 		elif flightCond == 'Takeoff':
 			for j in range(itermax):
-				W = prelim_weight(S[i] , thrustCon[flightCond][i])
+				W = prelim_weight(S[i] , thrustCon[flightCond][i])[0]
 				W_S = W/S[i]
 
 				T_W = calcTWTakeoff(W_S, consts.CL['max']['takeoff'], consts.runLength)
@@ -151,7 +151,7 @@ for i in range(len(S)):
 			#for j in range(itermax):
 				#thrustCon[flightCond][i] = (T_upper + T_lower)/2
 
-				#W = prelim_weight(S[i] , thrustCon[flightCond][i])
+				#W = prelim_weight(S[i] , thrustCon[flightCond][i])[0]
 				#W_S = W/S[i]
 				#diff_W_S = W_S - W_S_landing;
 				# binary search
@@ -180,37 +180,36 @@ for i in range(len(S)):
 
 # pdb.set_trace()
 
+X, Y, fuel_curves = fuel_weight(S, np.linspace(0, T_guess*20, 10))
+# print fuel_curves
+# X, Y = np.meshgrid(np.linspace(4000, 30000, 20), np.linspace(750, 1400, 20))
+CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn')
 
-ceiling, = plt.plot(S, thrustCon['Ceiling'], label='Ceiling')
-cruise, = plt.plot(S, thrustCon['Cruise'], label='Cruise')
-takeoff, = plt.plot(S, thrustCon['Takeoff'], label='Takeoff')
-landing, = plt.plot(S, thrustCon['Landing'], label='Landing')
+# plt.clabel(CS)
+cbar = plt.colorbar(CS)
+cbar.ax.set_ylabel('Fuel Weight [lbs]')
+# plt.show()
+
+
+ceiling, = plt.plot(S, thrustCon['Ceiling'], label='Ceiling',linewidth=3.0)
+takeoff, = plt.plot(S, thrustCon['Takeoff'], label='Takeoff',linewidth=3.0)
+cruise, = plt.plot(S, thrustCon['Cruise'], label='Cruise',linewidth=3.0)
+landing, = plt.plot(S, thrustCon['Landing'], label='Landing',linewidth=3.0)
 
 lines = [ceiling, cruise, takeoff, landing]
 # lines = [ceiling, cruise, takeoff]
 
 for climbCond in contraints['Climb']:
-	lines.append(plt.plot(S, thrustCon['Climb'][climbCond],'--', label=climbCond)[0])
+	lines.append(plt.plot(S, thrustCon['Climb'][climbCond], '--', label=climbCond,  linewidth=3.0)[0])
 
 labels = [ x._label for x in lines]
-
 
 plt.legend(lines, labels)
 plt.legend(loc = 'upper right')
 
-plt.ylabel('T')
-plt.xlabel('S')
-# plt.title('')
+plt.ylabel('Thrust [lbs]')
+plt.xlabel('S [ft^2]')
+plt.title('Thrust vs S and Fuel Burn')
 # plt.axis((S[0], S[-1], 0, T_guess*3))
 
 plt.show()
-
-
-
-# a = np.logical_and(T_W_cruise>=T_W_climb['balked climb OEI'], T_W_takeoff<=T_W_climb['balked climb OEI'])
-# b = np.logical_and(np.logical_not(a), T_W_takeoff<=T_W_climb['balked climb OEI'])
-# c = np.logical_and(T_W_takeoff>=T_W_climb['balked climb OEI'], W_S<=T_W_landing)
-
-# plt.fill_between(W_S,T_W_cruise,1,where=a     ,interpolate=True, color='b')
-# plt.fill_between(W_S,np.ones(np.shape(W_S))*T_W_climb['balked climb OEI'],1,where=b,interpolate=True, color='b')
-# plt.fill_between(W_S,T_W_takeoff,1,where=c,interpolate=True, color='b')
