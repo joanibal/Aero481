@@ -85,7 +85,7 @@ def prelim_weight(Sref_wing, T0):
 		w_0 += 0.1*(w_0new - w_0)
 		# print w_0
 
-	return w_0
+	return w_0, w_f
 
 if __name__ == '__main__':
 
@@ -96,6 +96,6 @@ if __name__ == '__main__':
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
 
-	MTOW = prelim_weight(1137.00, 2.0*consts.engine_thrust)
-	print MTOW
+	MTOW, w_f= prelim_weight(1137.00, 2.0*consts.engine_thrust)
+	print MTOW, w_f
 	

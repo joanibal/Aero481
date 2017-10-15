@@ -23,7 +23,7 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 itermax = 1000
 T_guess = 4400
 
-S = np.linspace(1300, 2000, 10)
+S = np.linspace(1300, 2000, 1000)
 
 # S = np.linspace(400, 751, 10)
 W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
@@ -183,7 +183,7 @@ for i in range(len(S)):
 X, Y, fuel_curves = fuel_weight(S, np.linspace(0, T_guess*20, 10))
 # print fuel_curves
 # X, Y = np.meshgrid(np.linspace(4000, 30000, 20), np.linspace(750, 1400, 20))
-CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn')
+CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn', colors='black')
 
 plt.clabel(CS, CS.levels[0::2])
 # cbar = plt.colorbar(CS)
@@ -204,12 +204,16 @@ for climbCond in contraints['Climb']:
 
 labels = [ x._label for x in lines]
 
+# a = np.logical_and(90000 >=thrustCon['Takeoff'],90000 >= thrustCon['Climb']['balked climb OEI'])
+plt.fill_between(S,thrustCon['Takeoff'],90000, where=thrustCon['Takeoff'] > thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
+plt.fill_between(S,thrustCon['Climb']['balked climb OEI'],90000, where=thrustCon['Takeoff'] < thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
+
 plt.legend(lines, labels)
 plt.legend(loc = 'upper right')
 
 plt.ylabel('Thrust [lbs]')
 plt.xlabel('S [ft^2]')
 plt.title('Thrust vs S and Fuel Burn')
-# plt.axis((S[0], S[-1], 0, T_guess*3))
+plt.axis((S[0], S[-1], 0, 80000))
 
 plt.show()
