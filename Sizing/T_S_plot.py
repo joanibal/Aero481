@@ -22,11 +22,9 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 
 itermax = 1000
 T_guess = 4400
-<<<<<<< HEAD
-S = np.linspace(800, 1400, 10)
-=======
+
 S = np.linspace(500, 2000, 10)
->>>>>>> 5caf3f3c246efc5988f3f7530c06020ea52e81a8
+
 # S = np.linspace(400, 751, 10)
 W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
 
