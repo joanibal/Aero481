@@ -69,6 +69,7 @@ def prelim_weight(Sref_wing, T0):
 
 	while True:
 	# for i in range(1000):
+		CL_cruise = consts.q
 		CD = calcCD(consts.C_f, consts.Swet_rest*10.7639 + 2.0*Sref_wing, Sref_wing,  consts.CL['cruise'], consts.e['cruise'], consts.AR )
 		ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 		w_f = ff*w_0

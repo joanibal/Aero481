@@ -4,8 +4,8 @@ def regression():
 	WTO = np.array([92500, 69600, 73000, 174200, 99600, 30800, 51000, 23500, 91000, 120152, 33500, 41000, 13870, 1268000, 987000])
 	WE = np.array([50861, 43500, 36100, 102100, 54000, 18656, 30500, 14640, 48300, 70841, 24200, 20735, 8540, 610000, 485300])
 
-	# (a_lin, b_lin)= np.polyfit(np.log10(WTO[:-3]),np.log10(WE[:-3]),1)
-	(a_lin, b_lin)= np.polyfit(np.log10(WTO),np.log10(WE),1)
+	(a_lin, b_lin)= np.polyfit(np.log10(WTO[:-3]),np.log10(WE[:-3]),1)
+	# (a_lin, b_lin)= np.polyfit(np.log10(WTO),np.log10(WE),1)
 
 	c = a_lin-1
 	a = 10**b_lin
@@ -74,7 +74,7 @@ def calcWeights(R,L_D, c , M=0.85):
 			return w, w*A*w**C, w*fuelFraction, w_crew + w_payload
 
 
-		w += 0.5*delw
+		w += delw
 		# print(i, w , delw, f,df_dw  )
 
 		# plt.plot(w, f, 'o')

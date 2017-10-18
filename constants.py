@@ -15,9 +15,9 @@ M = 0.85                                    # Cruise Mach numnber
 T_C = -56.5                                 # Temperature (Celcius)
 T = T_C + 273.15                            # Temperature (Kelvin)
 p = 18822.69                                # Absolute Pressure (Pa)
-gasConsts = 287                                     # Gas Constant (J/kgK)
-rho = p/(gasConsts*T)                               # Air Density (kg/m^3)
-a = math.sqrt(1.4*gasConsts*T)                      # Speed of Sound (m/s)
+gasConst = 287                                     # Gas Constant (J/kgK)
+rho = p/(gasConst*T)                               # Air Density (kg/m^3)
+a = math.sqrt(1.4*gasConst*T)                      # Speed of Sound (m/s)
 u = M*a                                     # Airspeed (m/s)
 rho_imperial = rho*0.00194032               # Conversion from kg/m^3 to slugs/ft^3
 u_imperial = u*3.28084                      # Conversion from m/s to ft/s
@@ -65,17 +65,17 @@ a_Ceiling = 573.57          				# knots
 
 CL= {
     'max': {
-    'takeoff': 1.8,
+    'takeoff': 2.6,
     'cruise':  1.2,
-    'landing': 2.1 ,
-    'balked landing': 2.0*0.85,
+    'landing': 3.0,
+    'balked landing': 3.0*0.85,
     },
     'cruise': 0.5
     }
 
 # Empennage Constants
 c_VT =  0.041
-c_HT = 1
+c_HT = 0.66
 
 # Horizontal Stabilizer Properties
 L_HT = 14.25 								# m

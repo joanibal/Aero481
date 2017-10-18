@@ -3,6 +3,7 @@ import os,sys,inspect
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 import Sizing.horizontal_surf_sizing
+from Aerodynamics.calcCoeff import *
 import Sizing.Svt_calc
 import Weight.weight_estimation
 import constants as consts
@@ -12,9 +13,6 @@ import numpy as np
 #     cruiseFrac = np.exp(R*c*CD/(speed_kts*CL_cruise))
 #     return cruiseFrac
 
-def calcCD(Cf, Swet, Sref, CL, e, AR):
-	CD = Cf*Swet/Sref + CL**2/(np.pi*AR*e)
-	return CD
 
 def fuel_fraction(c, CD, R, speed, CL):
 	ff1 = 0.99		#warmup
@@ -48,14 +46,21 @@ def prelim_weight(Sref_wing, T0):
 	S_HT = (S_total*consts.L_HT - consts.Sref_c*consts.L_c)/consts.L_HT #m^2
 
 	#weight calcuations (consts = lb/ft^2)
-	w_wing = 10.0*Sref_wing
-	w_HT = 5.5*S_HT*10.7639
-	w_VT = 5.5*Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)*10.7639
-	# w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
-	w_c = 5.5*consts.Sref_c*10.7639
-	w_fuse = 5.0*consts.Swet_fuse
+	# w_wing = 10.0*Sref_wing
+	# w_HT = 5.5*S_HT*10.7639
+	# w_VT = 5.5*Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)*10.7639
+	# # w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
+	# w_c = 5.5*consts.Sref_c*10.7639
+	# w_fuse = 5.0*consts.Swet_fuse
 
-	# engine weight calculations (lbs)
+	w_wing = 7.5*Sref_wing
+	w_HT = 4.0*S_HT*10.7639
+	w_VT = 4.0*Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)*10.7639
+	# w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
+	w_c = 4.0*consts.Sref_c*10.7639
+	w_fuse = 3.5*consts.Swet_fuse
+
+	# # engine weight calculations (lbs)
 	w_eng_dry = 0.521*(T0)**0.9
 	w_eng_oil = 0.082*(T0)**0.65
 	w_eng_rev = 0.034*(T0)	
@@ -65,12 +70,13 @@ def prelim_weight(Sref_wing, T0):
 
 	#iterating for MTOW	
 	w_0, _, _, w_crew_payload = Weight.weight_estimation.calcWeights(consts.R,consts.L_D, consts.SFC)
-	tolerance = 0.1
+	tolerance = 1.0
 	converged = 0
 
 	while True:
 	# for i in range(1000):
-		CD = calcCD(consts.C_f, consts.Swet_rest*10.7639 + 2.0*Sref_wing, Sref_wing,  consts.CL['cruise'], consts.e['cruise'], consts.AR )
+		CL = calcCL(w_0/Sref_wing)
+		CD = calcCD(consts.C_f, consts.Swet_rest*10.7639 + 2.0*Sref_wing, Sref_wing,  CL, consts.e['cruise'], consts.AR )
 		ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 		w_f = ff*w_0
 		w_landing_gear = w_0*0.043 #lb
@@ -85,6 +91,8 @@ def prelim_weight(Sref_wing, T0):
 			break	
 		w_0 += 0.1*(w_0new - w_0)
 		# print w_0
+	
+	print('CL ', CL, ' w_0/Sref_wing ',  w_0/Sref_wing)
 
 	return w_0, w_f
 
