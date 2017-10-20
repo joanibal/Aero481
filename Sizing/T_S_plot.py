@@ -23,7 +23,7 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 itermax = 1000
 T_guess = 4400
 
-S = np.linspace(1000, 1300, 10)
+S = np.linspace(800, 1600, 10)
 
 
 
@@ -173,11 +173,11 @@ for i in range(len(T)):
 X, Y, fuel_curves = fuel_weight(S, np.linspace(0, T_guess*20, 10))
 # print fuel_curves
 # X, Y = np.meshgrid(np.linspace(4000, 30000, 20), np.linspace(750, 1400, 20))
-CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn', colors='black')
+# CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn', colors='black')
 CS = plt.contourf(X, Y, fuel_curves, 50, alpha=0.5)
 
 # plt.clabel(CS, CS.levels[0::2])
-# cbar = plt.colorbar(CS)
+cbar = plt.colorbar(CS)
 # cbar.ax.set_ylabel('Fuel Weight [lbs]')
 # plt.show()
 

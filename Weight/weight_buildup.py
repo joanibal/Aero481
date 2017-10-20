@@ -75,9 +75,14 @@ def prelim_weight(Sref_wing, T0):
 
 	while True:
 	# for i in range(1000):
-		CL = calcCL(w_0/Sref_wing)
-		CD = calcCD(consts.C_f, consts.Swet_rest*10.7639 + 2.0*Sref_wing, Sref_wing,  CL, consts.e['cruise'], consts.AR )
-		ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
+		# CL = calcCL(w_0/Sref_wing)
+
+		CD0 = consts.C_f*(consts.Swet_rest*10.7639 + 2.0*Sref_wing)/Sref_wing
+		# calcCD0(consts.C_f, consts.Swet_rest*10.7639 + 2.0*Sref_wing, Sref_wing,  CL, consts.e['cruise'], consts.AR )
+		
+		CL = np.sqrt(CD0*np.pi*consts.AR*consts.e['cruise']) 
+		CD = CD0 + CL**2/(np.pi*consts.AR*consts.e['cruise'])
+		ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, CL)
 		w_f = ff*w_0
 		w_landing_gear = w_0*0.043 #lb
 		w_nose_gear = w_landing_gear*0.15 #lb
@@ -92,7 +97,7 @@ def prelim_weight(Sref_wing, T0):
 		w_0 += 0.1*(w_0new - w_0)
 		# print w_0
 	
-	print('CL ', CL, ' w_0/Sref_wing ',  w_0/Sref_wing)
+	print('CL ', CL, 'CD0', CD0, ' w_0/Sref_wing ',  w_0/Sref_wing)
 
 	return w_0, w_f
 
