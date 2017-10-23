@@ -176,7 +176,7 @@ X, Y, fuel_curves = fuel_weight(S, np.linspace(0, T_guess*20, 10))
 # CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn', colors='black')
 CS = plt.contourf(X, Y, fuel_curves, 50, alpha=0.5)
 
-# plt.clabel(CS, CS.levels[0::2])
+plt.clabel(CS, CS.levels[0::2])
 cbar = plt.colorbar(CS)
 # cbar.ax.set_ylabel('Fuel Weight [lbs]')
 # plt.show()

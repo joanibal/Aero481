@@ -49,3 +49,7 @@ if __name__ == '__main__':
 
 	_ , y_MAC_c = MAC(constants.c_root_c, constants.taper_c, b_c)
 	print y_MAC_c #m
+
+	# assuming sref area is exposed plan form (use this)
+	a, b = MAC(constants.c_root_c, 0.25, 5.0)
+	print a,b

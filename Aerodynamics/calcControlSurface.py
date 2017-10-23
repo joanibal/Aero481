@@ -1,3 +1,11 @@
+import os,sys,inspect
+
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+
+import constants
+import numpy as np
+from Sizing.horizontal_surf_sizing import MAC
+
 # Calculate the control surface position and span
 
 def calcControlSurface(Croot, b, taperRatio, chordRatio, spanRatio, endSpanPosition, controlSurface):
@@ -39,11 +47,11 @@ def calcControlSurface(Croot, b, taperRatio, chordRatio, spanRatio, endSpanPosit
 
 	return
 
-
-#Calculate Results
-# Solve for Main Wing Parameters
-# calcControlSurface(Croot, b, taperRatio, chordRatio, spanRatio, endSpanPosition, controlSurface)
-calcControlSurface(9.41, 33.89, 0.26, 0.08, 0.80, 0.90, "Slat")
-calcControlSurface(9.41, 33.89, 0.26, 0.25, 0.40, 0.50, "Flap")
-calcControlSurface(9.41, 33.89, 0.26, 0.25, 0.40, 0.90, "Aileron")
-calcControlSurface(3.50, 14.88, 0.41, 0.40, 0.95, 1.00, "Elevator")
+if __name__ == '__main__':
+	#Calculate Results
+	# Solve for Main Wing Parameters
+	# calcControlSurface(Croot, b, taperRatio, chordRatio, spanRatio, endSpanPosition, controlSurface)
+	calcControlSurface(constants.c_root, constants.b, 0.26, 0.08, 0.80, 0.90, "Slat")
+	calcControlSurface(constants.c_root, constants.b, 0.26, 0.25, 0.40, 0.50, "Flap")
+	calcControlSurface(constants.c_root, constants.b, 0.26, 0.25, 0.40, 0.90, "Aileron")
+	calcControlSurface(constants.c_root_HT, 7.68, 0.41, 0.40, 0.95, 1.00, "Elevator")

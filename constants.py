@@ -78,21 +78,21 @@ c_VT =  0.041
 c_HT = 0.66
 
 # Horizontal Stabilizer Properties
-L_HT = 14.25 								# m
-c_root_HT = 3.5 							# m
+L_HT = 13.25								# m
+c_root_HT = 2.35 							# m
 taper_HT = 0.41
 
 # Canard Properties
 L_c = 16 									# m
-Sref_c = 20	 								# m^2
-c_root_c = 3.5 								# m
+Sref_c = 2	 								# m^2
+c_root_c = 2 								# m
 taper_c = 0.25
 
 # Vertical Stabilizer Properties
-c_root_VT = 14.5*0.3048						# m
+c_root_VT = 3.5       						# m
 taper_VT = 0.75								# vertical tail taper ratiop
 sweep_VT = 0.628319							# radians (36 degrees)
-L_VT = L_HT - 4.5*0.3048
+L_VT = 9.75
 
 # Wing Properties
 #Sref = 127.59 								# m^2 (wing area)
@@ -111,9 +111,9 @@ CG = 0.4*fuse_length 						# m
 static_margin = 0.15
 
 # Wing Properties
-Sref = 127.59 #m^2 (wing area)
+Sref = 950.0 * 0.09203 #m^2 (wing area)
 b = 33.89 #m (span)
-c_root = 5.98 #m
+c_root = 4.95 #m
 w_lambda = 0.26 #(taper ratio
 c_MAC = 2.0/3.0*c_root*(1.0+w_lambda+w_lambda**2)/(1.0+w_lambda)
 y_MAC = b/6.0*(1.0+2.0*w_lambda)/(1.0+w_lambda)
@@ -122,3 +122,7 @@ AR = 9
 # Properties exclusing wings
 Swet_rest = 368 #m^2
 C_f = 0.0045 #Skin-friction coefficient based on equivalent skin-friction coefficients
+
+
+# design point
+thrust_req = 16550 #lbs

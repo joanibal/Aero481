@@ -38,15 +38,15 @@ def calcyMAC(c_root_VT, taper_VT, b):
 if __name__ == '__main__':
 
 	# Calculate Chord Mac
-	c_MAC = cMAC(constants.c_root_VT, constants.taper_VT, 0)
-	print("Chord MAC: " + str(c_MAC) + " m")
+	# c_MAC = cMAC(constants.c_root_VT, constants.taper_VT, 0)
+	# print("Chord MAC: " + str(c_MAC) + " m")
 
-	# Calculate Vertical Tail Moment Arm
-	L_VT = calcL_VT(c_MAC, constants.sweep_VT, constants.fuse_length, constants.CGpos, constants.c_root_VT)
-	print("VT Arm Length: " + str(L_VT) + " m")
+	# # Calculate Vertical Tail Moment Arm
+	# L_VT = calcL_VT(c_MAC, constants.sweep_VT, constants.fuse_length, constants.CGpos, constants.c_root_VT)
+	# print("VT Arm Length: " + str(L_VT) + " m")
 
 	# Calculate Vertical Tail Reference Area
-	S_VT = calcS_VT(L_VT, constants.c_VT, constants.b, constants.Sref)
+	S_VT = calcS_VT(constants.L_VT, constants.c_VT, constants.b, constants.Sref)
 	print("VT Sref: " + str(S_VT) + " m^2")
 
 	# Calculate Tip Chord Length
