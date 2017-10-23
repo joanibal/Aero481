@@ -25,6 +25,7 @@ def landinggear(nose, main, fwdCG, aftCG, H, W, Wlanding, Vstall):
 
     wheel_load = 1.07*1.25*maxSL/wheels_main
     wheel_load_nose = 1.07*1.25*DBL_nose/wheels_nose
-    KE_braking = 0.5*Wlanding*Vstall**2/(g*wheels_main)
+    KE_braking = 0.5*Wlanding*Vstall**2/(g*wheels_main) #assumes brakes are only on main gear 
 
+    #Ma/B and Mf/B are used to confirm landing gear location
     return (Ma/B), (Mf/B), wheel_load, wheel_load_nose, KE_braking
