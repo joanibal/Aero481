@@ -126,3 +126,7 @@ C_f = 0.0045 #Skin-friction coefficient based on equivalent skin-friction coeffi
 
 # design point
 thrust_req = 16550 #lbs
+
+#landing gear
+wheels_nose = 2
+wheels_main = 4
