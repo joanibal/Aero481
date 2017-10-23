@@ -6,8 +6,7 @@ import constants as consts
 import numpy as np
 
 def landinggear(nose, main, fwdCG, aftCG, H, W):
-        #inputs: nose gear position, main gear position, forward CG position, aft CG position, height of CG, MTOW, number of wheels on main gear, number of wheels on nose gear
-        #units: ft, lbs
+        #inputs: nose gear position, main gear position, forward CG position, aft CG position, height of CG, MTOW
 
     g = 32.2
 
