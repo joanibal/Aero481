@@ -9,14 +9,18 @@ import constants
 from Weight.weight_estimation import calcWeights
 
 def stallSpeed(Clmax):
-	w_0 = calcWeights(constants.R, constants.L_D, constants.SFC)[0]*0.453592
+	w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R, constants.L_D, constants.SFC)
+	print(w_0, w_empty, w_fuel, w_payload)
+	weight_landing = w_0-w_fuel
 	g = -9.81
-	rho = constants.rho
+	#rho = constants.rho
+	#assume sea level density
+	rho = 1.225
 	Sref = constants.Sref
 	Clmax = Clmax
-	Vstall = math.sqrt((2*w_0*g*(-1))/(rho*Sref*Clmax))
+	Vstall = math.sqrt((2*weight_landing*g*(-1))/(rho*Sref*Clmax))
 	return Vstall*3.28084
 
 if __name__=='__main__':
-	Vstall = stallSpeed(1.6)
+	Vstall = stallSpeed(2.11)							#Landing with full flaps (30 deg) and 6 deg nose up pitch
 	print("Stall Speed (ft/s): " + str(Vstall))
