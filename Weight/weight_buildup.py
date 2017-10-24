@@ -114,5 +114,7 @@ if __name__ == '__main__':
 	# print ff
 
 	w_0, w_f = prelim_weight(consts.Sref*10.7639, consts.thrust_req)
-	print w_0, w_f
+	ff7 = 0.992		#landing
+
+	print w_0, w_f, w_0-w_f
 	

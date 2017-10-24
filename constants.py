@@ -105,10 +105,10 @@ L_VT = 9.75
 fuse_length = 105.2*0.3048 					# m
 Swet_fuse = 2389.0744993 #ft^2
 
-# A/C Properties
-CGpos = 63.97*0.3048						# m (This is used in SVT calculations)
-CG = 0.4*fuse_length 						# m
-static_margin = 0.15
+# # A/C Properties
+# CGpos = 63.97*0.3048						# m (This is used in SVT calculations)
+# CG = 0.4*fuse_length 						# m
+# static_margin = 0.15
 
 # Wing Properties
 Sref = 950.0 * 0.09203 #m^2 (wing area)
@@ -123,6 +123,7 @@ AR = 9
 Swet_rest = 368 #m^2
 C_f = 0.0045 #Skin-friction coefficient based on equivalent skin-friction coefficients
 
+v_landingstall = 228.9 #ft/s
 
 # design point
 thrust_req = 16550 #lbs
@@ -130,3 +131,12 @@ thrust_req = 16550 #lbs
 #landing gear
 wheels_nose = 2
 wheels_main = 4
+nose_x = 180.0*0.0254           #m (from datum at nose)
+main_x = 20.7249521             #m (from datum at nose)
+
+# A/C mass properties (datum at nose)
+np_location = 20.09     #m
+cg_fwd = 19.0             #m (chosen because forward cg can be modified based on fuel placement)
+cg_aft = 19.60          #empty CG location
+cg_h = 2.2964764        #m
+
