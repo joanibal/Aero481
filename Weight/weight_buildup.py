@@ -82,7 +82,7 @@ def prelim_weight(Sref_wing, T0):
 		CD0 = consts.C_f*(consts.Swet_rest*10.7639 + 2.0*Sref_wing)/Sref_wing
 		# calcCD0(consts.C_f, consts.Swet_rest*10.7639 + 2.0*Sref_wing, Sref_wing,  CL, consts.e['cruise'], consts.AR )
 		
-		CL = np.sqrt(CD0*np.pi*consts.AR*consts.e['cruise']) 
+		CL = np.sqrt(CD0*np.pi*consts.AR*consts.e['cruise']) *0.701
 		CD = CD0 + CL**2/(np.pi*consts.AR*consts.e['cruise'])
 		ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, CL)
 		w_f = ff*w_0
