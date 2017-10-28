@@ -58,7 +58,7 @@ T_Ceiling = 216.650  						# K
 P_Ceiling = 11053.0  						# Pa
 # P_SL
 
-Density_Ceiling = 0.0716    				# kg/M^3
+Density_Ceiling = 0.1164     				# kg/M^3
 Density_SL  = 1.225       					# kg/M^3
 Density_Cruise = 0.154                      # 53000 ft 
 a_Ceiling = 573.57          				# knots
