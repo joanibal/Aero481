@@ -128,7 +128,7 @@ C_f = 0.0045 #Skin-friction coefficient based on equivalent skin-friction coeffi
 v_landingstall = 228.9 #ft/s
 
 # design point
-thrust_req = 16550 #lbs
+thrust_req = engine_thrust*numEngines #lbs
 
 #landing gear
 wheels_nose = 2

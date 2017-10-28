@@ -202,6 +202,9 @@ labels = [ x._label for x in lines]
 # plt.fill_between(S,thrustCon['Climb']['balked climb OEI'],90000, where=thrustCon['Takeoff'] < thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 plt.fill_between(Sref_landing, T,thrustCon['Climb']['balked climb OEI'], where=T > thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 
+plt.plot([consts.Sref/0.09203], [consts.thrust_req], 'ro', label='Design Point')
+design_point_str = str(consts.Sref/0.09203) + ' m^2, ' + str(consts.thrust_req) + ' lbs'
+plt.annotate(design_point_str, xy=(consts.Sref/0.09203, consts.thrust_req), xytext=(consts.Sref/0.09203+10, consts.thrust_req+1000))
 
 plt.legend(lines, labels)
 plt.legend(loc = 'upper right')
