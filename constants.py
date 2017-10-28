@@ -6,7 +6,7 @@ runLength = 4948   							# ft
 alt = 40000       							# ft
 R = 5200           							# nMi
 machCruise = 0.85
-SFC = 0.657        							# 1/hr
+SFC = 0.357       							# 1/hr
 L_D = 15 									#used in weight_estimation
 speed_kts = 566.7279
 
@@ -32,7 +32,7 @@ q = 0.5*rho_imperial*u_imperial**2          # Dynamic Pressure (imperial)
 # R = 6750 # nmi
 
 numEngines = 2
-engine_thrust = 16096.3201 #lbs
+engine_thrust = 9220 #lbs
 
 
 e = {'takeoff':{'gearUp':0.775,
@@ -141,4 +141,3 @@ np_location = 20.09     #m
 cg_fwd = 19.0             #m (chosen because forward cg can be modified based on fuel placement)
 cg_aft = 19.60          #empty CG location
 cg_h = 2.2964764        #m
-

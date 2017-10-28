@@ -23,7 +23,7 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 itermax = 1000
 T_guess = 4400
 
-S = np.linspace(800, 1600, 10)
+S = np.linspace(400, 1600, 10)
 
 
 
@@ -203,7 +203,7 @@ labels = [ x._label for x in lines]
 plt.fill_between(Sref_landing, T,thrustCon['Climb']['balked climb OEI'], where=T > thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 
 
-plt.legend(lines, labels)	
+plt.legend(lines, labels)
 plt.legend(loc = 'upper right')
 
 plt.ylabel('Thrust [lbs]')
