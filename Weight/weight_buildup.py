@@ -100,7 +100,7 @@ def prelim_weight(Sref_wing, T0):
 		# print w_0
 	
 	# print('CL ', CL, 'CD0', CD0, ' w_0/Sref_wing ',  w_0/Sref_wing)
-	print w_nose_gear, w_main_gear, w_xtra
+	print w_nose_gear, 2*w_main_gear, w_xtra
 	print w_fuse+w_xtra
 	return w_0, w_f
 

@@ -26,8 +26,8 @@ if __name__ == '__main__':
 	print c_MAC, y_MAC #m
 
 	#wing position
-	d_np = constants.static_margin*c_MAC*3.28084 + constants.CG
-	print d_np-constants.CG #ft
+	# d_np = constants.static_margin*c_MAC*3.28084 + constants.CG
+	# print d_np-constants.CG #ft
 
 	#horizontal stabilizer calculations
 	S_total = hor_Sref(constants.c_HT, c_MAC, constants.Sref, constants.L_HT)
@@ -50,6 +50,6 @@ if __name__ == '__main__':
 	_ , y_MAC_c = MAC(constants.c_root_c, constants.taper_c, b_c)
 	print y_MAC_c #m
 
-	# assuming sref area is exposed plan form (use this)
-	a, b = MAC(constants.c_root_c, 0.25, 5.0)
+	
+	a, b = MAC(1.34, 0.20, 3.5)
 	print a,b

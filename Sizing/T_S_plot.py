@@ -173,11 +173,11 @@ for i in range(len(T)):
 X, Y, fuel_curves = fuel_weight(S, np.linspace(0, T_guess*20, 10))
 # print fuel_curves
 # X, Y = np.meshgrid(np.linspace(4000, 30000, 20), np.linspace(750, 1400, 20))
-# CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn', colors='black')
-CS = plt.contourf(X, Y, fuel_curves, 50, alpha=0.5)
+CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn', colors='black')
+# CS = plt.contourf(X, Y, fuel_curves, 50, alpha=0.5)
 
 plt.clabel(CS, CS.levels[0::2])
-cbar = plt.colorbar(CS)
+# cbar = plt.colorbar(CS)
 # cbar.ax.set_ylabel('Fuel Weight [lbs]')
 # plt.show()
 
@@ -200,13 +200,15 @@ labels = [ x._label for x in lines]
 # # a = np.logical_and(90000 >=thrustCon['Takeoff'],90000 >= thrustCon['Climb']['balked climb OEI'])
 # plt.fill_between(S,thrustCon['Takeoff'],90000, where=thrustCon['Takeoff'] > thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 # plt.fill_between(S,thrustCon['Climb']['balked climb OEI'],90000, where=thrustCon['Takeoff'] < thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
+plt.fill_between(Sref_landing, T,thrustCon['Climb']['balked climb OEI'], where=T > thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 
-plt.legend(lines, labels)
+
+plt.legend(lines, labels)	
 plt.legend(loc = 'upper right')
 
 plt.ylabel('Thrust [lbs]')
 plt.xlabel('S [ft^2]')
 plt.title('Thrust vs S and Fuel Burn')
-plt.axis((S[0], S[-1], 0, 80000))
+plt.axis((S[0], S[-1], 0, 30000))
 
 plt.show()

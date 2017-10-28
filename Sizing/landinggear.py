@@ -40,3 +40,6 @@ def static_margin(np, cg, w_mac):
 if __name__ == '__main__':
     Ma_B, Mf_B, wheel_load, wheel_load_nose, KE_brake = landinggear(consts.nose_x*3.28084, consts.main_x*3.28084, consts.cg_fwd*3.28084, consts.cg_aft*3.28084, consts.cg_h*3.28084, 66111.89, 41190.9325884, consts.v_landingstall )
     print wheel_load, wheel_load_nose, KE_brake
+
+    # 27.75x8.75-14.5 tire choice (mains)
+    # 13.5x6.0-4 tire choice (nose)
