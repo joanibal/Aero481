@@ -6,21 +6,22 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import constants
-from Weight.weight_estimation import calcWeights
+from Weight.weight_buildup import prelim_weight
 
-def stallSpeed(Clmax):
-	w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R, constants.L_D, constants.SFC)
-	print(w_0, w_empty, w_fuel, w_payload)
-	weight_landing = w_0-w_fuel
-	g = -9.81
-	#rho = constants.rho
-	#assume sea level density
-	rho = 1.225
+def stallSpeed(Clmax, W, rho):
+	# weight is input in lbf 
 	Sref = constants.Sref
-	Clmax = Clmax
-	Vstall = math.sqrt((2*weight_landing*g*(-1))/(rho*Sref*Clmax))
+
+	Vstall = math.sqrt((2*W*4.44822)/(rho*Sref*Clmax))
 	return Vstall*3.28084
 
 if __name__=='__main__':
-	Vstall = stallSpeed(2.11)							#Landing with full flaps (30 deg) and 6 deg nose up pitch
-	print("Stall Speed (ft/s): " + str(Vstall))
+	import constants as consts 
+
+	w_0, w_fuel = prelim_weight(consts.Sref, consts.thrust_req)
+	# print(w_0, w_fuel)
+	weight_landing = w_0-w_fuel
+
+	print("Landing Stall Speed (MPH): ",  stallSpeed(consts.CL['max']['landing'],weight_landing, 1.225)*0.681818)
+	print("Cruise Stall Speed (MPH): " ,   stallSpeed(consts.CL['max']['cruise'],w_0, consts.Density_Cruise)*0.681818)
+	print("Takeoff Stall Speed (MPH): " ,   stallSpeed(consts.CL['max']['takeoff'],w_0, 1.225)*0.681818)
