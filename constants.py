@@ -6,7 +6,7 @@ runLength = 4948   							# ft
 alt = 40000       							# ft
 R = 5200           							# nMi
 machCruise = 0.85
-SFC = 0.372      							# 1/hr
+SFC = 0.346      							# 1/hr
 L_D = 15 									#used in weight_estimation
 speed_kts = 566.7279
 
@@ -32,7 +32,7 @@ q = 0.5*rho_imperial*u_imperial**2          # Dynamic Pressure (imperial)
 # R = 6750 # nmi
 
 numEngines = 2
-engine_thrust = 5725 #lbs
+engine_thrust = 9220 #lbs
 
 
 e = {'takeoff':{'gearUp':0.775,
