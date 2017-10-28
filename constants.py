@@ -60,6 +60,7 @@ P_Ceiling = 11053.0  						# Pa
 
 Density_Ceiling = 0.178     					# kg/M^3
 Density_SL  = 1.225       					# kg/M^3
+Density_Cruise = 0.30
 a_Ceiling = 573.57          				# knots
 
 

@@ -84,6 +84,8 @@ def prelim_weight(Sref_wing, T0):
 		
 		CL = np.sqrt(CD0*np.pi*consts.AR*consts.e['cruise']) *0.701
 		CD = CD0 + CL**2/(np.pi*consts.AR*consts.e['cruise'])
+		print(CL, CD, CD0)
+
 		ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, CL)
 		w_f = ff*w_0
 		w_landing_gear = w_0*0.043 #lb

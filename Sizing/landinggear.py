@@ -41,7 +41,7 @@ if __name__ == '__main__':
     from Weight.weight_buildup import prelim_weight
     from Aerodynamics.calcStall import stallSpeed
 
-    w_0, w_fuel = prelim_weight(consts.Sref, consts.thrust_req)
+    w_0, w_fuel = prelim_weight(consts.Sref/0.09203, consts.thrust_req)
     # print(w_0, w_fuel)
     weight_landing = w_0-w_fuel
 
