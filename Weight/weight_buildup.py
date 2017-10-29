@@ -6,8 +6,9 @@ import Sizing.horizontal_surf_sizing
 from Aerodynamics.calcCoeff import *
 import Sizing.Svt_calc
 import Weight.weight_estimation
-import constants as consts
 import numpy as np
+import matplotlib.pyplot as plt
+
 # def cruiseFuel(c, S, Cf, R, speed, CL_cruise):  # S must be in [m^2]
 #     CD = Cf*(Swet_rest + 2.0*S)/S + CL_cruise/(np.pi*AR*e['cruise'])
 #     cruiseFrac = np.exp(R*c*CD/(speed_kts*CL_cruise))
@@ -32,32 +33,34 @@ def fuel_fraction(c, CD, R, speed, CL):
 
 
 
-def prelim_weight(Sref_wing, T0):
+def prelim_weight(Sref_wing, T0, consts):
 	'''
 	#Sref in ft^2, T0 in lbs
 	'''
 
-	#Horizontal tail calculation
-	c_MAC_wing, _ = Sizing.horizontal_surf_sizing.MAC(consts.c_root, consts.w_lambda, consts.b) #m
-	#finds total required area
-	S_total = Sizing.horizontal_surf_sizing.hor_Sref(consts.c_HT, c_MAC_wing, 0.092903*Sref_wing, consts.L_HT) #m^2
-	
-	#formula explanation: new tail area = (tail only area * distance to tail - distance to canard * area of canard)/distance to tail
-	S_HT = (S_total*consts.L_HT - consts.Sref_c*consts.L_c)/consts.L_HT #m^2
+	try:
+		c_MAC_wing, _ = Sizing.horizontal_surf_sizing.MAC(consts.c_root, consts.w_lambda, consts.b) #m
+		#finds total required area
+		S_total = Sizing.horizontal_surf_sizing.hor_Sref(consts.c_HT, c_MAC_wing, 0.092903*Sref_wing, consts.L_HT) #m^2
+		
+		#formula explanation: new tail area = (tail only area * distance to tail - distance to canard * area of canard)/distance to tail
+		S_HT = (S_total*consts.L_HT - consts.Sref_c*consts.L_c)/consts.L_HT #m^2
+		S_VT = Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)
+		w_c = 4.0*consts.Sref_c*10.7639
 
-	#weight calcuations (consts = lb/ft^2)
-	# w_wing = 10.0*Sref_wing
-	# w_HT = 5.5*S_HT*10.7639
-	# w_VT = 5.5*Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)*10.7639
-	# # w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
-	# w_c = 5.5*consts.Sref_c*10.7639
-	# w_fuse = 5.0*consts.Swet_fuse
+	except:
+		S_HT = consts.S_HT
+		S_VT = consts.S_VT
+		w_c = 0
+
+
 
 	w_wing = 7.5*Sref_wing
 	w_HT = 4.0*S_HT*10.7639
-	w_VT = 4.0*Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)*10.7639
+	w_VT = 4.0*S_VT*10.7639
 	# w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
-	w_c = 4.0*consts.Sref_c*10.7639
+
+
 	w_fuse = 3.5*consts.Swet_fuse
 
 	# # engine weight calculations (lbs)
@@ -68,21 +71,22 @@ def prelim_weight(Sref_wing, T0):
 	w_eng_start = 9.33*(w_eng_dry/1000.0)**1.078
 	w_eng = w_eng_dry + w_eng_oil + w_eng_rev + w_eng_control + w_eng_start
 
-	# print w_wing, w_HT, w_VT, w_c, w_fuse, w_eng
 
 	#iterating for MTOW	
-	w_0, _, _, w_crew_payload = Weight.weight_estimation.calcWeights(consts.R,consts.L_D, consts.SFC)
+	w_0, _, _, w_crew_payload = Weight.weight_estimation.calcWeights(consts.R,consts.L_D, consts.SFC, consts.machCruise, consts.w_payload)
+
+
 	tolerance = 1.0
 	converged = 0
+
 
 	while True:
 	# for i in range(1000):
 		# CL = calcCL(w_0/Sref_wing)
 
-		CD0 = consts.C_f*(consts.Swet_rest*10.7639 + 2.0*Sref_wing)/Sref_wing
-		# calcCD0(consts.C_f, consts.Swet_rest*10.7639 + 2.0*Sref_wing, Sref_wing,  CL, consts.e['cruise'], consts.AR )
+		CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
 		
-		CL = np.sqrt(CD0*np.pi*consts.AR*consts.e['cruise']) *0.701
+		CL = np.sqrt(CD0*np.pi*consts.AR*consts.e['cruise'])
 		CD = CD0 + CL**2/(np.pi*consts.AR*consts.e['cruise'])
 
 		ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, CL)
@@ -108,14 +112,21 @@ def prelim_weight(Sref_wing, T0):
 if __name__ == '__main__':
 
 	import numpy as np 
-	import constants as consts
+	import constants 
+	import constantsG550
 
 	# CD = calcCD(consts.C_f, consts.Swet_rest*10.7639 + 2.0*consts.Sref, consts.Sref,  consts.CL['cruise'], consts.e['cruise'], consts.AR )
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
 
-	w_0, w_f = prelim_weight(consts.Sref*10.7639, consts.thrust_req)
-	ff7 = 0.992		#landing
+	w_0, w_f = prelim_weight(constants.Sref*10.7639, constants.thrust_req, constants)
 
-	print w_0, w_f, w_0-w_f
+	print 'w_0',w_0 , 'w_f', w_f
+
+	w_0, w_f = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
+
+	print 'w_0',w_0 , 'w_f', w_f
+
+
+	
 	

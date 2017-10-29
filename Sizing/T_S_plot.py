@@ -8,7 +8,6 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 # ==================== 481  Packages =============================== #
 
-from climb_constraints import *
 import constants as consts
 from Aerodynamics.calcDragPolar import DragPolar
 from Weight.weight_buildup import prelim_weight
@@ -31,20 +30,20 @@ contraints = {
 		'Ceiling': 'ceiling',
 		'Cruise': 'cruise',
 		'Landing': 'landing',
-		'Climb':['takeoff climb', 'trans seg climb', '2nd seg climb', 'enroute climb', 'balked climb AEO', 'balked climb OEI'],
-		'Takeoff': 'takeoff',
+		'Climb':['Takeoff Climb', 'Trans. Seg. Climb', '2nd Seg. Climb', 'Enroute Climb', 'Balked Climb AEO', 'Balked Climb OEI'],
+		'Takeoff': 'Takeoff',
 }
 
 thrustCon = {
 		'Ceiling': np.ones(len(S))*T_guess,
 		'Cruise': np.ones(len(S))*T_guess,
 		'Landing': np.ones(len(S))*T_guess,
-		'Climb':{'takeoff climb': np.ones(len(S))*T_guess,
-				'trans seg climb':  np.ones(len(S))*T_guess,
-				'2nd seg climb':  np.ones(len(S))*T_guess,
-				'enroute climb': np.ones(len(S))*T_guess,
-				'balked climb AEO': np.ones(len(S))*T_guess,
-				'balked climb OEI': np.ones(len(S))*T_guess},
+		'Climb':{'Takeoff Climb': np.ones(len(S))*T_guess,
+				'Trans. Seg. Climb':  np.ones(len(S))*T_guess,
+				'2nd Seg. Climb':  np.ones(len(S))*T_guess,
+				'Enroute Climb': np.ones(len(S))*T_guess,
+				'Balked Climb AEO': np.ones(len(S))*T_guess,
+				'Balked Climb OEI': np.ones(len(S))*T_guess},
 		'Takeoff': np.ones(len(S))*T_guess
 			}
 
@@ -197,9 +196,9 @@ for climbCond in contraints['Climb']:
 
 labels = [ x._label for x in lines]
 
-# # a = np.logical_and(90000 >=thrustCon['Takeoff'],90000 >= thrustCon['Climb']['balked climb OEI'])
-# plt.fill_between(S,thrustCon['Takeoff'],90000, where=thrustCon['Takeoff'] > thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
-# plt.fill_between(S,thrustCon['Climb']['balked climb OEI'],90000, where=thrustCon['Takeoff'] < thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
+# # a = np.logical_and(90000 >=thrustCon['Takeoff'],90000 >= thrustCon['Climb']['Balked Climb OEI'])
+# plt.fill_between(S,thrustCon['Takeoff'],90000, where=thrustCon['Takeoff'] > thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
+# plt.fill_between(S,thrustCon['Climb']['Balked Climb OEI'],90000, where=thrustCon['Takeoff'] < thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 
 
 
@@ -209,7 +208,7 @@ labels = [ x._label for x in lines]
 for i in range(len(Sref_landing)):
 
 	flightCond = 'Climb'
-	climbCond = 'balked climb OEI'
+	climbCond = 'Balked Climb OEI'
 	for j in range(itermax):
 		W = prelim_weight(Sref_landing[i] , thrustCon['Climb'][climbCond][i])[0]
 		# W_S = W/S[i]
@@ -236,7 +235,7 @@ for i in range(len(Sref_landing)):
 
 
 
-plt.fill_between(Sref_landing, T,thrustCon['Climb']['balked climb OEI'], where=T > thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
+plt.fill_between(Sref_landing, T,thrustCon['Climb']['Balked Climb OEI'], where=T > thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 
 plt.plot([consts.Sref/0.09203], [consts.thrust_req], 'ro', label='Design Point')
 design_point_str = str(consts.Sref/0.09203) + ' ft^2, ' + str(consts.thrust_req) + ' lbs'

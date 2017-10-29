@@ -22,6 +22,6 @@ if __name__=='__main__':
 	# print(w_0, w_fuel)
 	weight_landing = w_0-w_fuel
 
-	print("Landing Stall Speed (MPH): ",  stallSpeed(consts.CL['max']['landing'],weight_landing, 1.225)*0.681818)
-	print("Cruise Stall Speed (MPH): " ,   stallSpeed(consts.CL['max']['cruise'],w_0, consts.Density_Cruise)*0.681818)
-	print("Takeoff Stall Speed (MPH): " ,   stallSpeed(consts.CL['max']['takeoff'],w_0, 1.225)*0.681818)
+	print("Landing Stall Speed (knts): ",  stallSpeed(consts.CL['max']['landing'],weight_landing, 1.225)*0.681818*0.868976)
+	print("Cruise Stall Speed (knts): " ,   stallSpeed(consts.CL['max']['cruise'],w_0, consts.Density_Cruise)*0.681818*0.868976)
+	print("Takeoff Stall Speed (knts): " ,   stallSpeed(consts.CL['max']['takeoff'],w_0, 1.225)*0.681818*0.868976)

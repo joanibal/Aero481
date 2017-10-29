@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def regression():
 	WTO = np.array([92500, 69600, 73000, 174200, 99600, 30800, 51000, 23500, 91000, 120152, 33500, 41000, 13870, 1268000, 987000])
@@ -12,16 +13,23 @@ def regression():
 
 	# print (a, c)
 
-	# plt.plot(np.log10(WTO), np.log10(WE), 'o', label='Original data', markersize=10)
-	# plt.plot(np.log10(WTO), a_lin*np.log10(WTO) + b_lin, 'r', label='Fitted line')
+	# data, = plt.plot(np.log10(WTO[:-3]), np.log10(WE[:-3]), 'bo', label='Original Data', markersize=10)
+	# regLine, = plt.plot(np.log10(WTO[:-3]), a_lin*np.log10(WTO[:-3]) + b_lin, 'b-', label='Fitted line')
+
+	# dseign, =plt.plot(np.log10(94965), np.log10(53502), 'ro', label='Design Point', markersize=10)
+
+
+
 	# plt.legend()
+	# plt.xlabel('$Log_{10}$ MTOW', size='large')
+	# plt.ylabel('$Log_{10}$ Empyty Weight', size='large')
 	# plt.show()
 	return a, c
 
-def calcWeights(R,L_D, c , M=0.85):
+def calcWeights(R,L_D, c , M, w_payload ):
 	#human weights (project specs)
-	w_crew = 3.0*(180+60)		#lbs (crew weight + luggage)
-	w_payload = 8.0*(180+60)	#lbs (passenger weight + luggage)
+	# w_crew = 3.0*(180+60)		#lbs (crew weight + luggage)
+	# w_payload = 8.0*(180+60)	#lbs (passenger weight + luggage)
 
 	#fuel fractions (ROSKAM)
 	ff1 = 0.99		#warmup
@@ -60,10 +68,11 @@ def calcWeights(R,L_D, c , M=0.85):
 
 	for i in range(100):
 		# w_0new = (w_crew+w_payload)/(1-fuelFraction-A*w_0**C)
+
 		# w_0 += 0.1*(w_0new - w_0)
 		# w_0 = w_0new
 
-		f = w - fuelFraction*w - A*w**(C+1) - (w_crew+w_payload)
+		f = w - fuelFraction*w - A*w**(C+1) - (w_payload)
 		df_dw =  1 - fuelFraction - A*(C+1)*w**C 
 
 		delw = -f/df_dw
@@ -71,7 +80,7 @@ def calcWeights(R,L_D, c , M=0.85):
 
 		if (abs(delw) <= tolerance):
 			converged = 1
-			return w, w*A*w**C, w*fuelFraction, w_crew + w_payload
+			return w, w*A*w**C, w*fuelFraction, w_payload
 
 
 		w += delw
@@ -83,7 +92,7 @@ def calcWeights(R,L_D, c , M=0.85):
 
 
 if __name__ == '__main__':
-	# import matplotlib.pyplot as plt
+	import matplotlib.pyplot as plt
 	import os,sys,inspect
 
 	sys.path.insert(1, os.path.join(sys.path[0], '..'))
@@ -93,7 +102,7 @@ if __name__ == '__main__':
 
 
 	print(constants.R, constants.L_D, constants.SFC)
-	w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R, constants.L_D, constants.SFC)
+	w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R, constants.L_D, constants.SFC, constants.w_payload)
 
 	print(w_0, w_empty, w_fuel, w_payload )
 	# plt.show()

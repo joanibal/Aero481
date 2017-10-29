@@ -24,6 +24,8 @@ u_imperial = u*3.28084                      # Conversion from m/s to ft/s
 q = 0.5*rho_imperial*u_imperial**2          # Dynamic Pressure (imperial)
 
 # print(str(q))
+w_crew = 3.0*(180+60)       #lbs (crew weight + luggage)
+w_payload = 8.0*(180+60) + w_crew    #lbs (passenger weight + luggage)
 
 # G550 specs
 # machCruise = 0.8
@@ -123,7 +125,7 @@ AR = 9
 print c_MAC, y_MAC
 
 # Properties exclusing wings
-Swet_rest = 368 #m^2
+Swet_rest = 368*10.7639 #ft^2
 C_f = 0.0045 #Skin-friction coefficient based on equivalent skin-friction coefficients
 
 v_landingstall = 228.9 #ft/s
