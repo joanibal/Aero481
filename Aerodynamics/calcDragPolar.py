@@ -79,8 +79,8 @@ def DragPolar(w_0, plot=False):
 		takegeardownd, = plt.plot(CD_takeoff_flaps_gear_down, CL_range_takeoff, linewidth=2, label='Takeoff Gear Down', color='darkred')
 		landgearup, = plt.plot(CD_landing_flaps_gear_down, CL_range_landing,  linewidth=2, label='Landing Gear Up', color='skyblue')
 		landgeardown, = plt.plot(CD_landing_flaps_gear_up, CL_range_landing, linewidth=2, label='Landing Gear Down', color='darkblue')
-		plt.ylabel('CL', weight='bold',size='x-large')
-		plt.xlabel('CD', weight='bold',size='x-large')
+		plt.ylabel('$C_L$', weight='bold',size='x-large')
+		plt.xlabel('$C_D$', weight='bold',size='x-large')
 
 
 		lines = [cruise,	takegearup,	takegeardownd,	landgearup,	landgeardown]
