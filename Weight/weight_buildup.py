@@ -68,7 +68,7 @@ def prelim_weight(Sref_wing, T0):
 	w_eng_start = 9.33*(w_eng_dry/1000.0)**1.078
 	w_eng = w_eng_dry + w_eng_oil + w_eng_rev + w_eng_control + w_eng_start
 
-	print w_wing, w_HT, w_VT, w_c, w_fuse, w_eng
+	# print w_wing, w_HT, w_VT, w_c, w_fuse, w_eng
 
 	#iterating for MTOW	
 	w_0, _, _, w_crew_payload = Weight.weight_estimation.calcWeights(consts.R,consts.L_D, consts.SFC)
@@ -101,8 +101,8 @@ def prelim_weight(Sref_wing, T0):
 		# print w_0
 	
 	# print('CL ', CL, 'CD0', CD0, ' w_0/Sref_wing ',  w_0/Sref_wing)
-	print w_nose_gear, 2*w_main_gear, w_xtra
-	print w_fuse+w_xtra
+	# print w_nose_gear, 2*w_main_gear, w_xtra
+	# print w_fuse+w_xtra
 	return w_0, w_f
 
 if __name__ == '__main__':

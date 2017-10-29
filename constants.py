@@ -66,9 +66,9 @@ a_Ceiling = 573.57          				# knots
 
 CL= {
     'max': {
-    'takeoff': 2.6,
+    'takeoff': 2.0,
     'cruise':  1.2,
-    'landing': 3.0,
+    'landing': 2.6,
     'balked landing': 3.0*0.85,
     },
     'cruise': 0.5
