@@ -246,7 +246,7 @@ plt.legend(lines, labels)
 plt.legend(loc = 'upper left')
 
 plt.ylabel('Thrust [lbs]')
-plt.xlabel('S [ft^2]')
+plt.xlabel('S [$ft^2$]')
 # plt.title('Thrust vs S and Fuel Burn')
 plt.axis((S[0], S[-1], 0, 30000))
 

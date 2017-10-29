@@ -132,8 +132,8 @@ if __name__ == '__main__':
 	w_0 = calcWeights((5000+200),15, 0.657)[0]	 # [0] <-- only use the first
 	Cd_0, k = DragPolar(w_0)[0:2] # [0:2] <-- only use the first two ouputs
 
-	T_W_takeoff = calcTWTakeoff(W_S, consts.CL['max']['takeoff'])
-	T_W_cruise =  calcTWCruise(W_S)
+	T_W_takeoff = calcTWTakeoff(W_S, consts.CL['max']['takeoff'], consts.runLength)
+	T_W_cruise =  calcTWCruise(W_S, CD0['clean'], consts.AR, consts.e['cruise'], consts.q)
 	T_W_ceiling = np.ones(N)*calcTWCeiling(consts.Density_Ceiling/consts.Density_SL, Cd_0['clean'])
 	T_W_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
 
