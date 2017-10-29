@@ -61,22 +61,40 @@ def DragPolar(w_0, plot=False):
 
 	if plot:
 		#Need to update with appropriate CL limits
+		import constants as consts
 
-		CL_range = np.linspace(-1.5, 1.5, 100)
-		CD_clean = Cd_0['clean'] + k['clean']*CL_range**2
-		CD_takeoff_flaps_gear_down = Cd_0['takeoff']['gear down'] + k['takeoff']*CL_range**2
-		CD_takeoff_flaps_gear_up = Cd_0['takeoff']['gear up'] + k['takeoff']*CL_range**2
-		CD_landing_flaps_gear_down = Cd_0['landing']['gear down'] + k['landing']*CL_range**2
-		CD_landing_flaps_gear_up = Cd_0['landing']['gear up'] + k['landing']*CL_range**2
+		CL_range_clean = np.linspace(-0.8, consts.CL['max']['cruise'], 100)
+		CL_range_landing = np.linspace(0.2, consts.CL['max']['landing'], 100)
+		CL_range_takeoff = np.linspace(-0.1, consts.CL['max']['takeoff'], 100)
 
-		plt.plot(CD_clean, CL_range)
-		plt.plot(CD_takeoff_flaps_gear_down, CL_range)
-		plt.plot(CD_takeoff_flaps_gear_up, CL_range)
-		plt.plot(CD_landing_flaps_gear_up, CL_range)
-		plt.plot(CD_landing_flaps_gear_down, CL_range)
-		plt.ylabel('CL')
-		plt.xlabel('CD')
+
+		CD_clean = Cd_0['clean'] + k['clean']*CL_range_clean**2
+		CD_takeoff_flaps_gear_down = Cd_0['takeoff']['gear down'] + k['takeoff']*CL_range_takeoff**2
+		CD_takeoff_flaps_gear_up = Cd_0['takeoff']['gear up'] + k['takeoff']*CL_range_takeoff**2
+		CD_landing_flaps_gear_down = Cd_0['landing']['gear down'] + k['landing']*CL_range_landing**2
+		CD_landing_flaps_gear_up = Cd_0['landing']['gear up'] + k['landing']*CL_range_landing**2
+
+		cruise, = plt.plot(CD_clean, CL_range_clean, linewidth=2, label='Cruise', color='forestgreen')
+		takegearup, = plt.plot(CD_takeoff_flaps_gear_up, CL_range_takeoff, linewidth=2, label='Takeoff Gear Up', color='orangered')
+		takegeardownd, = plt.plot(CD_takeoff_flaps_gear_down, CL_range_takeoff, linewidth=2, label='Takeoff Gear Down', color='darkred')
+		landgearup, = plt.plot(CD_landing_flaps_gear_down, CL_range_landing,  linewidth=2, label='Landing Gear Up', color='skyblue')
+		landgeardown, = plt.plot(CD_landing_flaps_gear_up, CL_range_landing, linewidth=2, label='Landing Gear Down', color='darkblue')
+		plt.ylabel('CL', weight='bold',size='x-large')
+		plt.xlabel('CD', weight='bold',size='x-large')
+
+
+		lines = [cruise,	takegearup,	takegeardownd,	landgearup,	landgeardown]
+		labels = [ x._label for x in lines]
+	
+		plt.legend(lines, labels)
+		plt.legend(loc = 'lower right')
+
+
+
 		plt.show()
+
+
+
 
 
 	'''CL_range = np.array(-1.5, 1.5, 100)
