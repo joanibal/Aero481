@@ -23,7 +23,7 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 itermax = 1000
 T_guess = 4400
 
-S = np.linspace(400, 1200, 10)
+S = np.linspace(600, 1200, 10)
 
 
 
@@ -176,7 +176,7 @@ X, Y, fuel_curves = fuel_weight(S, np.linspace(0, T_guess*20, 10))
 CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn', colors='black')
 # CS = plt.contourf(X, Y, fuel_curves, 50, alpha=0.5)
 
-plt.clabel(CS, CS.levels[0::2])
+plt.clabel(CS, CS.levels, fmt= '%8.0f')
 # cbar = plt.colorbar(CS)
 # cbar.ax.set_ylabel('Fuel Weight [lbs]')
 # plt.show()
@@ -200,11 +200,47 @@ labels = [ x._label for x in lines]
 # # a = np.logical_and(90000 >=thrustCon['Takeoff'],90000 >= thrustCon['Climb']['balked climb OEI'])
 # plt.fill_between(S,thrustCon['Takeoff'],90000, where=thrustCon['Takeoff'] > thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 # plt.fill_between(S,thrustCon['Climb']['balked climb OEI'],90000, where=thrustCon['Takeoff'] < thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
+
+
+
+
+
+
+for i in range(len(Sref_landing)):
+
+	flightCond = 'Climb'
+	climbCond = 'balked climb OEI'
+	for j in range(itermax):
+		W = prelim_weight(Sref_landing[i] , thrustCon['Climb'][climbCond][i])[0]
+		# W_S = W/S[i]
+
+		CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
+
+		T_W_climb = calcTWClimb(consts.CL['max'], CD0, k, consts.numEngines)[climbCond]
+
+		T_climb_new = T_W_climb*W
+		print(flightCond + " " + climbCond + " " +  str(i) + " " + str(np.abs(T_climb_new - thrustCon['Climb'][climbCond][i])))
+		if np.abs(T_climb_new - thrustCon['Climb'][climbCond][i]) <= tolerance:
+			notconverged = False
+			break
+
+		thrustCon['Climb'][climbCond][i] = T_climb_new
+
+	if notconverged:
+		raise ValueError(flightCond + ' ' + climbCond + ' didnt converge')
+
+
+
+
+
+
+
+
 plt.fill_between(Sref_landing, T,thrustCon['Climb']['balked climb OEI'], where=T > thrustCon['Climb']['balked climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 
 plt.plot([consts.Sref/0.09203], [consts.thrust_req], 'ro', label='Design Point')
 design_point_str = str(consts.Sref/0.09203) + ' ft^2, ' + str(consts.thrust_req) + ' lbs'
-plt.annotate(design_point_str, xy=(consts.Sref/0.09203, consts.thrust_req), xytext=(consts.Sref/0.09203+5, consts.thrust_req+500))
+plt.annotate(design_point_str, xy=(consts.Sref/0.09203, consts.thrust_req), xytext=(consts.Sref/0.09203+5, consts.thrust_req+500), weight = 'bold')
 
 plt.legend(lines, labels)
 plt.legend(loc = 'upper left')
