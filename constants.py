@@ -86,7 +86,7 @@ c_root_HT = 2.35 							# m
 taper_HT = 0.41
 
 # Canard Properties
-L_c = 16 									# m
+L_c = 14.7808 									# m
 Sref_c = 2	 								# m^2
 c_root_c = 2 								# m
 taper_c = 0.25
@@ -105,8 +105,8 @@ L_VT = 9.75
 
 
 # Fuselage Properties
-fuse_length = 105.2*0.3048 					# m
-Swet_fuse = 2389.0744993 #ft^2
+fuse_length = 101.2*0.3048 					# m
+Swet_fuse = 2225.8999 #ft^2
 
 # # A/C Properties
 # CGpos = 63.97*0.3048						# m (This is used in SVT calculations)
@@ -125,7 +125,7 @@ AR = 9
 print c_MAC, y_MAC
 
 # Properties exclusing wings
-Swet_rest = 368*10.7639 #ft^2
+Swet_rest = 307.1091*10.7639 #ft^2
 C_f = 0.0045 #Skin-friction coefficient based on equivalent skin-friction coefficients
 
 v_landingstall = 228.9 #ft/s
