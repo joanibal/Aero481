@@ -30,9 +30,9 @@ jetMaizeV1
 
 
 
-#==============================================================
-#---------------------------FUSELAGE---------------------------
-#==============================================================
+# #==============================================================
+# #---------------------------FUSELAGE---------------------------
+# #==============================================================
 
 
 
@@ -53,69 +53,69 @@ TRANSLATE
 
 
 BFILE
-fuse2.dat
+j481fuse.dat
 
 
 
 
 
-#==============================================================
-#-----------------------------CANARD---------------------------
-#==============================================================
-SURFACE
-Canard
+# #==============================================================
+# #-----------------------------CANARD---------------------------
+# #==============================================================
+# SURFACE
+# Canard
 
-# Nchord Cspace [ Nspan Sspace ]
-13 1.00
-
-
-INDEX
-1371
+# # Nchord Cspace [ Nspan Sspace ]
+# 13 1.00
 
 
-YDUPLICATE
-0.0
+# INDEX
+# 1371
 
 
-SCALE
-1.0 1.0 1.0
+# YDUPLICATE
+# 0.0
 
 
-ANGLE
-0
+# SCALE
+# 1.0 1.0 1.0
 
 
-TRANSLATE
-0.0 0.0 0.0
+# ANGLE
+# 0
+
+
+# TRANSLATE
+# 0.0 0.0 0.0
 
 
 
-#ROOT CHORD WITH 50% HINGE
-SECTION
-# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-3.33 0.0 -0.3 1.34 0.000 19 3
-NACA
-0012
-CLAF
-1.1078
+# #ROOT CHORD WITH 50% HINGE
+# SECTION
+# # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+# 3.33 0.0 -0.3 1.34 0.000 19 3
+# NACA
+# 0012
+# CLAF
+# 1.1078
 
-CONTROL
-# name gain Xhinge VYZhvec SgnDup
-Canard -1.00 0.0 0 1 0 1.00
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Canard -1.00 0.0 0 1 0 1.00
 
 
-#TIP CHORD WITH 50% HINGE
-SECTION
-# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-4.81 3.50 -0.3 0.50 0.000 19 3
-NACA
-0012
-CLAF
-1.1078
+# #TIP CHORD WITH 50% HINGE
+# SECTION
+# # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+# 4.81 3.50 -0.3 0.50 0.000 19 3
+# NACA
+# 0012
+# CLAF
+# 1.1078
 
-CONTROL
-# name gain Xhinge VYZhvec SgnDup
-Canard -1.00 0.0   0 1 0    1.00
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Canard -1.00 0.0   0 1 0    1.00
 
 
 
@@ -174,181 +174,181 @@ SECTION
 AFILE
 sc20612-il.dat
 
-#==============================================================
-#--------------------------HORIZONTAL TAIL---------------------
-#==============================================================
-SURFACE
-Horizontal Tail
+# #==============================================================
+# #--------------------------HORIZONTAL TAIL---------------------
+# #==============================================================
+# SURFACE
+# Horizontal Tail
 
-# Nchord Cspace [ Nspan Sspace ]
-7 1.00 20 2.0
-
-
-INDEX
-6442
-
-YDUPLICATE
-0.0
-
-SCALE
-1.0 1.0 1.0
+# # Nchord Cspace [ Nspan Sspace ]
+# 7 1.00 20 2.0
 
 
-ANGLE
-0
+# INDEX
+# 6442
 
-TRANSLATE
-0.0 0.0 0.0
+# YDUPLICATE
+# 0.0
 
-
-#ROOT CHORD WITH 50% HINGE
-SECTION
-# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-30.76 0.0000 5.56 2.35 0.000 7 1
-NACA
-0012
-CLAF
-1.1078
-
-CONTROL
-# name gain Xhinge VYZhvec SgnDup
-Elevator -1.00 0.50 0 1 0 1.00
+# SCALE
+# 1.0 1.0 1.0
 
 
-#TIP CHORD WITH 50% HINGE
-SECTION
-# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-34.38 3.84 5.56 0.9635 0.000 7 1
-NACA
-0012
-CLAF
-1.1078
+# ANGLE
+# 0
 
-CONTROL
-# name gain Xhinge VYZhvec SgnDup
-Elevator -1.00 0.50 0 1 0 1.00
+# TRANSLATE
+# 0.0 0.0 0.0
 
 
-#==============================================================
-#---------------------------VERTICAL TAIL----------------------
-#==============================================================
-SURFACE
-Vertical Tail
+# #ROOT CHORD WITH 50% HINGE
+# SECTION
+# # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+# 30.76 0.0000 5.56 2.35 0.000 7 1
+# NACA
+# 0012
+# CLAF
+# 1.1078
 
-# Nchord Cspace [ Nspan Sspace ]
-7 1 10 -2.0
-
-
-INDEX
-6443
-
-
-SCALE
-1.0 1.0 1.0
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Elevator -1.00 0.50 0 1 0 1.00
 
 
-ANGLE
-0.0
+# #TIP CHORD WITH 50% HINGE
+# SECTION
+# # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+# 34.38 3.84 5.56 0.9635 0.000 7 1
+# NACA
+# 0012
+# CLAF
+# 1.1078
+
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Elevator -1.00 0.50 0 1 0 1.00
 
 
-TRANSLATE
-0.0 0.0 0.0
+# #==============================================================
+# #---------------------------VERTICAL TAIL----------------------
+# #==============================================================
+# SURFACE
+# Vertical Tail
+
+# # Nchord Cspace [ Nspan Sspace ]
+# 7 1 10 -2.0
 
 
-#ROOT CHORD WITH 50% HINGE
-SECTION
-# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-27.63 0.0000 1.79 3.50 0.000 7 1
-NACA
-0012
-CLAF
-1.1078
-
-CONTROL
-# name gain Xhinge VYZhvec SgnDup
-Rudder 1.00 0.50 0 0 1 -1.00
+# INDEX
+# 6443
 
 
-#TIP CHORD WITH 50% HINGE
-SECTION
-# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-31 0.0000 5.86 2.625 0.000 7 1
-NACA
-0012
-CLAF
-1.1078
-
-CONTROL
-# name gain Xhinge VYZhvec SgnDup
-Rudder 1.00 0.50 0 0 1 -1.00
+# SCALE
+# 1.0 1.0 1.0
 
 
-#--------------------------------------------------
-SURFACE
-Nacelle
-#Nchordwise  Cspace   Nspanwise  Sspace
-6            1.0      12          0.0
+# ANGLE
+# 0.0
 
-COMPONENT
-1
 
-YDUPLICATE
-0.0
+# TRANSLATE
+# 0.0 0.0 0.0
 
-SCALE
-1.0   0.5  0.5
 
-TRANSLATE
-25.0  1.5  1.25
+# #ROOT CHORD WITH 50% HINGE
+# SECTION
+# # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+# 27.63 0.0000 1.79 3.50 0.000 7 1
+# NACA
+# 0012
+# CLAF
+# 1.1078
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00  0.0    1.0       3.3   0.    1          0.
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Rudder 1.00 0.50 0 0 1 -1.00
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00  0.5    0.866     3.3   0.    1          0.
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00  0.866  0.5       3.3   0.    1          0.
+# #TIP CHORD WITH 50% HINGE
+# SECTION
+# # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+# 31 0.0000 5.86 2.625 0.000 7 1
+# NACA
+# 0012
+# CLAF
+# 1.1078
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00  1.0    0.0       3.3   0.    1          0.
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Rudder 1.00 0.50 0 0 1 -1.00
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00  0.866 -0.5       3.3   0.    1          0.
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00  0.5   -0.866     3.3   0.    1          0.
+# #--------------------------------------------------
+# SURFACE
+# Nacelle
+# #Nchordwise  Cspace   Nspanwise  Sspace
+# 6            1.0      12          0.0
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00  0.0   -1.0       3.3   0.    1          0.
+# COMPONENT
+# 1
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00 -0.5   -0.866     3.3   0.    1          0.
+# YDUPLICATE
+# 0.0
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00 -0.866 -0.5       3.3   0.    1          0.
+# SCALE
+# 1.0   0.5  0.5
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00 -1.0    0.0       3.3   0.    1          0.
+# TRANSLATE
+# 25.0  1.5  1.25
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00 -0.866  0.5       3.3   0.    1          0.
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00  0.0    1.0       3.3   0.    1          0.
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00 -0.5    0.866     3.3   0.    1          0.
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00  0.5    0.866     3.3   0.    1          0.
 
-SECTION		     
-#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
- 0.00  0.0    1.0       3.3   0.    1          0.
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00  0.866  0.5       3.3   0.    1          0.
+
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00  1.0    0.0       3.3   0.    1          0.
+
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00  0.866 -0.5       3.3   0.    1          0.
+
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00  0.5   -0.866     3.3   0.    1          0.
+
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00  0.0   -1.0       3.3   0.    1          0.
+
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00 -0.5   -0.866     3.3   0.    1          0.
+
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00 -0.866 -0.5       3.3   0.    1          0.
+
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00 -1.0    0.0       3.3   0.    1          0.
+
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00 -0.866  0.5       3.3   0.    1          0.
+
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00 -0.5    0.866     3.3   0.    1          0.
+
+# SECTION		     
+# #Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+#  0.00  0.0    1.0       3.3   0.    1          0.

@@ -239,7 +239,7 @@ plt.fill_between(Sref_landing, T,thrustCon['Climb']['Balked Climb OEI'], where=T
 
 plt.plot([consts.Sref/0.09203], [consts.thrust_req], 'ro', label='Design Point')
 design_point_str = str(consts.Sref/0.09203) + ' ft^2, ' + str(consts.thrust_req) + ' lbs'
-plt.annotate(design_point_str, xy=(consts.Sref/0.09203, consts.thrust_req), xytext=(consts.Sref/0.09203+5, consts.thrust_req+500), weight = 'bold')
+plt.annotate(design_point_str, xy=(consts.Sref/0.09203, consts.thrust_req), xytext=(consts.Sref/0.09203+10, consts.thrust_req+100), weight = 'bold')
 
 plt.legend(lines, labels)
 plt.legend(loc = 'upper left')

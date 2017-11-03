@@ -114,7 +114,7 @@ Swet_fuse = 2225.8999 #ft^2
 # static_margin = 0.15
 
 # Wing Properties
-Sref = 950.0 * 0.09203 #m^2 (wing area)
+Sref = 1060.0 * 0.09203 #m^2 (wing area)
 b = 33.89 #m (span)
 c_root = 4.95 #m
 w_lambda = 0.26 #(taper ratio
