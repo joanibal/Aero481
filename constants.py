@@ -90,6 +90,7 @@ L_c = 14.7808 									# m
 Sref_c = 2	 								# m^2
 c_root_c = 2 								# m
 taper_c = 0.25
+Sref_c_actual = 130/10.7639                 # m^2
 
 # Vertical Stabilizer Properties
 c_root_VT = 3.5       						# m
@@ -114,7 +115,7 @@ Swet_fuse = 2225.8999 #ft^2
 # static_margin = 0.15
 
 # Wing Properties
-Sref = 1060.0 * 0.09203 #m^2 (wing area)
+Sref = 950.0 * 0.09203 #m^2 (wing area)
 b = 33.89 #m (span)
 c_root = 4.95 #m
 w_lambda = 0.26 #(taper ratio

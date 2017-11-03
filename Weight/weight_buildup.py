@@ -46,7 +46,7 @@ def prelim_weight(Sref_wing, T0, consts):
 		#formula explanation: new tail area = (tail only area * distance to tail - distance to canard * area of canard)/distance to tail
 		S_HT = (S_total*consts.L_HT - consts.Sref_c*consts.L_c)/consts.L_HT #m^2
 		S_VT = Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)
-		w_c = 4.0*consts.Sref_c*10.7639
+		w_c = 4.0*consts.Sref_c_actual*10.7639
 
 	except:
 		S_HT = consts.S_HT
