@@ -22,7 +22,7 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 itermax = 1000
 T_guess = 4400
 
-S = np.linspace(600, 1200, 10)
+S = np.linspace(900, 1200, 10)
 
 
 
@@ -65,7 +65,7 @@ for i in range(len(S)):
 		if flightCond == 'Climb':
 			for climbCond in contraints[flightCond]:
 				for j in range(itermax):
-					W = prelim_weight(S[i] , thrustCon['Climb'][climbCond][i])[0]
+					W = prelim_weight(S[i] , thrustCon['Climb'][climbCond][i], consts)[0]
 					# W_S = W/S[i]
 
 					CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
@@ -85,7 +85,7 @@ for i in range(len(S)):
 
 		elif flightCond == 'Ceiling':
 			for j in range(itermax):
-				W = prelim_weight(S[i] , thrustCon[flightCond][i])[0]
+				W = prelim_weight(S[i] , thrustCon[flightCond][i], consts)[0]
 				W_S = W/S[i]
 
 				CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
@@ -106,7 +106,7 @@ for i in range(len(S)):
 
 		elif flightCond == 'Cruise':
 			for j in range(itermax):
-				W = prelim_weight(S[i] , thrustCon[flightCond][i])[0]
+				W = prelim_weight(S[i] , thrustCon[flightCond][i], consts)[0]
 				W_S = W/S[i]
 
 				CD0 = DragPolar(W)[0] # [0:2] <-- only use the first two ouputs
@@ -127,7 +127,7 @@ for i in range(len(S)):
 
 		elif flightCond == 'Takeoff':
 			for j in range(itermax):
-				W = prelim_weight(S[i] , thrustCon[flightCond][i])[0]
+				W = prelim_weight(S[i] , thrustCon[flightCond][i], consts)[0]
 				W_S = W/S[i]
 
 				T_W = calcTWTakeoff(W_S, consts.CL['max']['takeoff'], consts.runLength)
@@ -150,7 +150,7 @@ W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
 T = np.linspace(0,80000, len(S))
 for i in range(len(T)):
 	for j in range(itermax):
-		W_new = prelim_weight(Sref_landing[i] , T[i])[0]
+		W_new = prelim_weight(Sref_landing[i] , T[i], consts)[0]
 		# W_S = W/Sref_landing[i]
 		# S_new = T_W*W
 		print("Landing " +   str(i) + " " + str(np.abs(W_new - W_S_landing*Sref_landing[i])))
@@ -210,7 +210,7 @@ for i in range(len(Sref_landing)):
 	flightCond = 'Climb'
 	climbCond = 'Balked Climb OEI'
 	for j in range(itermax):
-		W = prelim_weight(Sref_landing[i] , thrustCon['Climb'][climbCond][i])[0]
+		W = prelim_weight(Sref_landing[i] , thrustCon['Climb'][climbCond][i], consts)[0]
 		# W_S = W/S[i]
 
 		CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs

@@ -6,7 +6,7 @@ runLength = 4948   							# ft
 alt = 40000       							# ft
 R = 5200           							# nMi
 machCruise = 0.85
-SFC = 0.346      							# 1/hr
+SFC = 0.69      							# 1/hr
 L_D = 15 									#used in weight_estimation
 speed_kts = 566.7279
 
@@ -62,7 +62,7 @@ P_Ceiling = 11053.0  						# Pa
 
 Density_Ceiling = 0.1164     				# kg/M^3
 Density_SL  = 1.225       					# kg/M^3
-Density_Cruise = 0.154                      # 53000 ft 
+Density_Cruise = 0.154                      # 53000 ft
 a_Ceiling = 573.57          				# knots
 
 
