@@ -11,13 +11,14 @@ def regression():
 	c = a_lin-1
 	a = 10**b_lin
 
-	# print (a, c)
+	print (a, c)
 
 	# data, = plt.plot(np.log10(WTO[:-3]), np.log10(WE[:-3]), 'bo', label='Original Data', markersize=10)
 	# regLine, = plt.plot(np.log10(WTO[:-3]), a_lin*np.log10(WTO[:-3]) + b_lin, 'b-', label='Fitted line')
 
-	# dseign, =plt.plot(np.log10(94965), np.log10(53502), 'ro', label='Design Point', markersize=10)
-
+	# dseign, = plt.plot(np.log10(94965), np.log10(53502), 'ro', label='Design Point', markersize=10)
+	# design_point_str = '94965 lb MTWO, 53502 lb EW'
+	# plt.annotate(design_point_str, xy=(np.log10(94965), np.log10(53502)), xytext=(np.log10(94965)-0.47, np.log10(53502)), weight = 'bold')
 
 
 	# plt.legend()
@@ -102,7 +103,7 @@ if __name__ == '__main__':
 
 
 	print(constants.R, constants.L_D, constants.SFC)
-	w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R, constants.L_D, constants.SFC, constants.w_payload)
+	w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R, constants.L_D, constants.SFC, constants.M, constants.w_payload)
 
 	print(w_0, w_empty, w_fuel, w_payload )
 	# plt.show()
