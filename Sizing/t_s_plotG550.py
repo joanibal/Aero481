@@ -21,8 +21,9 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 
 itermax = 1000
 T_guess = 32000
-S = np.linspace(1200, 2000, 10)
+S = np.linspace(1000, 1600, 10)
 
+W = prelim_weight(S[0] , T_guess, consts)[0]
 
 
 contraints = {
@@ -65,6 +66,7 @@ for i in range(len(S)):
 			for climbCond in contraints[flightCond]:
 				for j in range(itermax):
 					W = prelim_weight(S[i] , thrustCon['Climb'][climbCond][i], consts)[0]
+					# print W
 					# W_S = W/S[i]
 
 					CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
@@ -146,7 +148,7 @@ for i in range(len(S)):
 
 W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
 
-T = np.linspace(0,80000, len(S))
+T = np.linspace(0,100000, len(S))
 for i in range(len(T)):
 	for j in range(itermax):
 		W_new = prelim_weight(Sref_landing[i] , T[i], consts)[0]
@@ -168,10 +170,10 @@ for i in range(len(T)):
 
 # pdb.set_trace()
 
-X, Y, fuel_curves = fuel_weight(S, np.linspace(0, T_guess*20, 10))
+X, Y, fuel_curves = fuel_weight(S, np.linspace(0, T_guess*20, 10), consts)
 # print fuel_curves
 # X, Y = np.meshgrid(np.linspace(4000, 30000, 20), np.linspace(750, 1400, 20))
-CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn', colors='black')
+CS = plt.contour(X, Y, fuel_curves, 80,linestyles='dashed', alpha=0.5, label='Fuel Burn', colors='black')
 # CS = plt.contourf(X, Y, fuel_curves, 50, alpha=0.5)
 
 plt.clabel(CS, CS.levels, fmt= '%8.0f')
@@ -238,10 +240,10 @@ plt.fill_between(Sref_landing, T,thrustCon['Climb']['Balked Climb OEI'], where=T
 
 plt.plot([consts.Sref/0.09203], [consts.thrust_req], 'ro', label='Design Point')
 design_point_str = str(consts.Sref/0.09203) + ' ft^2, ' + str(consts.thrust_req) + ' lbs'
-plt.annotate(design_point_str, xy=(1080, consts.thrust_req), xytext=(1080+10, consts.thrust_req+100), weight = 'bold')
+plt.annotate(design_point_str, xy=(1180, consts.thrust_req), xytext=(1180, consts.thrust_req+100), weight = 'bold')
 
 plt.legend(lines, labels)
-plt.legend(loc = 'upper left')
+plt.legend(loc = 'upper right')
 
 plt.ylabel('Thrust [lbs]')
 plt.xlabel('S [$ft^2$]')

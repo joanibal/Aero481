@@ -1,4 +1,4 @@
-import os,sys,inspect
+mport os,sys,inspect
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
@@ -65,7 +65,7 @@ def prelim_weight(Sref_wing, T0):
 	w_0, _, _, w_crew_payload = Weight.weight_estimation.calcWeights(6750,17, consts.SFC)
 	tolerance = 0.1
 	converged = 0
-	print w_0
+	# print w_0
 
 	while True:
 	# for i in range(1000):

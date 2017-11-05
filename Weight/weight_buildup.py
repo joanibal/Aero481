@@ -47,7 +47,7 @@ def prelim_weight(Sref_wing, T0, consts):
 		S_HT = (S_total*consts.L_HT - consts.Sref_c*consts.L_c)/consts.L_HT #m^2
 		S_VT = Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)
 		w_c = 4.0*consts.Sref_c_actual*10.7639
-		print w_c
+		# print w_c
 
 	except:
 		S_HT = consts.S_HT
@@ -56,13 +56,24 @@ def prelim_weight(Sref_wing, T0, consts):
 
 
 
-	w_wing = 7.5*Sref_wing
-	w_HT = 4.0*S_HT*10.7639
-	w_VT = 4.0*S_VT*10.7639
+	# w_wing = 7.5*Sref_wing
+	# w_HT = 4.0*S_HT*10.7639
+	# w_VT = 4.0*S_VT*10.7639
+	# # w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
+
+
+	# w_fuse = 3.5*consts.Swet_fuse
+
+
+
+	w_wing = 6.5*Sref_wing
+	w_HT = 3.5*S_HT*10.7639
+	w_VT = 3.5*S_VT*10.7639
 	# w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
 
 
-	w_fuse = 3.5*consts.Swet_fuse
+	w_fuse = 2.5*consts.Swet_fuse
+
 
 	# # engine weight calculations (lbs)
 	w_eng_dry = 0.521*(T0)**0.9

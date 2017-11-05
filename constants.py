@@ -71,9 +71,9 @@ CL= {
     'takeoff': 2.0,
     'cruise':  1.2,
     'landing': 2.6,
-    'balked landing': 3.0*0.85,
+    'balked landing': 2.6*0.85,
     },
-    'cruise': 0.5
+    'cruise': 0.57
     }
 
 # Empennage Constants
