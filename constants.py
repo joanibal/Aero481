@@ -129,7 +129,7 @@ print c_MAC, y_MAC
 Swet_rest = 307.1091*10.7639 #ft^2
 C_f = 0.0045 #Skin-friction coefficient based on equivalent skin-friction coefficients
 
-v_landingstall = 228.9 #ft/s
+v_landingstall = 143.977436581 #ft/s
 
 # design point
 thrust_req = engine_thrust*numEngines #lbs
@@ -141,7 +141,7 @@ nose_x = 180.0*0.0254           #m (from datum at nose)
 main_x = 20.7249521             #m (from datum at nose)
 
 # A/C mass properties (datum at nose)
-np_location = 20.09     #m
-cg_fwd = 19.0             #m (chosen because forward cg can be modified based on fuel placement)
-cg_aft = 19.60          #empty CG location
-cg_h = 2.2964764        #m
+np_location = 16.66     #m
+cg_fwd = 15             #m (chosen because forward cg can be modified based on fuel placement)
+cg_aft = 16.07          #empty CG location
+cg_h = 2.50        #m

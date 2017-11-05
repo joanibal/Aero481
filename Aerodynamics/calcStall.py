@@ -18,9 +18,9 @@ def stallSpeed(Clmax, W, rho):
 if __name__=='__main__':
 	import constants as consts 
 
-	w_0, w_fuel = prelim_weight(consts.Sref/0.09203, consts.thrust_req)
-	# print(w_0, w_fuel)
-	weight_landing = w_0-w_fuel
+	w_0, w_fuel = prelim_weight((consts.Sref+consts.Sref_c_actual)/0.09203, consts.thrust_req, consts)
+	print(w_0, w_fuel)
+	weight_landing = 0.88*w_0
 
 	print("Landing Stall Speed (knts): ",  stallSpeed(consts.CL['max']['landing'],weight_landing, 1.225)*0.681818*0.868976)
 	print("Cruise Stall Speed (knts): " ,   stallSpeed(consts.CL['max']['cruise'],w_0, consts.Density_Cruise)*0.681818*0.868976)
