@@ -1,0 +1,64 @@
+
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+
+\input{ /home/joanibal/.local/lib/python2.7/site-packages/pyxdsm/diagram_border }
+
+\begin{document}
+
+\input{ /home/joanibal/.local/lib/python2.7/site-packages/pyxdsm/diagram_styles }
+
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+&
+&
+\node [DataIO] (output_conAnalysis) {$\frac{W}{S}$};&
+&
+\\
+%Row 1
+\node [Analysis] (W) {Weight Estimate};&
+\node [DataInter] (W-Drag) {$MTOW$};&
+&
+&
+\\
+%Row 2
+&
+\node [Analysis] (Drag) {Drag Polar};&
+\node [DataInter] (Drag-conAnalysis) {$C_{D0}, k$};&
+&
+\\
+%Row 3
+&
+&
+\node [Analysis,stack] (conAnalysis) {Constrant Analysis};&
+\node [DataInter,stack] (conAnalysis-conCurve) {$\frac{T}{W}$};&
+\\
+%Row 4
+&
+&
+&
+\node [Function] (conCurve) {Constraint Curves};&
+\\
+};
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(W) edge [DataLine] (W-Drag)
+(Drag) edge [DataLine] (Drag-conAnalysis)
+(conAnalysis) edge [DataLine] (conAnalysis-conCurve)
+% Vertical edges
+(W-Drag) edge [DataLine] (Drag)
+(Drag-conAnalysis) edge [DataLine] (conAnalysis)
+(conAnalysis-conCurve) edge [DataLine] (conCurve)
+(conAnalysis) edge [DataLine] (output_conAnalysis);
+\end{pgfonlayer}
+
+\end{tikzpicture}
+\end{document}

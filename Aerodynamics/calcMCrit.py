@@ -32,3 +32,10 @@ M_guess = 1
 M_solution = fsolve(func, M_guess)
 
 print("Critical Mach Number: " + str(M_solution))
+
+
+
+
+
+
+

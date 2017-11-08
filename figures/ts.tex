@@ -1,0 +1,107 @@
+
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+
+\input{ /home/joanibal/.local/lib/python2.7/site-packages/pyxdsm/diagram_border }
+
+\begin{document}
+
+\input{ /home/joanibal/.local/lib/python2.7/site-packages/pyxdsm/diagram_styles }
+
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+\node [DataIO] (output_TSplot) {$S$};&
+\node [DataIO] (output_FP) {Flight Condition};&
+&
+&
+&
+&
+\\
+%Row 1
+\node [Analysis] (TSplot) {T-S plot};&
+\node [DataInter] (TSplot-FP) {$S[i]$};&
+\node [DataInter] (TSplot-W) {$S[i]$};&
+\node [DataInter] (TSplot-conAnalysis) {$S[i]$};&
+\node [DataInter] (TSplot-Tcon) {$S[i]$};&
+&
+\\
+%Row 2
+&
+\node [MDA,stack] (FP) {Fixed Point};&
+\node [DataInter] (FP-W) {$T$[i]};&
+\node [DataInter] (FP-conAnalysis) {$T[i]$};&
+&
+&
+\\
+%Row 3
+&
+&
+\node [Analysis] (W) {Weight Build Up};&
+\node [DataInter] (W-conAnalysis) {$\frac{W}{S}$};&
+&
+&
+\\
+%Row 4
+&
+\node [DataInter] (conAnalysis-FP) {$T[i]$};&
+&
+\node [Analysis] (conAnalysis) {Constrant Analysis};&
+\node [DataInter,stack] (conAnalysis-Tcon) {$T[i]$};&
+&
+\\
+%Row 5
+\node [DataInter] (Tcon-TSplot) {$i$};&
+&
+&
+&
+\node [Analysis] (Tcon) {Thrust Constraints};&
+\node [DataInter] (Tcon-conCurve) {$\textb{S}, \textb{T}$};&
+\\
+%Row 6
+&
+&
+&
+&
+&
+\node [Function] (conCurve) {Constraint Curves};&
+\\
+};
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(TSplot) edge [DataLine] (TSplot-FP)
+(TSplot) edge [DataLine] (TSplot-W)
+(TSplot) edge [DataLine] (TSplot-conAnalysis)
+(TSplot) edge [DataLine] (TSplot-Tcon)
+(FP) edge [DataLine] (FP-W)
+(W) edge [DataLine] (W-conAnalysis)
+(FP) edge [DataLine] (FP-conAnalysis)
+(conAnalysis) edge [DataLine] (conAnalysis-FP)
+(conAnalysis) edge [DataLine] (conAnalysis-Tcon)
+(Tcon) edge [DataLine] (Tcon-conCurve)
+(Tcon) edge [DataLine] (Tcon-TSplot)
+% Vertical edges
+(TSplot-FP) edge [DataLine] (FP)
+(TSplot-W) edge [DataLine] (W)
+(TSplot-conAnalysis) edge [DataLine] (conAnalysis)
+(TSplot-Tcon) edge [DataLine] (Tcon)
+(FP-W) edge [DataLine] (W)
+(W-conAnalysis) edge [DataLine] (conAnalysis)
+(FP-conAnalysis) edge [DataLine] (conAnalysis)
+(conAnalysis-FP) edge [DataLine] (FP)
+(conAnalysis-Tcon) edge [DataLine] (Tcon)
+(Tcon-conCurve) edge [DataLine] (conCurve)
+(Tcon-TSplot) edge [DataLine] (TSplot)
+(TSplot) edge [DataLine] (output_TSplot)
+(FP) edge [DataLine] (output_FP);
+\end{pgfonlayer}
+
+\end{tikzpicture}
+\end{document}

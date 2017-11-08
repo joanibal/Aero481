@@ -1,0 +1,98 @@
+
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+
+\input{ /home/joanibal/.local/lib/python2.7/site-packages/pyxdsm/diagram_border }
+
+\begin{document}
+
+\input{ /home/joanibal/.local/lib/python2.7/site-packages/pyxdsm/diagram_styles }
+
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+\node [DataIO] (output_hist) {$\frac{L}{D}, R, SFC, M$};&
+&
+&
+&
+\node [DataIO] (output_Build) {$W_{LG},W_{Tail}$};&
+&
+\\
+%Row 1
+\node [Function] (hist) {Historic Weight};&
+\node [DataInter] (hist-FP) {$MTOW_{guess}$};&
+&
+&
+&
+&
+\\
+%Row 2
+&
+\node [MDA] (FP) {Fixed Point};&
+\node [DataInter] (FP-Fuel) {$MTOW$};&
+\node [DataInter] (FP-LG) {$MTOW$};&
+&
+&
+\\
+%Row 3
+&
+&
+\node [Analysis] (Fuel) {Fuel Weight};&
+&
+\node [DataInter] (Fuel-Build) {$W_{fuel}$};&
+&
+\\
+%Row 4
+&
+&
+&
+\node [Analysis] (LG) {Landing Gear Weight};&
+\node [DataInter] (LG-Build) {$W_{LG}$};&
+&
+\\
+%Row 5
+&
+\node [DataInter] (Build-FP) {$MTOW$};&
+&
+&
+\node [Analysis] (Build) {Weight Build Up};&
+&
+\node [DataIO] (right_output_Build) {$MTOW$};\\
+%Row 6
+&
+&
+&
+&
+&
+&
+\\
+};
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(hist) edge [DataLine] (hist-FP)
+(FP) edge [DataLine] (FP-Fuel)
+(FP) edge [DataLine] (FP-LG)
+(Fuel) edge [DataLine] (Fuel-Build)
+(LG) edge [DataLine] (LG-Build)
+(Build) edge [DataLine] (Build-FP)
+(Build) edge [DataLine] (right_output_Build)
+% Vertical edges
+(hist-FP) edge [DataLine] (FP)
+(FP-Fuel) edge [DataLine] (Fuel)
+(FP-LG) edge [DataLine] (LG)
+(Fuel-Build) edge [DataLine] (Build)
+(LG-Build) edge [DataLine] (Build)
+(Build-FP) edge [DataLine] (FP)
+(hist) edge [DataLine] (output_hist)
+(Build) edge [DataLine] (output_Build);
+\end{pgfonlayer}
+
+\end{tikzpicture}
+\end{document}

@@ -23,6 +23,7 @@ rho_imperial = rho*0.00194032               # Conversion from kg/m^3 to slugs/ft
 u_imperial = u*3.28084                      # Conversion from m/s to ft/s
 q = 0.5*rho_imperial*u_imperial**2          # Dynamic Pressure (imperial)
 
+
 # print(str(q))
 w_crew = 3.0*(180+60)       #lbs (crew weight + luggage)
 w_payload = 8.0*(180+60) + w_crew    #lbs (passenger weight + luggage)
@@ -56,6 +57,9 @@ e = {'takeoff':{'gearUp':0.775,
 
 ceiling = 51000     						# ft
 T_Ceiling = 216.650  						# K
+# mu = 2.995e-7*47.88026
+mu = 1.704e-5   #N s/m2
+
 # T_SL
 P_Ceiling = 11053.0  						# Pa
 # P_SL
@@ -115,7 +119,10 @@ Swet_fuse = 2225.8999 #ft^2
 # static_margin = 0.15
 
 # Wing Properties
-Sref = 950.0 * 0.09203 #m^2 (wing area)
+# Sref = 950.0 * 0.09203 #m^2 (wing area)
+S_wing = 950.0  # ft^2 Wing area
+Sref = 1060 #ft^2 (Referance area)
+
 b = 33.89 #m (span)
 c_root = 4.95 #m
 w_lambda = 0.26 #(taper ratio
@@ -123,7 +130,7 @@ c_MAC = 2.0/3.0*c_root*(1.0+w_lambda+w_lambda**2)/(1.0+w_lambda)
 y_MAC = b/6.0*(1.0+2.0*w_lambda)/(1.0+w_lambda)
 AR = 9
 
-print c_MAC, y_MAC
+# print c_MAC, y_MAC
 
 # Properties exclusing wings
 Swet_rest = 307.1091*10.7639 #ft^2
@@ -145,3 +152,65 @@ np_location = 16.66     #m
 cg_fwd = 15             #m (chosen because forward cg can be modified based on fuel placement)
 cg_aft = 16.07          #empty CG location
 cg_h = 2.50        #m
+
+
+
+
+
+
+surfaces = {
+            'fuselage':{
+                        'charLeng':101.17, #ft
+                        'diameter':8.8,  # ft
+                        'interfernceFactor': 1.0,
+                        'swet':2323.66 #ft^2
+                        }
+            'wing':{
+                        'charLeng':3.17, #ft
+                        't/c':.12,
+                        'Xmaxt/c':.4,
+                        'interfernceFactor': 1.0,
+                        'swet': 1746.54 #ft^2
+                        }
+            'vTail':{
+                        'charLeng':3.09, #ft
+                        't/c':.12,
+                        'Xmaxt/c':.4,
+                        'interfernceFactor': 1.0,
+                        'swet': 252.18 #ft^2
+                        }
+            'hTail':{
+                        'charLeng':1.79,
+                        't/c':.12,
+                        'Xmaxt/c':.4,
+                        'interfernceFactor': 1.0,
+                        'swet': 216.24 #ft^2
+                        }
+            'canard':{
+                        'charLeng':1.79,
+                        't/c':.12,
+                        'Xmaxt/c':.4,
+                        'interfernceFactor': 1.0,
+                        'swet': 267.4 #ft^2.
+                        }
+            'nacelle':{
+                        'charLeng':12.5,
+                        'diameter':4.83,
+                        'interfernceFactor': 1.0,
+                        'swet': 215.58 #ft^2
+                        }
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+

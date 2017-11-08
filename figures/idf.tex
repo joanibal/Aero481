@@ -1,0 +1,124 @@
+
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+
+\input{ /home/joanibal/.local/lib/python2.7/site-packages/pyxdsm/diagram_border }
+
+\begin{document}
+
+\input{ /home/joanibal/.local/lib/python2.7/site-packages/pyxdsm/diagram_styles }
+
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+&
+&
+\node [DataIO] (output_D1) {$P_1$};&
+\node [DataIO] (output_D2) {$P_2$};&
+&
+&
+&
+\\
+%Row 1
+&
+\node [Optimization] (opt) {Optimizer};&
+\node [DataInter] (opt-D1) {$x, z, y_2$};&
+\node [DataInter] (opt-D2) {$z, y_1$};&
+\node [DataInter] (opt-F) {$y_1, y_2$};&
+\node [DataInter,stack] (opt-G) {$y_1, y_2$};&
+&
+\node [DataIO] (right_output_opt) {$x^*, z^*$};\\
+%Row 2
+\node [DataIO] (left_output_D1) {$y_1^*$};&
+\node [DataInter] (D1-opt) {$\mathcal{R}(y_1)$};&
+\node [Analysis] (D1) {$D_1$};&
+&
+&
+&
+&
+\\
+%Row 3
+\node [DataIO] (left_output_D2) {$y_2^*$};&
+\node [DataInter] (D2-opt) {$\mathcal{R}(y_2)$};&
+&
+\node [Analysis,faded] (D2) {$D_2$};&
+&
+&
+&
+\\
+%Row 4
+&
+\node [DataInter] (F-opt) {$f$};&
+&
+&
+\node [Function] (F) {$F$};&
+&
+&
+\node [DataIO] (right_output_F) {$f^*$};\\
+%Row 5
+&
+\node [DataInter,stack] (G-opt) {$g$};&
+&
+&
+&
+\node [Function,stack] (G) {$G$};&
+&
+\node [DataIO] (right_output_G) {$g^*$};\\
+%Row 6
+&
+&
+&
+&
+&
+&
+&
+\\
+%Row 7
+&
+&
+&
+&
+&
+&
+&
+\\
+};
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(opt) edge [DataLine] (opt-D1)
+(opt) edge [DataLine] (opt-D2)
+(opt) edge [DataLine] (opt-F)
+(opt) edge [DataLine] (opt-F)
+(opt) edge [DataLine] (opt-G)
+(D1) edge [DataLine] (D1-opt)
+(D2) edge [DataLine] (D2-opt)
+(F) edge [DataLine] (F-opt)
+(G) edge [DataLine] (G-opt)
+(D2) edge [DataLine] (left_output_D2)
+(D1) edge [DataLine] (left_output_D1)
+(opt) edge [DataLine] (right_output_opt)
+(G) edge [DataLine] (right_output_G)
+(F) edge [DataLine] (right_output_F)
+% Vertical edges
+(opt-D1) edge [DataLine] (D1)
+(opt-D2) edge [DataLine] (D2)
+(opt-F) edge [DataLine] (F)
+(opt-F) edge [DataLine] (F)
+(opt-G) edge [DataLine] (G)
+(D1-opt) edge [DataLine] (opt)
+(D2-opt) edge [DataLine] (opt)
+(F-opt) edge [DataLine] (opt)
+(G-opt) edge [DataLine] (opt)
+(D2) edge [DataLine] (output_D2)
+(D1) edge [DataLine] (output_D1);
+\end{pgfonlayer}
+
+\end{tikzpicture}
+\end{document}
