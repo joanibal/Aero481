@@ -88,6 +88,9 @@ c_HT = 0.66
 L_HT = 13.25								# m
 c_root_HT = 2.35 							# m
 taper_HT = 0.41
+span_h = 25.197                             # ft
+t_root_h = 0.9251                           #ft
+
 
 # Canard Properties
 L_c = 14.7808 									# m
@@ -121,7 +124,7 @@ Swet_fuse = 2225.8999 #ft^2
 # Wing Properties
 # Sref = 950.0 * 0.09203 #m^2 (wing area)
 S_wing = 950.0  # ft^2 Wing area
-Sref = 1060 #ft^2 (Referance area)
+Sref = 1080 #ft^2 (Referance area)
 
 b = 33.89 #m (span)
 c_root = 4.95 #m
@@ -129,6 +132,9 @@ w_lambda = 0.26 #(taper ratio
 c_MAC = 2.0/3.0*c_root*(1.0+w_lambda+w_lambda**2)/(1.0+w_lambda)
 y_MAC = b/6.0*(1.0+2.0*w_lambda)/(1.0+w_lambda)
 AR = 9
+tc = 0.12
+sweep = 36*0.0174533
+
 
 # print c_MAC, y_MAC
 
@@ -153,6 +159,8 @@ cg_fwd = 15             #m (chosen because forward cg can be modified based on f
 cg_aft = 16.07          #empty CG location
 cg_h = 2.50        #m
 
+N = 4.5
+lambda_half = math.atan((0.5*b*math.tan(sweep)-0.25*c_root + 0.25*w_lambda*c_root)/(0.5*b))
 
 
 
@@ -201,16 +209,3 @@ surfaces = {
                         }
 
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
