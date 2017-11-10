@@ -60,3 +60,4 @@ W_miscfurnish = 0.771*(MTOW*10**(-3))	#misc
 	#air conditioning
 
 #avionics
+W_avionics = 19.2+11+5+3.5+44+78.4+168.5+14+38.2+37+15.6
