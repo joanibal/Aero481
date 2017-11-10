@@ -161,6 +161,10 @@ cg_h = 2.50        #m
 
 N = 4.5
 lambda_half = math.atan((0.5*b*math.tan(sweep)-0.25*c_root + 0.25*w_lambda*c_root)/(0.5*b))
+Keco = 0.686
+Npil = 2  #number of pilots
+Npass = 8  #number of passengers
+Natt = 1  #number of attendants
 
 
 
