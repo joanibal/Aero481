@@ -98,12 +98,15 @@ Sref_c = 2	 								# m^2
 c_root_c = 2 								# m
 taper_c = 0.25
 Sref_c_actual = 130/10.7639                 # m^2
+t_root_c = 0.837                            # ft
+span_c = 26.06                              # ft
 
 # Vertical Stabilizer Properties
 c_root_VT = 3.5       						# m
 taper_VT = 0.75								# vertical tail taper ratiop
 sweep_VT = 0.628319							# radians (36 degrees)
 L_VT = 9.75
+Arudder = 43.09                             # ft^2
 
 # Wing Properties
 #Sref = 127.59 								# m^2 (wing area)
@@ -134,6 +137,12 @@ y_MAC = b/6.0*(1.0+2.0*w_lambda)/(1.0+w_lambda)
 AR = 9
 tc = 0.12
 sweep = 36*0.0174533
+wing_mounted_area = 132.8011*2
+nacelle_length = 12.5               #ft
+inlet_area = 8.73                   #ft^2
+nacelle_width = 2.417*2             #ft
+nacelle_wettedarea = 315.789/2      #ft
+cabinpressure = 11.8                #psi
 
 
 # print c_MAC, y_MAC
