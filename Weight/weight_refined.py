@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 import constants as consts
 
 # wing weight calculations
-Wwing_carichner = (0.00428*consts.S_wing**0.48)*((consts.AR*consts.M**0.43)/(100*consts.tc)**0.76)*((MTOW*consts.N)**0.84*consts.w_lambda**0.14)/(np.cos(consts.lambda_half)**1.54)
-Wwing_raymer = 0.0051*((MTOW*consts.N)**0.557)*(consts.S_wing**0.649)*(consts.AR**0.5)*(consts.tc**(-0.4))*((1+w_lambda)**0.1)*(math.cos(consts.sweep)**(-1))*(consts.wing_mounted_area**0.1)
+Wwing_carichner = (0.00428*Sref_wing**0.48)*((consts.AR*consts.M**0.43)/(100*consts.tc)**0.76)*((MTOW*consts.N)**0.84*consts.w_lambda**0.14)/(np.cos(consts.lambda_half)**1.54)
+Wwing_raymer = 0.0051*((MTOW*consts.N)**0.557)*(Sref_wing**0.649)*(consts.AR**0.5)*(consts.tc**(-0.4))*((1+w_lambda)**0.1)*(math.cos(consts.sweep)**(-1))*(consts.wing_mounted_area**0.1)
 
 #horizontal tail calc
 gamma_horiz = ((MTOW*consts.N)**0.813)*((hs.S_HT*10.7639)**0.584)*((consts.span_h/consts.t_root_h)**0.033)*((consts.c_MAC/0.3048)/consts.L_HT)**0.28
