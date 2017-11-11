@@ -154,7 +154,7 @@ def prelim_weight(Sref_wing, T0, consts):
 	# print w_eng, w_nacelle, w_engcontrol, w_start_cp, w_start_elec
 	# print 'engine', w_eng_total
 
-	w_avionics = 19.2+11+5+3.5+44+78.4+168.5+14+38.2+37+15.6
+	w_avionics = 19.2+11+5+3.5+8.4+44+78.4+168.5+14+38.2+37+15.6
 	# print 'avionics', w_avionics
 
 	w_flightdeck = 54.99*consts.Npil	#flight deck seats
@@ -165,7 +165,7 @@ def prelim_weight(Sref_wing, T0, consts):
 	w_windows = 109.33*(consts.Npass*(1+consts.cabinpressure)*10**(-2))**0.505	#windows
 	w_baggage = 0.0646*consts.Npass**1.456	#baggage
 	w_ac = 469.30*((45.83*60*(consts.Npil+consts.Natt+consts.Npass)*10**(-4))**0.419)	#air conditioning
-
+	# print w_flightdeck, w_passseats, w_lav, w_food, w_oxygen, w_windows, w_baggage, w_ac
 	w_interior = w_flightdeck + w_passseats +  2.0*w_lav + w_food + w_oxygen + w_windows + w_baggage + w_ac
 	# print 'interior', w_interior
 
@@ -208,6 +208,7 @@ def prelim_weight(Sref_wing, T0, consts):
 		# print 'fuse', w_fuse
 
 		w_surfcont = 56.01*(w_0*consts.q*10**(-5))**0.576
+		# print w_surfcont
 
 		CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
 		
@@ -224,11 +225,12 @@ def prelim_weight(Sref_wing, T0, consts):
 
 		w_fuelcontrol = w_bladder + w_bladdersupport + w_dumpdrain + w_cgcontrol
 		# print 'fuel control', w_fuelcontrol
+		# print w_bladder, w_bladdersupport, w_dumpdrain, w_cgcontrol
 
 		w_flightind = consts.Npil*(15+0.032*(w_0*10**(-3)))	#flight indicators
 		w_engineind = consts.numEngines*(4.80+0.006*(w_0*10**(-3)))	#engine indicators
 		w_miscind = 0.15*(w_0*10**(-3))	#misc indicators
-
+		# print w_flightind, w_engineind, w_miscind
 		w_indicators = w_flightind + w_engineind + w_miscind
 		# print 'indicators', w_indicators
 
@@ -239,12 +241,12 @@ def prelim_weight(Sref_wing, T0, consts):
 		# w_xtra = 0.17*w_0 #lb
 		w_miscfurnish = 0.771*(w_0*10**(-3))	#misc
 		w_elec = 1162.66*(w_fuelcontrol*w_avionics*10**(-3))**0.506
-		print 'landing gear', w_landing_gear
-		print 'misc furnishings', w_miscfurnish
-		print 'electronics', w_elec
+		# print 'landing gear', w_landing_gear
+		# print 'misc furnishings', w_miscfurnish
+		# print 'electronics', w_elec
 
 		w_0new = w_eng_total + w_avionics + w_interior + w_wing + w_HT + w_c + w_VT + w_fuse + w_surfcont + w_f + w_fuelcontrol + w_indicators + w_landing_gear + w_miscfurnish + w_elec
-		# print w_eng_total, w_avionics, w_interior, w_wing, w_HT, w_c, w_VT, w_fuse, w_surfcont, w_f, w_fuelcontrol, w_indicators, w_landing_gear, w_miscfurnish, w_elec
+		print w_eng_total, w_avionics, w_interior, w_wing, w_HT, w_c, w_VT, w_fuse, w_surfcont, w_f, w_fuelcontrol, w_indicators, w_landing_gear, w_miscfurnish, w_elec
 
 		#convergence check
 		if abs(w_0new - w_0) <= tolerance:
