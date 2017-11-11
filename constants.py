@@ -175,10 +175,9 @@ Npil = 2  #number of pilots
 Npass = 8  #number of passengers
 Natt = 1  #number of attendants
 
-jetA_density = 6.71 #lbs/gal
-
-print lambda_half
-
+Rkva = 50
+La = fuse_length
+Ngen = numEngines
 
 # surfaces = {
 #             'fuselage':{
