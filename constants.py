@@ -175,6 +175,7 @@ Npil = 2  #number of pilots
 Npass = 8  #number of passengers
 Natt = 1  #number of attendants
 
+jetA_density = 6.71 #lbs/gal
 
 print lambda_half
 
