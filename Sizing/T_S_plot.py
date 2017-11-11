@@ -22,7 +22,7 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 itermax = 1000
 T_guess = 4400
 
-S = np.linspace(900, 1200, 10)
+S = np.linspace(500, 1200, 10)
 
 
 

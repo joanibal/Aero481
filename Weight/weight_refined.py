@@ -151,8 +151,11 @@ def prelim_weight(Sref_wing, T0, consts):
 	w_start_elec = 38.93*(consts.numEngines*w_eng*10**(-3))**0.918	#electrical
 
 	w_eng_total = w_eng*consts.numEngines + nacelle_comp*w_nacelle + w_engcontrol + w_start_cp + w_start_elec
+	# print w_eng, w_nacelle, w_engcontrol, w_start_cp, w_start_elec
+	# print 'engine', w_eng_total
 
 	w_avionics = 19.2+11+5+3.5+44+78.4+168.5+14+38.2+37+15.6
+	# print 'avionics', w_avionics
 
 	w_flightdeck = 54.99*consts.Npil	#flight deck seats
 	w_passseats = 32.03*consts.Npass	#passenger seats
@@ -164,6 +167,7 @@ def prelim_weight(Sref_wing, T0, consts):
 	w_ac = 469.30*((45.83*60*(consts.Npil+consts.Natt+consts.Npass)*10**(-4))**0.419)	#air conditioning
 
 	w_interior = w_flightdeck + w_passseats +  2.0*w_lav + w_food + w_oxygen + w_windows + w_baggage + w_ac
+	# print 'interior', w_interior
 
 	#iterating for MTOW	
 	w_0, _, _, w_crew_payload = Weight.weight_estimation.calcWeights(consts.R,consts.L_D, consts.SFC, consts.machCruise, consts.w_payload)
@@ -178,23 +182,30 @@ def prelim_weight(Sref_wing, T0, consts):
 		# CL = calcCL(w_0/Sref_wing)
 		
 		Wwing_carichner = (0.00428*Sref_wing**0.48)*((consts.AR*consts.M**0.43)/(100*consts.tc)**0.76)*((w_0*consts.N)**0.84*consts.w_lambda**0.14)/(np.cos(consts.lambda_half)**1.54)
+		# print 'carichner', Wwing_carichner
 		Wwing_raymer = 0.0051*((w_0*consts.N)**0.557)*(Sref_wing**0.649)*(consts.AR**0.5)*(consts.tc**(-0.4))*((1+consts.w_lambda)**0.1)*(np.cos(consts.sweep)**(-1))*(consts.wing_mounted_area**0.1)
+		# print 'raymer', Wwing_raymer
 		w_wing = wing_comp*(Wwing_raymer + Wwing_carichner)/2.0
+		# print 'wing', w_wing
 
-		gamma_horiz = ((w_0*consts.N)**0.813)*((S_HT*10.7639)**0.584)*((consts.span_h/consts.t_root_h)**0.033)*((consts.c_MAC/0.3048)/consts.L_HT)**0.28
+		gamma_horiz = ((w_0*consts.N)**0.813)*((S_HT*10.7639)**0.584)*((consts.span_h/consts.t_root_h)**0.033)*((consts.c_MAC/0.3048)/(consts.L_HT/0.3048))**0.28
 		w_HT = tail_comp*0.0034*gamma_horiz**0.915
+		# print 'HT', w_HT
 
 		try:
-			gamma_canard = ((w_0*consts.N)**0.813)*((consts.Sref_c_actual*10.7639)**0.584)*((consts.span_c/consts.t_root_c)**0.033)*((consts.c_MAC/0.3048)/consts.L_c)**0.28
+			gamma_canard = ((w_0*consts.N)**0.813)*((consts.Sref_c_actual*10.7639)**0.584)*((consts.span_c/consts.t_root_c)**0.033)*((consts.c_MAC/0.3048)/(consts.L_c/0.3048))**0.28
 			w_c = tail_comp*0.0034*gamma_canard**0.915
+			# print 'c', w_c
 
 		except:
 			w_c = 0
 
-		gamma_vert = ((1+1)**0.5)*((w_0*consts.N)**0.363)*(S_VT**1.089)*(consts.M**0.601)*(consts.L_VT**(-0.726))*((1+consts.Arudder/S_VT)**0.217)*(AR_VT**0.337)*((1+consts.taper_VT)**0.363)*(np.cos(consts.sweep_VT)**(-0.484))
+		gamma_vert = ((1+1)**0.5)*((w_0*consts.N)**0.363)*((S_VT*10.7639)**1.089)*(consts.M**0.601)*((consts.L_VT/0.3048)**(-0.726))*((1+consts.Arudder/S_VT)**0.217)*(AR_VT**0.337)*((1+consts.taper_VT)**0.363)*(np.cos(consts.sweep_VT)**(-0.484))
 		w_VT = tail_comp*0.19*gamma_vert**1.014
+		# print 'VT', w_VT
 
-		w_fuse = fuse_comp*10.43*(1.25**1.42)*((consts.q*10**(-2))**0.283)*((w_0*10**(-3))**0.95)*((consts.fuse_length/8.8)**0.71)
+		w_fuse = fuse_comp*10.43*(1.25**1.42)*((consts.q*10**(-2))**0.283)*((w_0*10**(-3))**0.95)*((consts.fuse_length/0.3048/8.8)**0.71)
+		# print 'fuse', w_fuse
 
 		w_surfcont = 56.01*(w_0*consts.q*10**(-5))**0.576
 
@@ -206,18 +217,20 @@ def prelim_weight(Sref_wing, T0, consts):
 		ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, CL)
 		w_f = ff*w_0
 
-		w_bladder = 23.10*((w_f)*10**(-2))**0.758	#bladder cells
-		w_bladdersupport = 7.91*((w_f)*10**(-2))**0.854	#bladder cells supports
-		w_dumpdrain = 7.38*((w_f)*10**(-2))**0.458	#dump and drain
-		w_cgcontrol = 28.38*((w_f)*10**(-2))**0.442	#cg control system
+		w_bladder = 23.10*((w_f/consts.jetA_density)*10**(-2))**0.758	#bladder cells
+		w_bladdersupport = 7.91*((w_f/consts.jetA_density)*10**(-2))**0.854	#bladder cells supports
+		w_dumpdrain = 7.38*((w_f/consts.jetA_density)*10**(-2))**0.458	#dump and drain
+		w_cgcontrol = 28.38*((w_f/consts.jetA_density)*10**(-2))**0.442	#cg control system
 
 		w_fuelcontrol = w_bladder + w_bladdersupport + w_dumpdrain + w_cgcontrol
+		# print 'fuel control', w_fuelcontrol
 
 		w_flightind = consts.Npil*(15+0.032*(w_0*10**(-3)))	#flight indicators
 		w_engineind = consts.numEngines*(4.80+0.006*(w_0*10**(-3)))	#engine indicators
 		w_miscind = 0.15*(w_0*10**(-3))	#misc indicators
 
 		w_indicators = w_flightind + w_engineind + w_miscind
+		# print 'indicators', w_indicators
 
 		w_landing_gear = gear_comp*62.21*(w_0*(10**(-3)))**0.84
 		# w_landing_gear = w_0*0.043 #lb
@@ -226,8 +239,12 @@ def prelim_weight(Sref_wing, T0, consts):
 		# w_xtra = 0.17*w_0 #lb
 		w_miscfurnish = 0.771*(w_0*10**(-3))	#misc
 		w_elec = 1162.66*(w_fuelcontrol*w_avionics*10**(-3))**0.506
+		print 'landing gear', w_landing_gear
+		print 'misc furnishings', w_miscfurnish
+		print 'electronics', w_elec
 
 		w_0new = w_eng_total + w_avionics + w_interior + w_wing + w_HT + w_c + w_VT + w_fuse + w_surfcont + w_f + w_fuelcontrol + w_indicators + w_landing_gear + w_miscfurnish + w_elec
+		# print w_eng_total, w_avionics, w_interior, w_wing, w_HT, w_c, w_VT, w_fuse, w_surfcont, w_f, w_fuelcontrol, w_indicators, w_landing_gear, w_miscfurnish, w_elec
 
 		#convergence check
 		if abs(w_0new - w_0) <= tolerance:
@@ -251,13 +268,13 @@ if __name__ == '__main__':
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
 
-	w_0, w_f = prelim_weight(constants.Sref*10.7639, constants.thrust_req, constants)
+	w_0, w_f = prelim_weight(constants.Sref, constants.thrust_req, constants)
 
 	print 'w_0',w_0 , 'w_f', w_f
 
-	w_0, w_f = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
+	# w_0, w_f = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
 
-	print 'w_0',w_0 , 'w_f', w_f
+	# print 'w_0',w_0 , 'w_f', w_f
 
 
 	
