@@ -93,7 +93,7 @@ t_root_h = 0.9251                           #ft
 
 
 # Canard Properties
-L_c = 14.7808 									# m
+L_c = 14.7808 								# m
 Sref_c = 2	 								# m^2
 c_root_c = 2 								# m
 taper_c = 0.25
@@ -105,7 +105,7 @@ span_c = 26.06                              # ft
 c_root_VT = 3.5       						# m
 taper_VT = 0.75								# vertical tail taper ratiop
 sweep_VT = 0.628319							# radians (36 degrees)
-L_VT = 9.75
+L_VT = 9.75                                 # m
 Arudder = 43.09                             # ft^2
 
 # Wing Properties
@@ -137,7 +137,7 @@ y_MAC = b/6.0*(1.0+2.0*w_lambda)/(1.0+w_lambda)
 AR = 9
 tc = 0.12
 sweep = 36*0.0174533
-wing_mounted_area = 132.8011*2
+wing_mounted_area = 132.8011*2      #ft
 nacelle_length = 12.5               #ft
 inlet_area = 8.73                   #ft^2
 nacelle_width = 2.417*2             #ft
@@ -176,7 +176,7 @@ Npass = 8  #number of passengers
 Natt = 1  #number of attendants
 
 
-
+print lambda_half
 
 
 # surfaces = {
