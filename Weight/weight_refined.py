@@ -9,6 +9,7 @@ import Weight.weight_estimation
 import numpy as np
 import matplotlib.pyplot as plt
 import constants as consts
+from Sizing.Svt_calc import *
 
 #------------------------------------------------------------------#
 
@@ -118,6 +119,9 @@ def prelim_weight(Sref_wing, T0, consts):
 		S_HT = consts.S_HT
 		S_VT = consts.S_VT
 
+	c_tip_VT = calcTipChord(constants.c_root_VT, constants.taper_VT)
+	b_VT = calcb_VT(S_VT, constants.c_root_VT, c_tip_VT)
+	AR_VT = calcAR_VT(b_VT, S_VT)
 
 	# w_wing = 7.5*Sref_wing
 	# w_HT = 4.0*S_HT*10.7639
@@ -138,7 +142,7 @@ def prelim_weight(Sref_wing, T0, consts):
 	w_eng_rev = 0.034*(T0)	
 	# w_eng_control = 0.26*(T0)**0.5
 	# w_eng_start = 9.33*(w_eng_dry/1000.0)**1.078
-	w_eng = w_eng_dry + w_eng_oil + w_eng_rev + w_eng_control + w_eng_start
+	w_eng = w_eng_dry + w_eng_oil + w_eng_rev
 	w_nacelle = 0.6724*1.017*(consts.nacelle_length**0.1)*(consts.nacelle_width**0.294)*(consts.N**0.119)*(w_eng**0.611)*(consts.numEngines**0.984)*(consts.nacelle_wettedarea**0.224)	#cowl/duct
 	w_engcontrol = consts.Keco*(consts.fuse_length/0.3048*consts.numEngines)**0.792
 	
@@ -173,8 +177,8 @@ def prelim_weight(Sref_wing, T0, consts):
 	# for i in range(1000):
 		# CL = calcCL(w_0/Sref_wing)
 		
-		Wwing_carichner = (0.00428*Sref_wing**0.48)*((consts.AR*consts.M**0.43)/(100*consts.tc)**0.76)*((MTOW*consts.N)**0.84*consts.w_lambda**0.14)/(np.cos(consts.lambda_half)**1.54)
-		Wwing_raymer = 0.0051*((w_0*consts.N)**0.557)*(Sref_wing**0.649)*(consts.AR**0.5)*(consts.tc**(-0.4))*((1+w_lambda)**0.1)*(math.cos(consts.sweep)**(-1))*(consts.wing_mounted_area**0.1)
+		Wwing_carichner = (0.00428*Sref_wing**0.48)*((consts.AR*consts.M**0.43)/(100*consts.tc)**0.76)*((w_0*consts.N)**0.84*consts.w_lambda**0.14)/(np.cos(consts.lambda_half)**1.54)
+		Wwing_raymer = 0.0051*((w_0*consts.N)**0.557)*(Sref_wing**0.649)*(consts.AR**0.5)*(consts.tc**(-0.4))*((1+consts.w_lambda)**0.1)*(np.cos(consts.sweep)**(-1))*(consts.wing_mounted_area**0.1)
 		w_wing = wing_comp*(Wwing_raymer + Wwing_carichner)/2.0
 
 		gamma_horiz = ((w_0*consts.N)**0.813)*((S_HT*10.7639)**0.584)*((consts.span_h/consts.t_root_h)**0.033)*((consts.c_MAC/0.3048)/consts.L_HT)**0.28
@@ -187,7 +191,7 @@ def prelim_weight(Sref_wing, T0, consts):
 		except:
 			w_c = 0
 
-		gamma_vert = ((1+1)**0.5)*((w_0*consts.N)**0.363)*(S_VT**1.089)*(consts.M**0.601)*(consts.L_VT**(-0.726))*((1+consts.Arudder/S_VT)**0.217)*(consts.AR_VT**0.337)*((1+consts.taper_VT)**0.363)*(math.cos(consts.sweep_VT)**(-0.484))
+		gamma_vert = ((1+1)**0.5)*((w_0*consts.N)**0.363)*(S_VT**1.089)*(consts.M**0.601)*(consts.L_VT**(-0.726))*((1+consts.Arudder/S_VT)**0.217)*(AR_VT**0.337)*((1+consts.taper_VT)**0.363)*(np.cos(consts.sweep_VT)**(-0.484))
 		w_VT = tail_comp*0.19*gamma_vert**1.014
 
 		w_fuse = fuse_comp*10.43*(1.25**1.42)*((consts.q*10**(-2))**0.283)*((w_0*10**(-3))**0.95)*((consts.fuse_length/8.8)**0.71)

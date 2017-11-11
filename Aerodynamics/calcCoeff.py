@@ -59,7 +59,7 @@ def calcFF(name, surface):
 		f = surface['charLeng']/surface['diameter']
 		FF = 1 + 0.65/f
 	else:
-		FF = (1+ 0.6/)
+		FF = (1+ 0.6/f)
 
 
 
