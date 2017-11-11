@@ -63,15 +63,15 @@ import constants as consts
 # w_elec = 1162.66*((w_bladder+w_bladdersupport+w_dumpdrain+w_cgcontrol)*w_avionics*10**(-3))**0.506
 
 #furnishings
-w_flightdeck = 54.99*consts.Npil	#flight deck seats
-w_passseats = 32.03*consts.Npass	#passenger seats
-w_lav = 3.90*(consts.Npass**1.33)	#lavatories
-w_food = 5.68*(consts.Npass**1.12)	#food
-w_oxygen = 7*(consts.Npil+consts.Npass+consts.Natt)**0.702	#oxygen
-w_windows = 109.33*(consts.Npass*(1+consts.cabinpressure)*10**(-2))**0.505	#windows
-w_baggage = 0.0646*consts.Npass**1.456	#baggage
-w_ac = 469.30*((45.83*60*(consts.Npil+consts.Natt+consts.Npass)*10**(-4))**0.419)	#air conditioning
-w_miscfurnish = 0.771*(w_0*10**(-3))	#misc
+# w_flightdeck = 54.99*consts.Npil	#flight deck seats
+# w_passseats = 32.03*consts.Npass	#passenger seats
+# w_lav = 3.90*(consts.Npass**1.33)	#lavatories
+# w_food = 5.68*(consts.Npass**1.12)	#food
+# w_oxygen = 7*(consts.Npil+consts.Npass+consts.Natt)**0.702	#oxygen
+# w_windows = 109.33*(consts.Npass*(1+consts.cabinpressure)*10**(-2))**0.505	#windows
+# w_baggage = 0.0646*consts.Npass**1.456	#baggage
+# w_ac = 469.30*((45.83*60*(consts.Npil+consts.Natt+consts.Npass)*10**(-4))**0.419)	#air conditioning
+# w_miscfurnish = 0.771*(w_0*10**(-3))	#misc
 
 #----------------------------------------------------#
 def fuel_fraction(c, CD, R, speed, CL):
@@ -96,6 +96,13 @@ def prelim_weight(Sref_wing, T0, consts):
 	'''
 	#Sref in ft^2, T0 in lbs
 	'''
+
+	wing_comp = 0.8
+	tail_comp = 0.75
+	fuse_comp = 0.75
+	# flapsslats_comp = 0.6
+	gear_comp = 0.92
+	nacelle_comp = 0.7
 
 	try:
 		c_MAC_wing, _ = Sizing.horizontal_surf_sizing.MAC(consts.c_root, consts.w_lambda, consts.b) #m
@@ -122,15 +129,15 @@ def prelim_weight(Sref_wing, T0, consts):
 	# w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
 
 
-	w_fuse = 2.5*consts.Swet_fuse
+	# w_fuse = 2.5*consts.Swet_fuse
 
 
 	# # engine weight calculations (lbs)
 	w_eng_dry = 0.521*(T0)**0.9
 	w_eng_oil = 0.082*(T0)**0.65
 	w_eng_rev = 0.034*(T0)	
-	w_eng_control = 0.26*(T0)**0.5
-	w_eng_start = 9.33*(w_eng_dry/1000.0)**1.078
+	# w_eng_control = 0.26*(T0)**0.5
+	# w_eng_start = 9.33*(w_eng_dry/1000.0)**1.078
 	w_eng = w_eng_dry + w_eng_oil + w_eng_rev + w_eng_control + w_eng_start
 	w_nacelle = 0.6724*1.017*(consts.nacelle_length**0.1)*(consts.nacelle_width**0.294)*(consts.N**0.119)*(w_eng**0.611)*(consts.numEngines**0.984)*(consts.nacelle_wettedarea**0.224)	#cowl/duct
 	w_engcontrol = consts.Keco*(consts.fuse_length/0.3048*consts.numEngines)**0.792
@@ -138,6 +145,8 @@ def prelim_weight(Sref_wing, T0, consts):
 	#starting systems
 	w_start_cp = 9.33*(consts.numEngines*w_eng*10**(-3))**1.078	#cartridge/pneumatic
 	w_start_elec = 38.93*(consts.numEngines*w_eng*10**(-3))**0.918	#electrical
+
+	w_eng_total = w_eng*consts.numEngines + nacelle_comp*w_nacelle + w_engcontrol + w_start_cp + w_start_elec
 
 	w_avionics = 19.2+11+5+3.5+44+78.4+168.5+14+38.2+37+15.6
 
@@ -149,6 +158,8 @@ def prelim_weight(Sref_wing, T0, consts):
 	w_windows = 109.33*(consts.Npass*(1+consts.cabinpressure)*10**(-2))**0.505	#windows
 	w_baggage = 0.0646*consts.Npass**1.456	#baggage
 	w_ac = 469.30*((45.83*60*(consts.Npil+consts.Natt+consts.Npass)*10**(-4))**0.419)	#air conditioning
+
+	w_interior = w_flightdeck + w_passseats +  2.0*w_lav + w_food + w_oxygen + w_windows + w_baggage + w_ac
 
 	#iterating for MTOW	
 	w_0, _, _, w_crew_payload = Weight.weight_estimation.calcWeights(consts.R,consts.L_D, consts.SFC, consts.machCruise, consts.w_payload)
@@ -164,22 +175,22 @@ def prelim_weight(Sref_wing, T0, consts):
 		
 		Wwing_carichner = (0.00428*Sref_wing**0.48)*((consts.AR*consts.M**0.43)/(100*consts.tc)**0.76)*((MTOW*consts.N)**0.84*consts.w_lambda**0.14)/(np.cos(consts.lambda_half)**1.54)
 		Wwing_raymer = 0.0051*((w_0*consts.N)**0.557)*(Sref_wing**0.649)*(consts.AR**0.5)*(consts.tc**(-0.4))*((1+w_lambda)**0.1)*(math.cos(consts.sweep)**(-1))*(consts.wing_mounted_area**0.1)
-		w_wing = (Wwing_raymer + Wwing_carichner)/2.0
+		w_wing = wing_comp*(Wwing_raymer + Wwing_carichner)/2.0
 
 		gamma_horiz = ((w_0*consts.N)**0.813)*((S_HT*10.7639)**0.584)*((consts.span_h/consts.t_root_h)**0.033)*((consts.c_MAC/0.3048)/consts.L_HT)**0.28
-		w_HT = 0.0034*gamma_horiz**0.915
+		w_HT = tail_comp*0.0034*gamma_horiz**0.915
 
 		try:
 			gamma_canard = ((w_0*consts.N)**0.813)*((consts.Sref_c_actual*10.7639)**0.584)*((consts.span_c/consts.t_root_c)**0.033)*((consts.c_MAC/0.3048)/consts.L_c)**0.28
-			w_c = 0.0034*gamma_canard**0.915
+			w_c = tail_comp*0.0034*gamma_canard**0.915
 
 		except:
 			w_c = 0
 
 		gamma_vert = ((1+1)**0.5)*((w_0*consts.N)**0.363)*(S_VT**1.089)*(consts.M**0.601)*(consts.L_VT**(-0.726))*((1+consts.Arudder/S_VT)**0.217)*(consts.AR_VT**0.337)*((1+consts.taper_VT)**0.363)*(math.cos(consts.sweep_VT)**(-0.484))
-		w_VT = 0.19*gamma_vert**1.014
+		w_VT = tail_comp*0.19*gamma_vert**1.014
 
-		w_fuse = 10.43*(1.25**1.42)*((consts.q*10**(-2))**0.283)*((w_0*10**(-3))**0.95)*((consts.fuse_length/8.8)**0.71)
+		w_fuse = fuse_comp*10.43*(1.25**1.42)*((consts.q*10**(-2))**0.283)*((w_0*10**(-3))**0.95)*((consts.fuse_length/8.8)**0.71)
 
 		w_surfcont = 56.01*(w_0*consts.q*10**(-5))**0.576
 
@@ -196,19 +207,23 @@ def prelim_weight(Sref_wing, T0, consts):
 		w_dumpdrain = 7.38*((w_f)*10**(-2))**0.458	#dump and drain
 		w_cgcontrol = 28.38*((w_f)*10**(-2))**0.442	#cg control system
 
+		w_fuelcontrol = w_bladder + w_bladdersupport + w_dumpdrain + w_cgcontrol
+
 		w_flightind = consts.Npil*(15+0.032*(w_0*10**(-3)))	#flight indicators
 		w_engineind = consts.numEngines*(4.80+0.006*(w_0*10**(-3)))	#engine indicators
 		w_miscind = 0.15*(w_0*10**(-3))	#misc indicators
 
-		w_landing_gear = 62.21*(w_0*(10**(-3)))**0.84
+		w_indicators = w_flightind + w_engineind + w_miscind
+
+		w_landing_gear = gear_comp*62.21*(w_0*(10**(-3)))**0.84
 		# w_landing_gear = w_0*0.043 #lb
 		w_nose_gear = w_landing_gear*0.15 #lb
 		w_main_gear = 0.85*w_landing_gear/2.0 #lb
 		# w_xtra = 0.17*w_0 #lb
 		w_miscfurnish = 0.771*(w_0*10**(-3))	#misc
-		w_elec = 1162.66*((w_bladder+w_bladdersupport+w_dumpdrain+w_cgcontrol)*w_avionics*10**(-3))**0.506
+		w_elec = 1162.66*(w_fuelcontrol*w_avionics*10**(-3))**0.506
 
-		w_0new = consts.numEngines*w_eng + w_wing + w_HT + w_c + w_VT + w_fuse + w_xtra + w_landing_gear + w_f + w_crew_payload
+		w_0new = w_eng_total + w_avionics + w_interior + w_wing + w_HT + w_c + w_VT + w_fuse + w_surfcont + w_f + w_fuelcontrol + w_indicators + w_landing_gear + w_miscfurnish + w_elec
 
 		#convergence check
 		if abs(w_0new - w_0) <= tolerance:
