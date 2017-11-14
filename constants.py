@@ -89,8 +89,8 @@ L_HT = 13.25								# m
 c_root_HT = 2.35 							# m
 taper_HT = 0.41
 span_h = 25.197                             # ft
-t_root_h = 0.9251                           #ft
-
+t_root_h = 0.9251                           # ft
+sweep_HT = 36                               # deg
 
 # Canard Properties
 L_c = 14.7808 								# m
@@ -100,6 +100,7 @@ taper_c = 0.25
 Sref_c_actual = 130/10.7639                 # m^2
 t_root_c = 0.837                            # ft
 span_c = 26.06                              # ft
+sweep_c = 31.0                              # deg
 
 # Vertical Stabilizer Properties
 c_root_VT = 3.5       						# m
