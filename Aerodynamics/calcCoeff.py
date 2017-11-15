@@ -15,12 +15,15 @@ def compentCDMethod(surfaces, consts):
 	'''
 	Cd_0 = 0
 	for surface in surfaces.keys():
-		Cf =  calcCf(surfaces[surface]['charLeng'], consts.v, consts.dens, consts.mu, consts.Density_Cruise, consts.machCruise)
+		Cf = calcCf(surfaces[surface]['charLeng']*0.3048, consts.speed_kts * 0.51444448824222,
+		            consts.mu, consts.Density_Cruise, consts.machCruise)
+
+		FF = calcFF()
+
+		Cd_0 += 1/consts.Sref*FF*surfaces[surface]['interfernceFactor']*surfaces[surface]['swet']
 
 
-
-		Cd += 1/consts.Sref*FF*surfaces[surface]['interfernceFactor']*surfaces[surface]['swet']
-
+	quit()
 
 			
 
@@ -45,10 +48,11 @@ def compentCDMethod(surfaces, consts):
 	return CD0
 
 
-def calcCf(C, v, dens, mu, rho, M):
+def calcCf(C, v, mu, rho, M):
+    # every varible must be in SI!!!
 	Re = rho*v*C/mu
 
-	return 0.455/(np.log10(Re)**2.58*(1+0.144*M^2)^0.65)
+	return 0.455/(np.log10(Re)**2.58*(1+0.144*M**2)**0.65)
 
 def calcFF(name, surface):
 
@@ -59,25 +63,28 @@ def calcFF(name, surface):
 		f = surface['charLeng']/surface['diameter']
 		FF = 1 + 0.65/f
 	else:
-		FF = (1+ 0.6/f)
+		FF = (1 + 0.6 / surface['Xmaxt/c'] * surface['t/c'] + 100 * surface['t/c']**4)*(1.34*M**0.18*np.cos())
 
 
 
 
 def calcFlagDrag(cf, c, S_flapped, S_slotted, defl, defl_slotted ):
-	Cd = 1.7*(cf/c)^1.38 * (S_flapped/Sref)*sin(defl)^2
-	Cd += 0.9*(cf/c)^1.38 * (S_slotted/Sref)*sin(defl_slotted)^2
+	Cd = 1.7*(cf/c)**1.38 * (S_flapped/Sref)*sin(defl)^2
+	Cd += 0.9*(cf/c)**1.38 * (S_slotted/Sref)*sin(defl_slotted)^2
 	return Cd
 
 
 
 if __name__ == '__main__':
 	#Define w_0
-
+	import numpy as np
 	import constants as consts
-	w_0 = calcWeights((5000+200),15, 0.657, M=0.85)[0]	 # [0] <-- only use the first 
-	Cd_0, k = DragPolar(w_0, plot=True)[0:2] # [0:2] <-- only use the first two ouputs 
-	print Cd_0
+	# w_0 = calcWeights((5000+200),15, 0.657, M=0.85)[0]	 # [0] <-- only use the first 
+	# Cd_0, k = DragPolar(w_0, plot=True)[0:2] # [0:2] <-- only use the first two ouputs 
+	# print Cd_0
+
+	compentCDMethod(consts.surfaces, consts)
+
 
 	# test for array inputs
 	# w_0 = np.array([calcWeights((5000+200),15, 0.657, M=0.85)[0], calcWeights((5000+100),15, 0.657, M=0.85)[0]])	 # [0] <-- only use the first 

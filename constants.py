@@ -182,46 +182,46 @@ jetA_density = 6.71 #lb/gal
 # La = fuse_length
 # Ngen = numEngines
 
-# surfaces = {
-#             'fuselage':{
-#                         'charLeng':101.17, #ft
-#                         'diameter':8.8,  # ft
-#                         'interfernceFactor': 1.0,
-#                         'swet':2323.66 #ft^2
-#                         }
-#             'wing':{
-#                         'charLeng':3.17, #ft
-#                         't/c':.12,
-#                         'Xmaxt/c':.4,
-#                         'interfernceFactor': 1.0,
-#                         'swet': 1746.54 #ft^2
-#                         }
-#             'vTail':{
-#                         'charLeng':3.09, #ft
-#                         't/c':.12,
-#                         'Xmaxt/c':.4,
-#                         'interfernceFactor': 1.0,
-#                         'swet': 252.18 #ft^2
-#                         }
-#             'hTail':{
-#                         'charLeng':1.79,
-#                         't/c':.12,
-#                         'Xmaxt/c':.4,
-#                         'interfernceFactor': 1.0,
-#                         'swet': 216.24 #ft^2
-#                         }
-#             'canard':{
-#                         'charLeng':1.79,
-#                         't/c':.12,
-#                         'Xmaxt/c':.4,
-#                         'interfernceFactor': 1.0,
-#                         'swet': 267.4 #ft^2.
-#                         }
-#             'nacelle':{
-#                         'charLeng':12.5,
-#                         'diameter':4.83,
-#                         'interfernceFactor': 1.0,
-#                         'swet': 215.58 #ft^2
-#                         }
+surfaces = {
+            'fuselage':{
+                        'charLeng':101.17, #ft
+                        'diameter':8.8,  # ft
+                        'interfernceFactor': 1.0,
+                        'swet':2323.66 #ft^2
+                        },
+            'wing':{
+                        'charLeng':3.17, #ft
+                        't/c':.12,
+                        'Xmaxt/c':.4,
+                        'interfernceFactor': 1.0,
+                        'swet': 1746.54 #ft^2
+                        },
+            'vTail':{
+                        'charLeng':3.09, #ft
+                        't/c':.12,
+                        'Xmaxt/c':.4,
+                        'interfernceFactor': 1.0,
+                        'swet': 252.18 #ft^2
+                        },
+            'hTail':{
+                        'charLeng':1.79,
+                        't/c':.12,
+                        'Xmaxt/c':.4,
+                        'interfernceFactor': 1.0,
+                        'swet': 216.24 #ft^2
+                        },
+            'canard':{
+                        'charLeng':1.79,
+                        't/c':.12,
+                        'Xmaxt/c':.4,
+                        'interfernceFactor': 1.0,
+                        'swet': 267.4 #ft^2.
+                        },
+            'nacelle':{
+                        'charLeng':12.5,
+                        'diameter':4.83,
+                        'interfernceFactor': 1.0,
+                        'swet': 215.58 #ft^2
+                        }
 
-#             }
+            }
