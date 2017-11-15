@@ -70,9 +70,13 @@ def prelim_weight(Sref_wing, T0, consts):
 	w_HT = 3.5*S_HT*10.7639
 	w_VT = 3.5*S_VT*10.7639
 	# w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
-
+	# print 'wing', w_wing
+	# print 'ht', w_HT
+	# print 'vt', w_VT
+	# print 'canard', w_c
 
 	w_fuse = 2.5*consts.Swet_fuse
+	# print 'fuse', w_fuse
 
 
 	# # engine weight calculations (lbs)
@@ -131,7 +135,7 @@ if __name__ == '__main__':
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
 
-	w_0, w_f = prelim_weight(constants.Sref*10.7639, constants.thrust_req, constants)
+	w_0, w_f = prelim_weight(constants.Sref, constants.thrust_req, constants)
 
 	print 'w_0',w_0 , 'w_f', w_f
 
