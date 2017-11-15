@@ -90,7 +90,7 @@ def fuel_fraction(c, CD, R, speed, CL):
 	# print cruiseFrac, ff5, ff, 1-ff
 	return 1-ff
 
-
+# def fuel_fraction_update()
 
 
 def prelim_weight(Sref_wing, T0, consts):
@@ -240,13 +240,17 @@ def prelim_weight(Sref_wing, T0, consts):
 		w_main_gear = 0.85*w_landing_gear/2.0 #lb
 		# w_xtra = 0.17*w_0 #lb
 		w_miscfurnish = 0.771*(w_0*10**(-3))	#misc
-		w_elec = 1162.66*(w_fuelcontrol*w_avionics*10**(-3))**0.506
+		w_elec = 1162.66*((w_fuelcontrol*w_avionics)*10**(-3))**0.506 # transport
+		# w_elec = 426.17*((w_fuelcontrol*w_avionics)*10**(-3))**0.51 # fighter
+		# w_elec = 12.57*(w_fuelcontrol*w_avionics)**(0.51) #raymer GA
 		# print 'landing gear', w_landing_gear
 		# print 'misc furnishings', w_miscfurnish
+		# print 'w_avionics', w_avionics
+		# print 'fuel control', w_fuelcontrol
 		# print 'electronics', w_elec
 
 		w_0new = w_eng_total + w_avionics + w_interior + w_wing + w_HT + w_c + w_VT + w_fuse + w_surfcont + w_f + w_fuelcontrol + w_indicators + w_landing_gear + w_miscfurnish + w_elec
-		print w_eng_total, w_avionics, w_interior, w_wing, w_HT, w_c, w_VT, w_fuse, w_surfcont, w_f, w_fuelcontrol, w_indicators, w_landing_gear, w_miscfurnish, w_elec
+		# print w_eng_total, w_avionics, w_interior, w_wing, w_HT, w_c, w_VT, w_fuse, w_surfcont, w_f, w_fuelcontrol, w_indicators, w_landing_gear, w_miscfurnish, w_elec
 
 		#convergence check
 		if abs(w_0new - w_0) <= tolerance:

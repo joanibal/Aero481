@@ -30,22 +30,22 @@ if __name__ == '__main__':
 	# print d_np-constants.CG #ft
 
 	#horizontal stabilizer calculations
-	S_total = hor_Sref(constants.c_HT, c_MAC, constants.Sref, constants.L_HT)
-	print S_total*constants.L_HT
-
+	S_total = hor_Sref(constants.c_HT, c_MAC, constants.S_wing*0.092903, constants.L_HT)
+	print S_total, S_total*constants.L_HT
+	print constants.L_c*constants.Sref_c
 	#HT calculations
 	Sref_HT = (S_total*constants.L_HT-constants.L_c*constants.Sref_c)/constants.L_HT
-	print Sref_HT #m^2
+	print 'Sref HT:', Sref_HT #m^2
 
 	b_HT, AR_HT = hor_surf_prop(Sref_HT, constants.c_root_HT, constants.taper_HT)
-	print b_HT, AR_HT #m
+	print 'b_HT', b_HT, '    AR_HT', AR_HT #m
 
 	_ , y_MAC_HT = MAC(constants.c_root_HT, constants.taper_HT, b_HT)
 	print y_MAC_HT #m
 
 	#canard calculations
 	b_c, AR_c = hor_surf_prop(constants.Sref_c, constants.c_root_c, constants.taper_c)
-	print b_c, AR_c #m
+	print 'b_c', b_c, 'AR_c', AR_c #m
 
 	_ , y_MAC_c = MAC(constants.c_root_c, constants.taper_c, b_c)
 	print y_MAC_c #m
