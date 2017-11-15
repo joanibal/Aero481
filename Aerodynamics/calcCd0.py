@@ -185,6 +185,7 @@ da_fuse = 3.83*empennage_upsweep**2.5*(math.pi*(surfaces['fuselage']['diameter']
 # regular wheel and tire, in tandem, and round strut (for nose, and two aft main gears)
 da_lg = (0.25+0.15+0.30)*3
 # 4.5 sq ft for main landing gear
+# 2.15
 
 da_engine_windmill = (0.3*math.pi*(surfaces['nacelle']['diameter']/2)**2)*2					# engine windmilling effects
 CD_mis = (da_fuse+da_lg+da_engine_windmill)/constants.Sref

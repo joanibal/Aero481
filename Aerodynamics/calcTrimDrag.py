@@ -31,7 +31,7 @@ l_c = x_cg-x_cNP					# Dist. between Canard NP and Aircraft CG (ft)
 Sref = constants.Sref
 wMAC = constants.c_MAC
 ht_cMAC, ht_yMAC = MAC(constants.c_root, constants.w_lambda, constants.b)
-St = hor_Sref(constants.c_HT, ht_cMAC, constants.Sref, constants.L_HT)
+St = hor_Sref(constants.c_HT, ht_cMAC, constants.S_wing*0.092903, constants.L_HT)
 V_HT = constants.c_HT
 
 """# Calculate fuselage + main wing pitching moment contributions
@@ -50,9 +50,12 @@ Sref_HT = (St*constants.L_HT-\
 	constants.L_c*constants.Sref_c)/constants.L_HT			# Tail Sref
 _, AR_t = hor_surf_prop(Sref_HT, \
 	constants.c_root_HT, constants.taper_HT)				# Tail AR
+print("Tail Aspect Ratio:" + str(AR_t))
 e_t = 1.78*(1-0.045*AR_t**0.68)-0.64						# Tail Oswald efficiency
+print("Tail efficiency: " + str(e_t))
+
 CD_trim_tail = ((C_Lt**2)/(math.pi*e_t*AR_t))*(St/Sref)		# Tail trim drag
-print("Horizontal Trail Trim Drag (C_D):" + str(CD_trim_tail))
+#print("Horizontal Trail Trim Drag (C_D):" + str(CD_trim_tail))
 
 #Calculate canard trim drag coefficients
 Sref_c = constants.Sref_c*10.7639								# Canard sref (ft^2)
@@ -60,4 +63,19 @@ AR_c = (constants.span_c)**2/Sref_c								# Canard AR
 C_Lc = (C_LW*(x_w/Sref)+C_Mact)*(l/(l-x_w))*(Sref/Sref_c)		# Canard lift coefficient
 e_c = 1.78*(1-0.045*AR_c**0.68)-0.64							# Canard Oswald efficiency
 CD_tim_canard = ((C_Lc**2)/(math.pi*e_c*AR_c))*(Sref_c/Sref)	# Canard trim drag
-print("Canard Trim Drag (C_D):" + str(CD_tim_canard))
+#print("Canard Trim Drag (C_D):" + str(CD_tim_canard))
+
+#Calculate wing
+A = constants.AR
+sweep_LE = 38.37339*0.0174533
+e_w = (4.61*(1-0.045*A**0.68))*((math.cos(sweep_LE))**0.15)-3.1
+#print("Wing efficiency: " + str(e_w))
+
+#Compute drag-due-to-lift factor
+k_wing = 1/(math.pi*A*e_w)
+k_canard = 1/(math.pi*AR_c*e_c)
+k_tail = 1/(math.pi*AR_t*e_t)
+
+print(k_wing)
+print(k_canard)
+print(k_tail)
