@@ -9,24 +9,22 @@ def calcCD(Cf, Swet, Sref, CL, e, AR):
 	CD = Cf*Swet/Sref + CL**2/(3.141529*AR*e)
 	return CD
 
-def compentCDMethod(surfaces, consts):
+def compentCDMethod(consts):
 	'''
 	surfaces is a dictionary of surfaces. where each entry is another dictionary of the surface properties
 	'''
+	surfaces = consts.surfaces
 	Cd_0 = 0
 	for surface in surfaces.keys():
 		Cf = calcCf(surfaces[surface]['charLeng']*0.3048, consts.speed_kts * 0.51444448824222,
 		            consts.mu, consts.Density_Cruise, consts.machCruise)
 
-		FF = calcFF()
-
-		Cd_0 += 1/consts.Sref*FF*surfaces[surface]['interfernceFactor']*surfaces[surface]['swet']
+		FF = calcFF(surface, surfaces[surface], consts.machCruise)
+		print 'FF', FF
+		Cd_0 += 1.0/consts.Sref*FF*surfaces[surface]['interfernceFactor']*surfaces[surface]['swet']
 
 
 	quit()
-
-			
-
 
 	Cd_0 = {
 		'takeoff':{'gear up':Cd0 + delC_d0_tof,
@@ -45,7 +43,6 @@ def compentCDMethod(surfaces, consts):
 	#return
 	return Cd_0, k, e
 
-	return CD0
 
 
 def calcCf(C, v, mu, rho, M):
@@ -54,18 +51,19 @@ def calcCf(C, v, mu, rho, M):
 
 	return 0.455/(np.log10(Re)**2.58*(1+0.144*M**2)**0.65)
 
-def calcFF(name, surface):
+def calcFF(name, surface, M):
+	print name
 
-	if name is 'fueslage':
+	if name is 'fuselage':
 		f = surface['charLeng']/surface['diameter']
 		FF = 1 + 60/f**3 + f/400
 	elif name is 'nacelle':
 		f = surface['charLeng']/surface['diameter']
 		FF = 1 + 0.65/f
 	else:
-		FF = (1 + 0.6 / surface['Xmaxt/c'] * surface['t/c'] + 100 * surface['t/c']**4)*(1.34*M**0.18*np.cos())
+		FF = (1 + 0.6 / surface['Xmaxt/c'] * surface['t/c'] + 100 * surface['t/c']**4)*(1.34*M**0.18*np.cos(surface['sweep'])**0.28)
 
-
+	return FF
 
 
 def calcFlagDrag(cf, c, S_flapped, S_slotted, defl, defl_slotted ):
@@ -77,13 +75,17 @@ def calcFlagDrag(cf, c, S_flapped, S_slotted, defl, defl_slotted ):
 
 if __name__ == '__main__':
 	#Define w_0
+	#calculate Cd0 using the component build up method
+	import os,sys,inspect
+
+	sys.path.insert(1, os.path.join(sys.path[0], '..'))
 	import numpy as np
 	import constants as consts
 	# w_0 = calcWeights((5000+200),15, 0.657, M=0.85)[0]	 # [0] <-- only use the first 
 	# Cd_0, k = DragPolar(w_0, plot=True)[0:2] # [0:2] <-- only use the first two ouputs 
 	# print Cd_0
 
-	compentCDMethod(consts.surfaces, consts)
+	compentCDMethod(consts)
 
 
 	# test for array inputs
