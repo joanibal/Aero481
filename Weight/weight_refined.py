@@ -240,8 +240,9 @@ def prelim_weight(Sref_wing, T0, consts):
 		w_main_gear = 0.85*w_landing_gear/2.0 #lb
 		# w_xtra = 0.17*w_0 #lb
 		w_miscfurnish = 0.771*(w_0*10**(-3))	#misc
-		w_elec = 1162.66*((w_fuelcontrol*w_avionics)*10**(-3))**0.506 # transport
-		# w_elec = 426.17*((w_fuelcontrol*w_avionics)*10**(-3))**0.51 # fighter
+		w_elec_transport = 1162.66*((w_fuelcontrol*w_avionics)*10**(-3))**0.506 # transport
+		w_elec_fight = 426.17*((w_fuelcontrol*w_avionics)*10**(-3))**0.51 # fighter
+		w_elec = (w_elec_transport + w_elec_fight)/2.0
 		# w_elec = 12.57*(w_fuelcontrol*w_avionics)**(0.51) #raymer GA
 		# print 'landing gear', w_landing_gear
 		# print 'misc furnishings', w_miscfurnish
