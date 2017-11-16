@@ -54,7 +54,18 @@ def AR_study(root, tip, Sref_wing, sweep_quarterchord, AR_init, AR_final, AR_ste
 		print line
 
 	return 0
-		
+
+def Sref_study(root, tip, sweep_quarterchord, sref_start, sref_end, steps):	
+	taper_ratio = tip['c']/root['c'] 
+	Sref = np.linspace(sref_start, sref_end, steps)
+	print '\n# Sref trade study from', sref_start,'to', sref_end
+	for i in range(0, len(Sref)):
+		b = 2*Sref[i]/(root['c']*(1+taper_ratio))
+		AR = b**2.0/Sref[i]
+		tan_sweep_LE = np.tan(sweep_quarterchord)+ (1-taper_ratio)/(AR*(1+taper_ratio))
+		print '# '+str(round((tan_sweep_LE*0.5*b)+root['X'], 4))+' '+str(round(0.5*b,4))+' '+str(tip['Z'])+' '+str(tip['c'])+' '+str(tip['Ainc'])+' '+str(tip['Nspan'])+' '+str(tip['Sspace'])
+
+	return 0	
 
 if __name__ == '__main__':
 	import constants as consts
@@ -80,3 +91,4 @@ if __name__ == '__main__':
 	sweep_study(root, tip, 40, 2) #final sweep angle & angle step size
 	taper_study(root, tip, 0, 20) #taper final & number of steps
 	AR_study(root, tip, consts.S_wing, consts.sweep, 1.0, 16.0, 20.0) #start AR & final AR & number of steps
+	Sref_study(root, tip, consts.sweep, 900, 2500, 20) #start Sref, end Sref, number of steps
