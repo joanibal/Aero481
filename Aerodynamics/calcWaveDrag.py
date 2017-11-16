@@ -14,10 +14,8 @@ cruiseCL = constants.CL['cruise']
 M = constants.M
 
 MDD = kappa/math.cos(sweep)-thickness/(math.cos(sweep)**2)-cruiseCL/(10*math.cos(sweep)**3)
-print(MDD)
 Mcrit = MDD-(0.1/80)**(1.0/3)
 
-print(Mcrit)
 if M > Mcrit:
 	print("Valid")
 

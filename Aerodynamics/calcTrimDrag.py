@@ -68,8 +68,10 @@ CD_tim_canard = ((C_Lc**2)/(math.pi*e_c*AR_c))*(Sref_c/Sref)	# Canard trim drag
 #Calculate wing
 A = constants.AR
 sweep_LE = 38.37339*0.0174533
-e_w = (4.61*(1-0.045*A**0.68))*((math.cos(sweep_LE))**0.15)-3.1
-#print("Wing efficiency: " + str(e_w))
+e_w = (4.61*(1-0.045*15**0.68))*((math.cos(sweep_LE))**0.15)-3.1
+e_w_straight = 1.78*(1-0.045*15**0.68)-0.64
+print("Wing efficiency: " + str(e_w))
+print("Straight wing efficiency:" + str(e_w_straight))
 
 #Compute drag-due-to-lift factor
 k_wing = 1/(math.pi*A*e_w)
