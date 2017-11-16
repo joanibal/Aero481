@@ -248,7 +248,7 @@ def prelim_weight(Sref_wing, T0, consts):
 		# print 'misc furnishings', w_miscfurnish
 		# print 'w_avionics', w_avionics
 		# print 'fuel control', w_fuelcontrol
-		# print 'electronics', w_elec
+		# print 'electron`ics', w_elec
 
 		w_0new = w_eng_total + w_avionics + w_interior + w_wing + w_HT + w_c + w_VT + w_fuse + w_surfcont + w_f + w_fuelcontrol + w_indicators + w_landing_gear + w_miscfurnish + w_elec
 		# print w_eng_total, w_avionics, w_interior, w_wing, w_HT, w_c, w_VT, w_fuse, w_surfcont, w_f, w_fuelcontrol, w_indicators, w_landing_gear, w_miscfurnish, w_elec
@@ -277,7 +277,7 @@ if __name__ == '__main__':
 
 	w_0, w_f = prelim_weight(constants.Sref, constants.thrust_req, constants)
 
-	print 'w_0',w_0 , 'w_f', w_f
+	print 'w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
 
 	# w_0, w_f = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
 
