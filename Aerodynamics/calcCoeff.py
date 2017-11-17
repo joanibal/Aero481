@@ -15,42 +15,41 @@ def compentCDMethod(consts):
 	'''
 	surfaces is a dictionary of surfaces. where each entry is another dictionary of the surface properties
 	'''
-	skinRoughness = {
-            'camPaint': 3.3e-5,
-        				'smoothPaint': 2.08e-5,
-        				'producitonSM': 1.33e-5,
-        				'polishedSM': 0.50e-5,
-        				'smoothComp': 0.17e-5
-        }
 
 	surfaces = consts.surfaces
 	Cd_0 = 0
 	for surface in surfaces.keys():
+
 		Cf = calcCf(surfaces[surface] , consts.speed_kts * 0.51444448824222,
-		            consts.mu, consts.Density_Cruise, consts.machCruise, )
+			consts.mu, consts.Density_Cruise, consts.machCruise, )
 
 		FF = calcFF(surface, surfaces[surface], consts.machCruise)
-		Cd_0 += 1.0 / consts.Sref * FF * \
-			surfaces[surface]['interfernceFactor'] * surfaces[surface]['swet']
 
+		# print surface, Cf, FF, surfaces[surface]['interfernceFactor'], surfaces[surface]['swet']/ consts.Sref
+		Cd_0 += surfaces[surface]['swet'] / consts.Sref * FF * Cf * surfaces[surface]['interfernceFactor'] 
+		# print Cd_0
+
+	# quit()
 	# Missing Form Drag (da = drag area (D\q))
 	empennage_upsweep = 6.08853 * 0.0174533														# rad
-	da_fuse = 3.83 * empennage_upsweep**2.5 * \
-		(np.pi * (surfaces['fuselage']['diameter'] / 2)**2)
+	da_fuse = 3.83 * empennage_upsweep**2.5 * np.pi * \
+		(( surfaces['fuselage']['diameter'] / 2.0)**2)
 	# regular wheel and tire, in tandem, and round strut (for nose, and two aft main gears)
 	da_lg = (0.25 + 0.15 + 0.30) * (2 * 4.5 + 2.15)
 	delC_d0_lg = (da_lg) / consts.Sref
 	# 4.5 sq ft for main landing gear
 
 	# engine windmilling effects
-	da_engine_windmill = (
-		0.3 * np.pi * (surfaces['nacelle']['diameter'] / 2)**2) * 2
-	CD_mis = (da_fuse + da_lg + da_engine_windmill) / consts.Sref
+	da_engine_windmill = 0.3*2* np.pi *( surfaces['nacelle']['diameter'] / 2)**2
+	CD_mis = (da_fuse + da_engine_windmill) / consts.Sref
 
-	Cd_0 *= (3.5 / 100)  # Account for Leak and Protuberance Drag
+	print Cd_0
 
-	Cf = calcCf(surfaces['wing']['charLeng'] * 0.3048, consts.speed_kts * 0.51444448824222,
-             consts.mu, consts.Density_Cruise, consts.machCruise)
+	Cd_0 += CD_mis
+	Cd_0 *= 1.035  # Account for Leak and Protuberance Drag
+
+	Cf = calcCf(surfaces['wing'], consts.speed_kts * 0.51444448824222,
+				consts.mu, consts.Density_Cruise, consts.machCruise, )
 
 	# solving for the area of the flap
 	c_flap_start = 0.9 * consts.c_root + consts.w_lambda * 0.1 * consts.c_root
@@ -63,8 +62,22 @@ def compentCDMethod(consts):
 	delC_d0_lf = calcFlapDrag(
 		0.25, S_flapped,  consts.S_wing / 10.7639,  40 * 0.0174533)
 
-	Cd_0_wave = 0
 
+	kappa = 0.95
+	sweep = consts.sweep
+	thickness = consts.surfaces['wing']['t/c']  # Average
+	cruiseCL = consts.CL['cruise']
+	M = consts.M
+
+	MDD = kappa / np.cos(sweep) - thickness / (np.cos(sweep)
+												** 2) - cruiseCL / (10 * np.cos(sweep)**3)
+	Mcrit = MDD - (0.1 / 80)**(1.0 / 3)
+
+	if M > Mcrit:
+		print("Valid")
+
+	Cd_0_wave = 20 * (M - Mcrit)**4
+	print Cd_0_wave
 	Cd0 = {
 		'takeoff': {'gear up': Cd_0 + delC_d0_to,
                     'gear down': Cd_0 + delC_d0_lg + delC_d0_to},
@@ -79,7 +92,8 @@ def compentCDMethod(consts):
 		'landing': 0.70
 	}
 
-	print e['clean']
+	print Cd_0
+
 	k = {}
 	for key in e.keys():
 		k[key] = 1 / (np.pi * consts.AR * e[key])
@@ -88,13 +102,26 @@ def compentCDMethod(consts):
 	return Cd0, k
 
 
-def calcCf(surface, v, mu, rho, M, k, fracLaminar):
+def calcCf(surface, v, mu, rho, M):
     # every varible must be in SI!!!
 
 	# Reynolds number breakdown
 	# Cruise conditions (40k ft)
+
+	skinRoughness = {
+				'camPaint': 3.3e-5,
+				'smoothPaint': 2.08e-5,
+				'producitonSM': 1.33e-5,
+				'polishedSM': 0.50e-5,
+				'smoothComp': 0.17e-5
+			}
+
+	# print surface, surface['charLeng']
+
+
 	C = surface['charLeng']
 	fracLaminar = surface['fracLaminar']
+	k = skinRoughness[surface['finish']]
 
 	Re = rho * v * C / mu
 	Re_cutoff_turb = 44.62 * (C / k)**1.053 * M**1.16
@@ -111,7 +138,7 @@ def calcCf(surface, v, mu, rho, M, k, fracLaminar):
 		Re_laminar = Re
 
 	Cf = 0.455 / (np.log10(Re)**2.58 * (1 + 0.144 * M**2)**0.65) * (1 - fracLaminar) + \
-            1.328 / np.sqrt(Re_hTail_laminar) * fracLaminar
+            1.328 / np.sqrt(Re_laminar) * fracLaminar
 
 	return Cf
 
@@ -127,6 +154,7 @@ def calcFF(name, surface, M):
 	else:
 		FF = (1 + 0.6 / surface['Xmaxt/c'] * surface['t/c'] + 100 *
 		      surface['t/c']**4) * (1.34 * M**0.18 * np.cos(surface['sweep'])**0.28)
+		# print (1.34 * M**0.18 * np.cos(surface['sweep'])**0.28), 1.34 * M**0.18, np.cos(surface['sweep'])**0.28
 
 	return FF
 

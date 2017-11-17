@@ -189,8 +189,8 @@ surfaces = {
                         'interfernceFactor': 1.0,
                         'swet':2323.66 ,#ft^2
                         'sweep': 0  ,# rad
-                        'fracLaminar': 0.0
-
+                        'fracLaminar': 0.1,
+                        'finish': 'smoothPaint'
                     },
             'wing':{
                         'charLeng':3.17, #ft
@@ -199,7 +199,8 @@ surfaces = {
                         'interfernceFactor': 1.0,
                         'swet': 1746.54 ,#ft^2
                         'sweep': sweep  ,# rad
-                        'fracLaminar': 0.0
+                        'fracLaminar': 0.35,
+                        'finish': 'polishedSM'
                         },
             'vTail':{
                         'charLeng':3.09, #ft
@@ -208,7 +209,8 @@ surfaces = {
                         'interfernceFactor': 1.0,
                         'swet': 252.18 ,#ft^2
                         'sweep': sweep_VT  ,# rad
-                        'fracLaminar': 0.0
+                        'fracLaminar': 0.35,
+                        'finish': 'smoothPaint'
                     },
             'hTail':{
                         'charLeng':1.79,
@@ -217,7 +219,8 @@ surfaces = {
                         'interfernceFactor': 1.0,
                         'swet': 216.24 ,#ft^2
                         'sweep': sweep_HT  ,# rad
-                        'fracLaminar': 0.0
+                        'fracLaminar': 0.35,
+                        'finish': 'polishedSM'
                     },
             'canard':{
                         'charLeng':1.79,
@@ -226,7 +229,8 @@ surfaces = {
                         'interfernceFactor': 1.0,
                         'swet': 267.4, #ft^2.
                         'sweep': sweep_c  ,# rad
-                        'fracLaminar': 0.0
+                        'fracLaminar': 0.35,
+                        'finish': 'polishedSM'
 
                         },
             'nacelle':{
@@ -235,7 +239,8 @@ surfaces = {
                         'interfernceFactor': 1.0,
                         'swet': 215.58, #ft^2,
                         'sweep': 0,
-                        'fracLaminar': 0.0
+                        'fracLaminar': 0.1,
+                        'finish': 'smoothPaint'
                         }
 
             }
