@@ -8,7 +8,7 @@ import Sizing.Svt_calc
 import Weight.weight_estimation
 import numpy as np
 import matplotlib.pyplot as plt
-import constants as consts
+# import constants as consts
 from Sizing.Svt_calc import *
 
 #------------------------------------------------------------------#
@@ -119,8 +119,8 @@ def prelim_weight(Sref_wing, T0, consts):
 		S_HT = consts.S_HT
 		S_VT = consts.S_VT
 
-	c_tip_VT = calcTipChord(constants.c_root_VT, constants.taper_VT)
-	b_VT = calcb_VT(S_VT, constants.c_root_VT, c_tip_VT)
+	c_tip_VT = calcTipChord(consts.c_root_VT, consts.taper_VT)
+	b_VT = calcb_VT(S_VT, consts.c_root_VT, c_tip_VT)
 	AR_VT = calcAR_VT(b_VT, S_VT)
 
 	# w_wing = 7.5*Sref_wing
@@ -275,7 +275,7 @@ if __name__ == '__main__':
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
 
-	w_0, w_f = prelim_weight(constants.Sref, constants.thrust_req, constants)
+	w_0, w_f = prelim_weight(constants.S_wing, constants.thrust_req, constants)
 
 	print 'w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
 
