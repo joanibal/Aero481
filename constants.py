@@ -188,7 +188,9 @@ surfaces = {
                         'diameter':8.8,  # ft
                         'interfernceFactor': 1.0,
                         'swet':2323.66 ,#ft^2
-                        'sweep': 0  # rad
+                        'sweep': 0  ,# rad
+                        'fracLaminar': 0.0
+
                     },
             'wing':{
                         'charLeng':3.17, #ft
@@ -196,7 +198,8 @@ surfaces = {
                         'Xmaxt/c':.4,
                         'interfernceFactor': 1.0,
                         'swet': 1746.54 ,#ft^2
-                        'sweep': sweep  # rad
+                        'sweep': sweep  ,# rad
+                        'fracLaminar': 0.0
                         },
             'vTail':{
                         'charLeng':3.09, #ft
@@ -204,7 +207,8 @@ surfaces = {
                         'Xmaxt/c':.4,
                         'interfernceFactor': 1.0,
                         'swet': 252.18 ,#ft^2
-                        'sweep': sweep_VT  # rad
+                        'sweep': sweep_VT  ,# rad
+                        'fracLaminar': 0.0
                     },
             'hTail':{
                         'charLeng':1.79,
@@ -212,7 +216,8 @@ surfaces = {
                         'Xmaxt/c':.4,
                         'interfernceFactor': 1.0,
                         'swet': 216.24 ,#ft^2
-                        'sweep': sweep_HT  # rad
+                        'sweep': sweep_HT  ,# rad
+                        'fracLaminar': 0.0
                     },
             'canard':{
                         'charLeng':1.79,
@@ -220,7 +225,8 @@ surfaces = {
                         'Xmaxt/c':.4,
                         'interfernceFactor': 1.0,
                         'swet': 267.4, #ft^2.
-                        'sweep': sweep_c  # rad
+                        'sweep': sweep_c  ,# rad
+                        'fracLaminar': 0.0
 
                         },
             'nacelle':{
@@ -228,7 +234,8 @@ surfaces = {
                         'diameter':4.83,
                         'interfernceFactor': 1.0,
                         'swet': 215.58, #ft^2,
-                        'sweep': 0
+                        'sweep': 0,
+                        'fracLaminar': 0.0
                         }
 
             }
