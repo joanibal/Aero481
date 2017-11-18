@@ -9,11 +9,12 @@ def sweep_study(root, tip, angle_final, angle_step):
 		d = np.tan(np.deg2rad(angle))*hspan
 		tip_X = round(root['X']+0.25*root['c']+d-0.25*tip['c'], 4)
 		print '#',tip_X, tip['Y'], tip['Z'], tip['c'], tip['Ainc'], tip['Nspan'], tip['Sspace']
+
 	return 0
 
 def taper_study(root, tip, taper_final, taper_step_number):
 	tip_quarterchord_position = tip['X'] - 0.25*tip['c']
-	print '\n# wing sweep angle trade study from 1 to ', taper_final
+	print '\n# wing taper ratio trade study from 1 to ', taper_final
 	taper = np.linspace(1.0, taper_final, num=taper_step_number)
 	for i in range(0, len(taper)):
 		tip_c = taper[i]*root['c']
@@ -63,7 +64,7 @@ def Sref_study(root, tip, sweep_quarterchord, sref_start, sref_end, steps):
 		b = 2*Sref[i]/(root['c']*(1+taper_ratio))
 		AR = b**2.0/Sref[i]
 		tan_sweep_LE = np.tan(sweep_quarterchord)+ (1-taper_ratio)/(AR*(1+taper_ratio))
-		print '# '+str(round((tan_sweep_LE*0.5*b)+root['X'], 4))+' '+str(round(0.5*b,4))+' '+str(tip['Z'])+' '+str(tip['c'])+' '+str(tip['Ainc'])+' '+str(tip['Nspan'])+' '+str(tip['Sspace'])
+		print ' # '+str(round((tan_sweep_LE*0.5*b)+root['X'], 4))+' '+str(round(0.5*b,4))+' '+str(tip['Z'])+' '+str(tip['c'])+' '+str(tip['Ainc'])+' '+str(tip['Nspan'])+' '+str(tip['Sspace'])
 
 	return 0	
 
@@ -88,7 +89,7 @@ if __name__ == '__main__':
 		   'Nspan':19,
 		   'Sspace':3,}
 
-	sweep_study(root, tip, 40, 2) #final sweep angle & angle step size
-	taper_study(root, tip, 0, 20) #taper final & number of steps
-	AR_study(root, tip, consts.S_wing, consts.sweep, 1.0, 16.0, 20.0) #start AR & final AR & number of steps
-	Sref_study(root, tip, consts.sweep, 900, 2500, 20) #start Sref, end Sref, number of steps
+	sweep_study(root, tip, 42, 2) #final sweep angle & angle step size
+	taper_study(root, tip, 0, 21) #taper final & number of steps
+	AR_study(root, tip, consts.S_wing, consts.sweep, 1.0, 16, 16) #start AR & final AR & number of steps
+	Sref_study(root, tip, consts.sweep, 900, 2500, 17) #start Sref, end Sref, number of steps
