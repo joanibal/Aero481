@@ -9,7 +9,7 @@
 # Imperial Used: ft, lbm, etc.
 
 # Case title
-jetMaizeV1
+jetMaize
 
 # Mach
 0.85
@@ -287,6 +287,40 @@ sc20612-il.dat
 
 #AFILE
 #sc20612-il.dat
+
+
+
+
+
+#10%
+SECTION
+# Xle Yle Zle Chord Ainc           [ Nspan Sspace ]
+45.19918 7.14237 -2.2244105 13.975434 2.5 19 3
+
+AFILE
+sc20612-il.dat
+
+
+CONTROL
+# name gain Xhinge VYZhvec SgnDup
+Flap -1.00 0.25 0 1 0 1.00
+
+
+
+
+#50%
+SECTION
+# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+58.663 24.42585 -2.4606325 9.64077 0.5 19 3
+AFILE
+sc20612-il.dat
+
+
+
+CONTROL
+# name gain Xhinge VYZhvec SgnDup
+Flap -1.00 0.25 0 1 0 1.00
+
 
 #TIP CHORD
 SECTION
