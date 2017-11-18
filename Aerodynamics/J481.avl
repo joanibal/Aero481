@@ -172,23 +172,23 @@ TRANSLATE
 
 
 
-#ROOT CHORD WITH 50% HINGE (FUSELAGE EFFECT IGNORED)
-SECTION
-# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-10.9592 0.0 -0.73 7 0.000 3 3
-NACA
-0008
-CLAF
-1.1078
+# #ROOT CHORD WITH 50% HINGE (FUSELAGE EFFECT IGNORED)
+# SECTION
+# # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+# 10.9592 0.0 -0.73 7 0.000 3 3
+# NACA
+# 0008
+# CLAF
+# 1.1078
 
-#ROOT CHORD WITH 50% HINGE (FUSELAGE EFFECT IGNORED)
-SECTION
-# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-10.9592 3.5 -0.73 7 0.000 1 3
-NACA
-0008
-CLAF
-1.1078
+# #ROOT CHORD WITH 50% HINGE (FUSELAGE EFFECT IGNORED)
+# SECTION
+# # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+# 10.9592 3.5 -0.73 7 0.000 1 3
+# NACA
+# 0008
+# CLAF
+# 1.1078
 
 
 # outside fuse
@@ -197,7 +197,7 @@ CLAF
 #ROOT CHORD WITH 50% HINGE (FUSELAGE EFFECT ACCOUNTED)
 SECTION
 # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-10.9592 3.87 -0.73 7 2 5 3
+10.9592 0.0 -0.73 7 2 8 3
 AFILE
 sc20612-il.dat
 
@@ -205,11 +205,15 @@ CONTROL
 # name gain Xhinge VYZhvec SgnDup
 Canard -1.00 0.0 0 1 0 1.00
 
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Flap 1.00 0.70 0 0 0 1.00
+
 
 #TIP CHORD WITH 50% HINGE
 SECTION
 # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-18.7808 16.9 -0.984252 3 2 5 3
+18.7808 16.9 -0.984252 3 2 8 3
 AFILE
 sc20612-il.dat
 
@@ -217,6 +221,10 @@ sc20612-il.dat
 CONTROL
 # name gain Xhinge VYZhvec SgnDup
 Canard 1.00 0.0   0 1 0    1.00
+
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Flap 1.00 0.70 0 0 0 1.00
 
 
 
@@ -251,22 +259,22 @@ TRANSLATE
 
 
 
-SECTION
-# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-5 0 -2.16535 61 2.00 2 3
-NACA
-0008
-CLAF
-1.1078
+# SECTION
+# # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+# 5 0 -2.16535 61 2.00 2 3
+# NACA
+# 0008
+# CLAF
+# 1.1078
 
 
-SECTION
-# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-10.9592 2. -2.16535 51.21 0.00 1 3
-NACA
-0008
-CLAF
-1.1078
+# SECTION
+# # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+# 10.9592 2. -2.16535 51.21 3 1 3
+# NACA
+# 0008
+# CLAF
+# 1.1078
 
 
 
@@ -275,7 +283,7 @@ CLAF
 #ROOT CHORD
 SECTION
 # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-41.8333 2.82152 -2.16535 15.0591 3 19 3
+41.8333 0 -2.16535 15.0591 4 6 3
 
 AFILE
 sc20612-il.dat
@@ -292,10 +300,17 @@ sc20612-il.dat
 
 
 
+CONTROL
+# name gain Xhinge VYZhvec SgnDup
+Flap 1.00 0.70 0 0 0 1.00
+
+
+
+
 #10%
 SECTION
 # Xle Yle Zle Chord Ainc           [ Nspan Sspace ]
-45.19918 7.14237 -2.2244105 13.975434 2.5 19 3
+45.19918 7.14237 -2.2244105 13.975434 4 5 3
 
 AFILE
 sc20612-il.dat
@@ -303,7 +318,7 @@ sc20612-il.dat
 
 CONTROL
 # name gain Xhinge VYZhvec SgnDup
-Flap -1.00 0.25 0 1 0 1.00
+Flap 1.00 0.70 0 0 0 1.00
 
 
 
@@ -311,7 +326,7 @@ Flap -1.00 0.25 0 1 0 1.00
 #50%
 SECTION
 # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-58.663 24.42585 -2.4606325 9.64077 0.5 19 3
+58.663 24.42585 -2.4606325 9.64077 1 3 3
 AFILE
 sc20612-il.dat
 
@@ -319,13 +334,17 @@ sc20612-il.dat
 
 CONTROL
 # name gain Xhinge VYZhvec SgnDup
-Flap -1.00 0.25 0 1 0 1.00
+Flap 1.00 0.70 0 0 0 1.00
+
+
+
+
 
 
 #TIP CHORD
 SECTION
 # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-75.4948 46.0302 -2.75591 4.22244 -2 19 3
+75.4948 46.0302 -2.75591 4.22244 -14 2 3
 
 AFILE
 sc20612-il.dat
