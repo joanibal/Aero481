@@ -5,7 +5,7 @@ import string
 filenames = ["results_sweep.txt", "results_taper.txt", "results_ar.txt", "results_sref.txt"]
 xlabels = ['Sweep, ' + '$\Lambda$' + ' (deg)', 'Taper, ' + '$\lambda$', 'Aspect Ratio, AR', '$S_{ref}$']
 ylabels = ["CL/CD", "CL/CD", "CL/CD", "CL/CD"]
-titles = ["Sweep", "Taper Ratio", "Aspect Ratio", "Reference Area"]
+titles = ["Aerodynamics: Sweep Study", "Aerodynamics: Taper Ratio Study", "Aerodynamics: Aspect Ratio Study", "Aerodynamics: Reference Area Study"]
 #x_min = [0, 0, 1, 900]
 #x_max = [40, 1, 16, 2500]
 
