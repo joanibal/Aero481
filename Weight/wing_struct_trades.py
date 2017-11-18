@@ -41,14 +41,16 @@ def prelim_weight(Sref_wing, T0, consts, AR, tc, taper_ratio, sweep_angle):
 	gear_comp = 0.92
 	nacelle_comp = 0.7
 
+	b = ((AR*Sref_wing)**0.5)*0.3048 #m
+
 	try:
-		c_MAC_wing, _ = Sizing.horizontal_surf_sizing.MAC(consts.c_root, taper_ratio, consts.b) #m
+		c_MAC_wing, _ = Sizing.horizontal_surf_sizing.MAC(consts.c_root, taper_ratio, b) #m
 		#finds total required area
 		S_total = Sizing.horizontal_surf_sizing.hor_Sref(consts.c_HT, c_MAC_wing, 0.092903*Sref_wing, consts.L_HT) #m^2
 		
 		#formula explanation: new tail area = (tail only area * distance to tail - distance to canard * area of canard)/distance to tail
 		S_HT = (S_total*consts.L_HT - consts.Sref_c*consts.L_c)/consts.L_HT #m^2
-		S_VT = Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)
+		S_VT = Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, b, Sref_wing/10.7639)
 		# print w_c
 
 	except:
@@ -99,7 +101,7 @@ def prelim_weight(Sref_wing, T0, consts, AR, tc, taper_ratio, sweep_angle):
 	tolerance = 1.0
 	converged = 0
 
-	sweep_halfchord = np.arctan((0.5*consts.b*np.tan(sweep_angle)-0.25*consts.c_root + 0.25*taper_ratio*consts.c_root)/(0.5*consts.b))
+	sweep_halfchord = np.arctan((0.5*b*np.tan(sweep_angle)-0.25*consts.c_root + 0.25*taper_ratio*consts.c_root)/(0.5*b))
 
 	while True:
 	# for i in range(1000):
@@ -178,22 +180,16 @@ def prelim_weight(Sref_wing, T0, consts, AR, tc, taper_ratio, sweep_angle):
 	return w_0, w_f
 
 def prelim_weight_wrapper(consts, Sref, AR, tc, taper_ratio, sweep_angle):
-	n = max(len(Sref), len(AR), len(tc), len(taper_ratio), len(sweep_angle))
-	ones = np.ones(n)
-
-	Sref = Sref*ones
-	AR = AR*ones
-	tc = tc*ones
-	taper_ratio = taper_ratio*ones
-	sweep_angle = sweep_angle*ones
-
-	w_0 = np.empty(n)
-	w_f = np.empty(n)
+	w_0 = np.empty([len(Sref), len(AR), len(tc), len(taper_ratio), len(sweep_angle)])
+	w_f = w_0
 	# print w_0
 
-	for i in range(0, n):
-		print 
-		w_0[i], w_f[i] = prelim_weight(Sref[i], consts.thrust_req, consts, AR[i], tc[i], taper_ratio[i], sweep_angle[i])
+	for i in range(0, len(Sref)):
+		for j in range(0, len(AR)):
+			for k in range(0, len(tc)):
+				for l in range(0, len(taper_ratio)):
+					for m in range(0, len(sweep_angle)):
+						w_0[i,j,k,l,m], w_f[i,j,k,l,m] = prelim_weight(Sref[i], consts.thrust_req, consts, AR[j], tc[k], taper_ratio[l], sweep_angle[m])
 	# print w_0
 	# print w_f
 	return w_0, w_f
@@ -219,7 +215,7 @@ def prelim_weight_wrapper(consts, Sref, AR, tc, taper_ratio, sweep_angle):
 
 if __name__ == '__main__':
 	import constants as consts
-	import Weight.weight_refined as weight_refined
+	# import Weight.weight_refined as weight_refined
 	import matplotlib.pyplot as plt
 	
 	Sref_0 = consts.S_wing 
@@ -234,72 +230,82 @@ if __name__ == '__main__':
 	# # wing_mounted_area = consts.wing_mounted_area
 	# # b = consts.b
 	# # c_root = consts.c_root
-	w_0, w_f = weight_refined.prelim_weight(consts.S_wing, consts.thrust_req, consts)
+	w_0, w_f = prelim_weight_wrapper(consts, [Sref_0], [AR_0], [tc_0], [taper_0], [sweep_0])
 	# w_0, w_f = prelim_weight_wrapper(consts, [Sref_0], [AR_0], [tc_0], [taper_0], [sweep_0])
 	# W_wing0 = weight_calc(Sref_0, AR_0, tc_0, taper_0, sweep_0, constants)
 
 
 	#varying Sref
-	Sref_range = np.linspace(800, 2000, 50)
+	Sref_range = np.linspace(800, 2000, 10)
 	w_0_Sref, w_f_Sref = prelim_weight_wrapper(consts, Sref_range, [AR_0], [tc_0], [taper_0], [sweep_0])
 	# W_Sref = weight_calc(Sref_range, AR_0, tc_0, taper_0, sweep_0, constants)
 	print 'Sref complete'
 
 	#varying AR
-	AR_range = np.linspace(1.0, 15.0, 50)
+	AR_range = np.linspace(1.0, 15.0, 10)
 	w_0_AR, w_f_AR = prelim_weight_wrapper(consts, [Sref_0], AR_range, [tc_0], [taper_0], [sweep_0])
 	# W_AR = weight_calc(Sref_0, AR_range, tc_0, taper_0, sweep_0, constants)
 	print 'AR complete'
 
 	#varying tc
-	tc_range = np.linspace(0.03, 0.25, 50)
+	tc_range = np.linspace(0.03, 0.25, 10)
 	w_0_tc, w_f_tc = prelim_weight_wrapper(consts, [Sref_0], [AR_0], tc_range, [taper_0], [sweep_0])
 	# W_tc = weight_calc(Sref_0, AR_0, tc_range, taper_0, sweep_0, constants)
 	print 't/c complete'
 
 	#varying taper
-	taper_range = np.linspace(0.0, 1.0, 100)
+	taper_range = np.linspace(0.0, 1.0, 10)
 	w_0_taper, w_f_taper = prelim_weight_wrapper(consts, [Sref_0], [AR_0], [tc_0], taper_range, [sweep_0])
 	# W_taper = weight_calc(Sref_0, AR_0, tc_0, taper_range, sweep_0, constants)
 	print 'Taper ratio complete'
 
 	#varying sweep
-	sweep_range = np.linspace(0.0, 45.0, 50)
+	sweep_range = np.linspace(0.0, 45.0, 10)
 	w_0_sweep, w_f_sweep = prelim_weight_wrapper(consts, [Sref_0], [AR_0], [tc_0], [taper_0], np.deg2rad(sweep_range))
 	# W_sweep = weight_calc(Sref_0, AR_0, tc_0, taper_0, np.deg2rad(sweep_range), constants)
 	print 'Sweep angle complete'
 
-	plt.plot(Sref_range, w_f_Sref)
+	#varying all
+	w_0_all, w_f_all = prelim_weight_wrapper(consts, Sref_range, AR_range, tc_range, taper_range, np.deg2rad(sweep_range))
+	w_f_min = argmin(w_f_all)
+	print w_f
+	print 'Sref: '+str(Sref_range[w_f_min[1]])
+	print 'AR: '+str(AR_range[w_f_min[2]])
+	print 't/c: '+str(tc_range[w_f_min[3]])
+	print 'taper: '+str(taper_range[w_f_min[4]])
+	print 'sweep: '+str(sweep_range[w_f_min[5]])
+
+	plt.plot(Sref_range, w_f_Sref[:,0, 0, 0, 0])
 	plt.title('Fuel Burn Trade Study: Sref')
 	plt.ylabel('Fuel Weight [lbs]')
 	plt.xlabel('Wing Area [ft^2]')
-	plt.plot([Sref_0], [w_f], 'ro') 
+	plt.plot([Sref_0], [w_f[0,0,0,0,0]], 'ro') 
 	plt.show()
 
-	plt.plot(AR_range, w_f_AR)
+	plt.plot(AR_range, w_f_AR[0,:,0,0,0])
 	plt.title('Fuel Burn Trade Study: Aspect Ratio')
 	plt.ylabel('Fuel Weight [lbs]')
 	plt.xlabel('Aspect Ratio')
-	plt.plot([AR_0], [w_f], 'ro')
+	plt.plot([AR_0], [w_f[0,0,0,0,0]], 'ro')
 	plt.show()
 
-	plt.plot(tc_range, w_f_tc)
+	plt.plot(tc_range, w_f_tc[0,0,:,0,0])
 	plt.title('Fuel Burn Trade Study: t/c')
 	plt.ylabel('Fuel Weight [lbs]')
 	plt.xlabel('t/c')
-	plt.plot([tc_0], [w_f], 'ro')
+	plt.plot([tc_0], [w_f[0,0,0,0,0]], 'ro')
 	plt.show()
 
-	plt.plot(taper_range, w_f_taper)
+	plt.plot(taper_range, w_f_taper[0,0,0,:,0])
 	plt.title('Fuel Burn Trade Study: Taper Ratio')
 	plt.ylabel('Fuel Weight [lbs]')
 	plt.xlabel('Taper Ratio')
-	plt.plot([taper_0], [w_f], 'ro')
+	plt.plot([taper_0], [w_f[0,0,0,0,0]], 'ro')
 	plt.show()
 
-	plt.plot(sweep_range, w_f_sweep)
+	plt.plot(sweep_range, w_f_sweep[0,0,0,0,:])
 	plt.title('Fuel Burn Trade Study: Quarter Chord Sweep Angle')
 	plt.ylabel('Fuel Weight [lbs]')
 	plt.xlabel('Angle [deg]')
-	plt.plot([np.degrees(sweep_0)], [w_f], 'ro')
+	plt.plot([np.degrees(sweep_0)], [w_f[0,0,0,0,0]], 'ro')
 	plt.show()
