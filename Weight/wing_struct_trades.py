@@ -258,7 +258,7 @@ if __name__ == '__main__':
 	print 't/c complete'
 
 	#varying taper
-	taper_range = np.linspace(0.0, 1.0, 50)
+	taper_range = np.linspace(0.0, 1.0, 100)
 	w_0_taper, w_f_taper = prelim_weight_wrapper(consts, [Sref_0], [AR_0], [tc_0], taper_range, [sweep_0])
 	# W_taper = weight_calc(Sref_0, AR_0, tc_0, taper_range, sweep_0, constants)
 	print 'Taper ratio complete'
