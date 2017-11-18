@@ -2,15 +2,14 @@
 import matplotlib.pyplot as plt
 import string
 
-filename = "results_sweep.txt"
-file = open(filename, "r")
-flines = file.readlines()
-
-filenames = ["results_sweep.txt"]
-
+filenames = ["results_sweep.txt", "results_taper.txt", "results_ar.txt", "results_sref.txt"]
+xlabels = ["Sweep", "Taper Ratio", "Aspect Ratio", "Sref"]
+ylabels = ["CL/CD", "CL/CD", "CL/CD", "CL/CD"]
+x_min = [0, 0, 1, 900]
+x_max = [40, 1, 16, 2500]
 
 for j in range(len(filenames)):
-	file = open(filename, "r")
+	file = open(filenames[j], "r")
 	flines = file.readlines()
 
 	x = []
@@ -23,6 +22,9 @@ for j in range(len(filenames)):
 
 	plt.axis('equal')
 	plt.plot(x,y, linewidth=2)
-	plt.ylabel('Y')
-	plt.xlabel('X')
+	#plt.xlim(x_min[j], x_max[j])
+	axes = plt.gca()
+	axes.set_xlim([x_min[j],x_max[j]])
+	plt.xlabel(xlabels[j])
+	plt.ylabel(ylabels[j])
 	plt.show()
