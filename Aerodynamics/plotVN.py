@@ -26,12 +26,14 @@ C_Lmax = 1.3									# Max CL
 C_Lmin = -0.8									# Without high-lift devices
 
 # max
-wing_loading = 59.254							# lbs/ft^2 (Taken from PDR report)
+# wing_loading = 59.254							# lbs/ft^2 (Taken from PDR report)
 # empty
-# wing_loading = 37.24
+wing_loading = 37.24
 
+# max
 cf = 0.96										# correction factor to account for fuel burn (MTOW correction)
-												# notes use 0.96 as start of cruise
+# empty											# notes use 0.96 as start of cruise
+# cf = 1
 
 g_chord = constants.Sref/(constants.b*3.28084) 	# Sref/b (geometric chord) (ft)
 kappa = 0.97									# Assumed estimate from notes
