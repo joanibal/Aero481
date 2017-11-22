@@ -150,7 +150,7 @@ cabinpressure = 11.8                #psi
 
 # Properties exclusing wings
 Swet_rest = 307.1091*10.7639 #ft^2
-C_f = 0.0045 #Skin-friction coefficient based on equivalent skin-friction coefficients
+C_f = 0.0030 #Skin-friction coefficient based on equivalent skin-friction coefficients
 
 v_landingstall = 143.977436581 #ft/s
 

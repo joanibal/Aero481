@@ -22,7 +22,7 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 itermax = 1000
 T_guess = 4400
 
-S = np.linspace(900, 1200, 10)
+S = np.linspace(700, 1200, 10)
 
 
 
@@ -173,63 +173,61 @@ X, Y, fuel_curves = fuel_weight(S, np.linspace(0, T_guess*20, 10), consts)
 # print fuel_curves
 # X, Y = np.meshgrid(np.linspace(4000, 30000, 20), np.linspace(750, 1400, 20))
 
-with plt.xkcd():
-	CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn', colors='black')
-	# CS = plt.contourf(X, Y, fuel_curves, 50, alpha=0.5)
+CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn', colors='black')
+# CS = plt.contourf(X, Y, fuel_curves, 50, alpha=0.5)
 
-	plt.clabel(CS, CS.levels, fmt= '%8.0f')
-	# cbar = plt.colorbar(CS)
-	# cbar.ax.set_ylabel('Fuel Weight [lbs]')
-	# plt.show()
+plt.clabel(CS, CS.levels, fmt= '%8.0f')
+# cbar = plt.colorbar(CS)
+# cbar.ax.set_ylabel('Fuel Weight [lbs]')
+# plt.show()
 
 
-	ceiling, = plt.plot(S, thrustCon['Ceiling'], label='Ceiling',linewidth=3.0)
-	takeoff, = plt.plot(S, thrustCon['Takeoff'], label='Takeoff',linewidth=3.0)
+ceiling, = plt.plot(S, thrustCon['Ceiling'], label='Ceiling',linewidth=3.0)
+takeoff, = plt.plot(S, thrustCon['Takeoff'], label='Takeoff',linewidth=3.0)
 
-	cruise, = plt.plot(S, thrustCon['Cruise'], label='Cruise',linewidth=3.0)
-	# landing, = plt.plot(S, thrustCon['Landing'], label='Landing',linewidth=3.0)
-	landing, = plt.plot(Sref_landing, T, label='Landing',linewidth=3.0)
-	print(T)
-	print(Sref_landing)
-	lines = [ceiling, cruise, takeoff, landing]
+cruise, = plt.plot(S, thrustCon['Cruise'], label='Cruise',linewidth=3.0)
+# landing, = plt.plot(S, thrustCon['Landing'], label='Landing',linewidth=3.0)
+landing, = plt.plot(Sref_landing, T, label='Landing',linewidth=3.0)
+print(T)
+print(Sref_landing)
+lines = [ceiling, cruise, takeoff, landing]
 
-	for climbCond in contraints['Climb']:
-		lines.append(plt.plot(S, thrustCon['Climb'][climbCond], '--', label=climbCond,  linewidth=3.0)[0])
+for climbCond in contraints['Climb']:
+	lines.append(plt.plot(S, thrustCon['Climb'][climbCond], '--', label=climbCond,  linewidth=3.0)[0])
 
-	labels = [ x._label for x in lines]
+labels = [ x._label for x in lines]
 
-	# # a = np.logical_and(90000 >=thrustCon['Takeoff'],90000 >= thrustCon['Climb']['Balked Climb OEI'])
-	# plt.fill_between(S,thrustCon['Takeoff'],90000, where=thrustCon['Takeoff'] > thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
-	# plt.fill_between(S,thrustCon['Climb']['Balked Climb OEI'],90000, where=thrustCon['Takeoff'] < thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
-
+# # a = np.logical_and(90000 >=thrustCon['Takeoff'],90000 >= thrustCon['Climb']['Balked Climb OEI'])
+# plt.fill_between(S,thrustCon['Takeoff'],90000, where=thrustCon['Takeoff'] > thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
+# plt.fill_between(S,thrustCon['Climb']['Balked Climb OEI'],90000, where=thrustCon['Takeoff'] < thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 
 
 
 
 
-	for i in range(len(Sref_landing)):
 
-		flightCond = 'Climb'
-		climbCond = 'Balked Climb OEI'
-		for j in range(itermax):
-			W = prelim_weight(Sref_landing[i] , thrustCon['Climb'][climbCond][i], consts)[0]
-			# W_S = W/S[i]
+for i in range(len(Sref_landing)):
 
-			CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
+	flightCond = 'Climb'
+	climbCond = 'Balked Climb OEI'
+	for j in range(itermax):
+		W = prelim_weight(Sref_landing[i] , thrustCon['Climb'][climbCond][i], consts)[0]
+		# W_S = W/S[i]
 
-			T_W_climb = calcTWClimb(consts.CL['max'], CD0, k, consts.numEngines)[climbCond]
+		CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
 
-			T_climb_new = T_W_climb*W
-			print(flightCond + " " + climbCond + " " +  str(i) + " " + str(np.abs(T_climb_new - thrustCon['Climb'][climbCond][i])))
-			if np.abs(T_climb_new - thrustCon['Climb'][climbCond][i]) <= tolerance:
-				notconverged = False
-				break
+		T_W_climb = calcTWClimb(consts.CL['max'], CD0, k, consts.numEngines)[climbCond]
 
-			thrustCon['Climb'][climbCond][i] = T_climb_new
+		T_climb_new = T_W_climb*W
+		print(flightCond + " " + climbCond + " " +  str(i) + " " + str(np.abs(T_climb_new - thrustCon['Climb'][climbCond][i])))
+		if np.abs(T_climb_new - thrustCon['Climb'][climbCond][i]) <= tolerance:
+			notconverged = False
+			break
 
-		if notconverged:
-			raise ValueError(flightCond + ' ' + climbCond + ' didnt converge')
+		thrustCon['Climb'][climbCond][i] = T_climb_new
 
+	if notconverged:
+		raise ValueError(flightCond + ' ' + climbCond + ' didnt converge')
 
 
 
@@ -237,19 +235,20 @@ with plt.xkcd():
 
 
 
-	plt.fill_between(Sref_landing, T,thrustCon['Climb']['Balked Climb OEI'], where=T > thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 
-	# plt.plot([1080], [consts.thrust_req], 'ro', label='Design Point')
-	plt.plot([1080], [consts.thrust_req], 'ro', label='da design pnt')
-	design_point_str = '1080' + ' ft^2, ' + str(consts.thrust_req) + ' lbs'
-	plt.annotate(design_point_str, xy=(1080, consts.thrust_req), xytext=(1080+10, consts.thrust_req+100), weight = 'bold')
+plt.fill_between(Sref_landing, T,thrustCon['Climb']['Balked Climb OEI'], where=T > thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 
-	plt.legend(lines, labels)
-	plt.legend(loc = 'upper left')
+plt.plot([1080], [consts.thrust_req], 'ro', label='Design Point')
+# plt.plot([1080], [consts.thrust_req], 'ro', label='da design pnt')
+design_point_str = '1080' + ' ft^2, ' + str(consts.thrust_req) + ' lbs'
+plt.annotate(design_point_str, xy=(1080, consts.thrust_req), xytext=(1080+10, consts.thrust_req+100), weight = 'bold')
 
-	plt.ylabel('Thrust [lbs]')
-	plt.xlabel('S [$ft^2$]')
-	# plt.title('Thrust vs S and Fuel Burn')
-	plt.axis((S[0], S[-1], 0, 30000))
+plt.legend(lines, labels)
+plt.legend(loc = 'upper left')
+
+plt.ylabel('Thrust [lbs]')
+plt.xlabel('S [$ft^2$]')
+# plt.title('Thrust vs S and Fuel Burn')
+plt.axis((S[0], S[-1], 0, 30000))
 
 plt.show()
