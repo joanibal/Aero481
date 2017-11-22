@@ -16,6 +16,7 @@ M = constants.M
 Vk = constants.u_imperial*0.592484				# kts
 cruise_altitude = 50000							# Set cruise altitude
 gust_altitude = 20000							# Gust envelope at 20,000 ft
+U_e = [25, 50, 66]								# Gust velocities D, C, B at 20,000 ft	
 rho = 3.64e-4									# 50,000 ft (slugs/ft^3)
 rho0 = 12.67e-4									# 20,000 ft (slugs/ft^3)
 rho_SL = 23.77e-4								# Sea level density (slugs/ft^3)
@@ -42,11 +43,11 @@ V_C = V_EAS
 V_MO = 1.06*V_C 								# V_MO approximated as 1.06*V_C
 V_D = 1.07*V_MO 								# V_D approximated as 1.07*V_MO
 
-print('V_TAS: ' + str(V_TAS))
-print('V_EAS: '+ str(V_EAS))
-print('V_C: '+ str(V_C))
-print('V_MO: '+ str(V_MO))
-print('V_D: '+ str(V_D))
+print('V_TAS: ' + str(V_TAS) + ' kts')
+print('V_EAS: '+ str(V_EAS) + ' kts')
+print('V_C: '+ str(V_C) + ' kts')
+print('V_MO: '+ str(V_MO) + ' kts')
+print('V_D: '+ str(V_D) + ' kts')
 
 
 # Max/min stall curves
@@ -75,15 +76,12 @@ V_S = math.sqrt((2*cf*wing_loading*n_limit_norm*(-0.5))/(rho_SL*C_Lmin))/convKts
 V_S_n_upper = (rho_SL*(convKts2fts*V_S)**2*C_Lmax)/(2*cf*wing_loading)
 V_S_n_lower = (rho_SL*(convKts2fts*V_S)**2*C_Lmin)/(2*cf*wing_loading)
 
-print('V_A: '+str(V_A))
-print('V_S: '+ str(V_S))
+print('V_A: '+str(V_A) + ' kts')
+print('V_S: '+ str(V_S) + ' kts')
 
 # Gust Loads
 mu = 2*(wing_loading*cf)/(rho0*g_chord*Cl_alpha*g)
 K_g = 0.88*mu/(5.3+mu)
-
-# D, C, B at 20, 000 ft
-U_e = [25, 50, 66]		
 
 # Solve roots to determine intersection point (U_e_b)
 a = (rho_SL*convKts2fts**2*C_Lmax)/(2*wing_loading*cf)
