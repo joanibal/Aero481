@@ -16,7 +16,6 @@ M = constants.M
 Vk = constants.u_imperial*0.592484				# kts
 cruise_altitude = 50000							# Set cruise altitude
 gust_altitude = 20000							# Gust envelope at 20,000 ft
-U_e = [25, 50, 66]								# Gust velocities D, C, B at 20,000 ft	
 rho = 3.64e-4									# 50,000 ft (slugs/ft^3)
 rho0 = 12.67e-4									# 20,000 ft (slugs/ft^3)
 rho_SL = 23.77e-4								# Sea level density (slugs/ft^3)
@@ -26,7 +25,11 @@ g = 32.2										# gravity (ft/s) (non-negative)
 C_Lmax = 1.3									# Max CL 
 C_Lmin = -0.8									# Without high-lift devices
 
-wing_loading = 62.34							# lbs/ft^2 (Taken from PDR report)
+# max
+wing_loading = 59.254							# lbs/ft^2 (Taken from PDR report)
+# empty
+# wing_loading = 37.24
+
 cf = 0.96										# correction factor to account for fuel burn (MTOW correction)
 												# notes use 0.96 as start of cruise
 
@@ -80,6 +83,28 @@ print('V_A: '+str(V_A) + ' kts')
 print('V_S: '+ str(V_S) + ' kts')
 
 # Gust Loads
+# Solve for gust speeds at altitude
+
+b_B = 50000-((50000-20000)/(38-66))*38
+b_C = 50000-((50000-20000)/(25-50))*25
+b_D = 50000-((50000-20000)/(12.5-25))*12.5
+
+U_e = [25, 50, 66]								# Default 20,000 ft
+
+if gust_altitude < 50000 and gust_altitude > 20000:
+	U_e[2] = (gust_altitude-b_B)/((50000-20000)/(38-66))
+	U_e[1] = (gust_altitude-b_B)/((50000-20000)/(25-50))
+	U_e[0] = (gust_altitude-b_B)/((50000-20000)/(12.5-25))
+elif gust_altitude >= 50000:
+	U_e[2] = 38
+	U_e[1] = 25
+	U_e[0] = 12.5
+
+print('\nGust velocities at ' + str(gust_altitude) + ' ft')
+print('V_B (rough gust): ' + str(U_e[2]) + ' kts') 
+print('V_C (gust at max design speed): ' + str(U_e[1]) + ' kts')
+print('V_D (gust at max dive speed): ' + str(U_e[0]) + ' kts')
+
 mu = 2*(wing_loading*cf)/(rho0*g_chord*Cl_alpha*g)
 K_g = 0.88*mu/(5.3+mu)
 
