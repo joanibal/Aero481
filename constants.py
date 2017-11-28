@@ -7,6 +7,7 @@ alt = 40000       							# ft
 R = 5200           							# nMi
 machCruise = 0.85
 SFC = 0.69      							# 1/hr
+SFC_sealevel = 0.346                        # 1/hr
 L_D = 15 									#used in weight_estimation
 speed_kts = 566.7279
 

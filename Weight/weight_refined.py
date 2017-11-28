@@ -90,7 +90,31 @@ def fuel_fraction(c, CD, R, speed, CL):
 	# print cruiseFrac, ff5, ff, 1-ff
 	return 1-ff
 
-# def fuel_fraction_update()
+def fuel_fraction_update(c, c_sealevel, Sref, T, w0, altitude, mach, rho, R, K, n)
+	
+	ff_startup = 1.0-c_sealevel*(15.0/60.0)*(T*0.05/w0)	#startup/warmup/taxi
+	w_startup = ff_startup*w_0
+	
+	ff_TO = 1.0-c_sealevel*(1/60.0)*(T/w_startup)
+	w_takeoff = ff_TO*w_startup
+	
+	ff_climb = 0.98 #historical
+	w_climb = ff_climb*w_takeoff
+
+	w_cruise_i = w_climb
+	for i in range{n-1}:
+		#calculate V from rho?
+		#calculate rho from initial?
+		CL = 2*w_cruise_i/(rho*V^2*Sref)
+		L_D = CL/(CD0 + K*CL^2)	
+		ff_cruise_step = np.exp(-(R/n)*c/(V*L_D))
+		w_cruise_i = ff_cruise_step*w_cruise_i
+	ff_cruise = w_cruise_i/w_climb
+
+	ff_descent = 0.99 #historical
+	ff_landing = 0.992 #historical
+
+	return ff
 
 
 def prelim_weight(Sref_wing, T0, consts):
