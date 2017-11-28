@@ -56,7 +56,7 @@ e = {'takeoff':{'gearUp':0.775,
 # density_denver =
 # density_ceiling =
 
-ceiling = 51000     						# ft
+# ceiling = 60000     						# ft
 T_Ceiling = 216.650  						# K
 # mu = 2.995e-7*47.88026
 mu = 1.704e-5   #N s/m2
