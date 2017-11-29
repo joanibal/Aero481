@@ -163,14 +163,16 @@ def prelim_weight(Sref_wing, T0, consts):
 		S_HT = (S_total*consts.L_HT - consts.Sref_c*consts.L_c)/consts.L_HT #m^2
 		S_VT = Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)
 		# print w_c
+		c_tip_VT = calcTipChord(consts.c_root_VT, consts.taper_VT)
+		b_VT = calcb_VT(S_VT, consts.c_root_VT, c_tip_VT)
+		AR_VT = calcAR_VT(b_VT, S_VT)
 
 	except:
 		S_HT = consts.S_HT
 		S_VT = consts.S_VT
+		AR_VT = consts.AR_VT
 
-	c_tip_VT = calcTipChord(consts.c_root_VT, consts.taper_VT)
-	b_VT = calcb_VT(S_VT, consts.c_root_VT, c_tip_VT)
-	AR_VT = calcAR_VT(b_VT, S_VT)
+
 
 	# w_wing = 7.5*Sref_wing
 	# w_HT = 4.0*S_HT*10.7639
@@ -329,13 +331,13 @@ if __name__ == '__main__':
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
 
-	w_0, w_f = prelim_weight(constants.S_wing, constants.thrust_req, constants)
+	# w_0, w_f = prelim_weight(constants.S_wing, constants.thrust_req, constants)
 
-	print 'w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
+	# print 'w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
 
-	# w_0, w_f = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
+	w_0, w_f = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
 
-	# print 'w_0',w_0 , 'w_f', w_f
+	print 'w_0',w_0 , 'w_f', w_f
 
 	# n = 10.0
 	# Sref_wing = consts.S_wing

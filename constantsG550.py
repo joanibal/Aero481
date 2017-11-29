@@ -51,6 +51,7 @@ c_root = 18.48
 
 S_HT = 244.87* 0.09203  # m^2
 S_VT = 140.16* 0.09203  # m^2
+AR_VT = 5.05
 
 Density_Ceiling = 0.17773
 Density_SL  = 1.225
@@ -77,3 +78,6 @@ u = M*a                                     # Airspeed (m/s)
 rho_imperial = rho*0.00194032               # Conversion from kg/m^3 to slugs/ft^3
 u_imperial = u*3.28084                      # Conversion from m/s to ft/s
 q = 0.5*rho_imperial*u_imperial**2          # Dynamic Pressure (imperial)
+
+
+nacelle_length = 16.24              #ft
