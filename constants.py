@@ -56,7 +56,7 @@ e = {'takeoff':{'gearUp':0.775,
 # density_denver =
 # density_ceiling =
 
-# ceiling = 60000     						# ft
+ceiling = 60000     						# ft
 T_Ceiling = 216.650  						# K
 # mu = 2.995e-7*47.88026
 mu = 1.704e-5   #N s/m2
@@ -69,7 +69,7 @@ Density_Ceiling = 0.1164     				# kg/M^3
 Density_SL  = 1.225       					# kg/M^3
 Density_Cruise = 0.154                      # 53000 ft
 a_Ceiling = 573.57          				# knots
-
+cruise_steps = 5.0                          # number of steps used in cruise climb
 
 CL= {
     'max': {

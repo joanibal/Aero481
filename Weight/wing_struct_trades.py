@@ -184,6 +184,7 @@ def prelim_weight_wrapper(consts, Sref, AR, tc, taper_ratio, sweep_angle):
 	w_0 = np.empty([len(Sref), len(AR), len(tc), len(taper_ratio), len(sweep_angle)])
 	w_f = w_0
 	# print w_0
+	print consts.C_f
 	counter = 0
 	for i in range(0, len(Sref)):
 		for j in range(0, len(AR)):
@@ -191,7 +192,7 @@ def prelim_weight_wrapper(consts, Sref, AR, tc, taper_ratio, sweep_angle):
 				for l in range(0, len(taper_ratio)):
 					for m in range(0, len(sweep_angle)):
 						w_0[i,j,k,l,m], w_f[i,j,k,l,m] = prelim_weight(Sref[i], consts.thrust_req, consts, AR[j], tc[k], taper_ratio[l], sweep_angle[m])
-						print counter
+						# print counter
 						counter += 1
 
 	return w_0, w_f
@@ -282,7 +283,7 @@ if __name__ == '__main__':
 	# print 'sweep: '+str(sweep_range[int(w_f_minloc[4])])
 
 	#varying sref & sweep angle
-	w_0_srefsweep, w_f_srefsweep = prelim_weight_wrapper(consts, Sref_range, [AR_0], [tc_0], [taper_0], np.deg2rad(sweep_range))
+	# w_0_srefsweep, w_f_srefsweep = prelim_weight_wrapper(consts, Sref_range, [AR_0], [tc_0], [taper_0], np.deg2rad(sweep_range))
 
 
 
@@ -321,10 +322,10 @@ if __name__ == '__main__':
 	plt.plot([np.degrees(sweep_0)], [w_f[0,0,0,0,0]], 'ro')
 	plt.show()
 
-	srefsweep = plt.contour(Sref_range, sweep_range, w_f_srefsweep[:,0,0,0,:])
-	plt.clabel(srefsweep, inline=1, fontsize=10)
-	plt.title('Fuel Burn Trade Study: Sref & Sweep')
-	plt.ylabel('Sweep Angle [deg]')
-	plt.xlabel('Sref [ft^2]')
-	plt.plot([Sref_0], [np.degrees(sweep_0)], 'ro')
-	plt.show()
+	# srefsweep = plt.contour(Sref_range, sweep_range, w_f_srefsweep[:,0,0,0,:])
+	# plt.clabel(srefsweep, inline=1, fontsize=10)
+	# plt.title('Fuel Burn Trade Study: Sref & Sweep')
+	# plt.ylabel('Sweep Angle [deg]')
+	# plt.xlabel('Sref [ft^2]')
+	# plt.plot([Sref_0], [np.degrees(sweep_0)], 'ro')
+	# plt.show()
