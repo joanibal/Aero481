@@ -90,7 +90,7 @@ def fuel_fraction(c, CD, R, speed, CL):
 	# print cruiseFrac, ff5, ff, 1-ff
 	return 1-ff
 
-def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, alt_ceiling, V, rho, R, K, n):
+def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, n):
 	
 	ff_startup = 1.0-c_sealevel*(15.0/60.0)*(T*0.05/w_0)	#startup/warmup/taxi
 	w_startup = ff_startup*w_0
@@ -106,11 +106,18 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, alt_ceili
 
 	w_cruise_i = w_climb
 	alt_cruise_i = alt_cruise
+	temp = -56.46 + 273.15 #K - approximately constant for altitude range
+
 	for i in range(int(n)):
+		p = 22.65 * np.exp(1.73 - .000157*(alt_cruise_i*0.3048)) #kPa
+		# print 'pressure '+str(p)
+		rho_metric = p*1000.0/(287.058*temp)
+		rho = rho_metric*0.00194032
+
 		# V constant because a = sqrt(gamma*R*T) -> T is approx. constant
 		CL = 2.0*w_cruise_i/(rho*(V*1.68781)**2.0*Sref)
 		# print rho, Sref, w_cruise_i
-		# print 'CL step '+str(CL)
+		
 		L_D = CL/(CD0 + K*CL**2)
 		# print CL, CD0, K, L_D
 		ff_cruise_step = np.exp(-(R/n)*c/(V*L_D))
@@ -118,15 +125,11 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, alt_ceili
 
 		# used in next iteration
 		w_cruise_i = ff_cruise_step*w_cruise_i
+		# print 'altitude '+str(alt_cruise_i), 'CL step '+str(CL), 'weight '+str(w_cruise_i)
 		# print 'w_cruise_step '+str(w_cruise_i)
-		alt_cruise_i += (alt_ceiling-alt_cruise)/n
-		# print 'cruise_alt '+str(alt_cruise)
-		temp = -56.46 + 273.15 #K - approximately constant for altitude range
-		p = 22.65 * np.exp(1.73 - .000157*(alt_cruise_i*0.3048)) #kPa
-		# print 'pressure '+str(p)
-		rho_metric = p*1000.0/(287.058*temp)
-		rho = rho_metric*0.00194032	
-		# print R/n, w_cruise_i, ff_cruise_step, alt_cruise_i
+		# print i, alt_cruise_i, R, n, R/n, rho
+		
+		alt_cruise_i += 2000.0 			#steps determined by ATC
 
 	ff_cruise = w_cruise_i/w_climb
 	# print 'cruise '+str(ff_cruise)
@@ -259,14 +262,15 @@ def prelim_weight(Sref_wing, T0, consts):
 		CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
 		
 		CL = np.sqrt(CD0*np.pi*consts.AR*consts.e['cruise'])
-		# print 'CL original '+str(CL)
 		CD = CD0 + CL**2/(np.pi*consts.AR*consts.e['cruise'])
-
 		ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, CL)
-		ff_step = fuel_fraction_update(consts.SFC, consts.SFC_sealevel, Sref_wing, T0, w_0, CD0, consts.alt, consts.ceiling, consts.speed_kts, consts.rho_imperial, consts.R, 1.0/(np.pi*consts.AR*consts.e['cruise']), consts.cruise_steps)
+		w_f = ff*w_0
+		# ff_step = fuel_fraction_update(consts.SFC, consts.SFC_sealevel, Sref_wing, T0, w_0, CD0, consts.alt, consts.speed_kts, consts.R, 1.0/(np.pi*consts.AR*consts.e['cruise']), consts.cruise_steps)
+		# w_f = ff_step*w_0
+
+		# print 'CL original '+str(CL)
 		# print 'originial '+str(ff)
 		# print 'stepped '+str(ff_step)
-		w_f = ff_step*w_0
 
 		w_bladder = 23.10*((w_f/consts.jetA_density)*10**(-2))**0.758	#bladder cells
 		w_bladdersupport = 7.91*((w_f/consts.jetA_density)*10**(-2))**0.854	#bladder cells supports
@@ -325,13 +329,13 @@ if __name__ == '__main__':
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
 
-	w_0, w_f = prelim_weight(constants.S_wing, constants.thrust_req, constants)
+	# w_0, w_f = prelim_weight(constants.S_wing, constants.thrust_req, constants)
 
-	print 'w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
+	# print 'w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
 
-	# w_0, w_f = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
+	w_0, w_f = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
 
-	# print 'w_0',w_0 , 'w_f', w_f
+	print 'w_0',w_0 , 'w_f', w_f
 
 	# n = 10.0
 	# Sref_wing = consts.S_wing
