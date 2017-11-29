@@ -3,10 +3,11 @@ import numpy as np
 import math
 
 runLength = 4948   							# ft
-alt = 40000       							# ft
+alt = 53000       							# ft
 R = 5200           							# nMi
 machCruise = 0.85
 SFC = 0.69      							# 1/hr
+SFC_sealevel = 0.346                        # 1/hr
 L_D = 15 									#used in weight_estimation
 speed_kts = 566.7279
 
@@ -17,6 +18,7 @@ T = T_C + 273.15                            # Temperature (Kelvin)
 p = 18822.69                                # Absolute Pressure (Pa)
 gasConst = 287                                     # Gas Constant (J/kgK)
 rho = p/(gasConst*T)                               # Air Density (kg/m^3)
+# print rho
 a = math.sqrt(1.4*gasConst*T)                      # Speed of Sound (m/s)
 u = M*a                                     # Airspeed (m/s)
 rho_imperial = rho*0.00194032               # Conversion from kg/m^3 to slugs/ft^3
@@ -55,7 +57,7 @@ engine_thrust = 9220 #lbs
 # density_denver =
 # density_ceiling =
 
-ceiling = 51000     						# ft
+# ceiling = 60000     						# ft
 T_Ceiling = 216.650  						# K
 # mu = 2.995e-7*47.88026
 mu = 1.704e-5   #N s/m2
@@ -68,7 +70,8 @@ Density_Ceiling = 0.1164     				# kg/M^3
 Density_SL  = 1.225       					# kg/M^3
 Density_Cruise = 0.154                      # 53000 ft
 a_Ceiling = 573.57          				# knots
-
+cruise_steps = 1                            # number of altitude levels for cruise
+# cruise_max_alt = alt+cruise_steps*2000.0
 
 CL= {
     'max': {
@@ -151,7 +154,7 @@ cabinpressure = 11.8                #psi
 
 # Properties exclusing wings
 Swet_rest = 307.1091*10.7639 #ft^2
-C_f = 0.0045 #Skin-friction coefficient based on equivalent skin-friction coefficients
+C_f = 0.0030 #Skin-friction coefficient based on equivalent skin-friction coefficients
 
 v_landingstall = 143.977436581 #ft/s
 
