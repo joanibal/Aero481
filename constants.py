@@ -38,11 +38,11 @@ numEngines = 2
 engine_thrust = 9220 #lbs
 
 
-e = {'takeoff':{'gearUp':0.775,
-                'geardown':0775},
-     'cruise':0.835,
-     'landing':{'gearUp':0.725,
-                'geardown':0.725}}
+# e = {'takeoff':{'gearUp':0.775,
+#                 'geardown':0775},
+#      'cruise':0.835,
+#      'landing':{'gearUp':0.725,
+#                 'geardown':0.725}}
 
 # Cd_0 = {'takeoff':{'gearUp':0.0400,
 #                 'geardown':0.0600},
@@ -134,6 +134,7 @@ b = 33.89 #m (span)
 c_root = 4.95 #m
 w_lambda = 0.26 #(taper ratio
 c_MAC = 2.0/3.0*c_root*(1.0+w_lambda+w_lambda**2)/(1.0+w_lambda)
+print(c_MAC)
 y_MAC = b/6.0*(1.0+2.0*w_lambda)/(1.0+w_lambda)
 AR = 9
 tc = 0.12
