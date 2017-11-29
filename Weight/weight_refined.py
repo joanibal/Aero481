@@ -329,13 +329,13 @@ if __name__ == '__main__':
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
 
-	# w_0, w_f = prelim_weight(constants.S_wing, constants.thrust_req, constants)
+	w_0, w_f = prelim_weight(constants.S_wing, constants.thrust_req, constants)
 
-	# print 'w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
+	print 'w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
 
-	w_0, w_f = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
+	# w_0, w_f = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
 
-	print 'w_0',w_0 , 'w_f', w_f
+	# print 'w_0',w_0 , 'w_f', w_f
 
 	# n = 10.0
 	# Sref_wing = consts.S_wing
