@@ -10,7 +10,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 import constantsG550 as consts
 from Aerodynamics.calcDragPolar import DragPolar
-from Weight.weight_buildup import prelim_weight
+from Weight.weight_refined import prelim_weight
 from Weight.weight_estimation import calcWeights
 from Weight.fuel_weight_curves import fuel_weight
 from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeoff, calcWSLanding

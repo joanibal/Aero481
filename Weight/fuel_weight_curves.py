@@ -2,7 +2,7 @@ import os,sys,inspect
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import numpy as np
-from weight_buildup import *
+from weight_refined import *
 import matplotlib.pyplot as plt
 
 def fuel_weight(sref_range, t_range, consts):
