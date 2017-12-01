@@ -1,8 +1,53 @@
 import pyAVL
 import numpy as np
 import matplotlib.pyplot as plt
+from gen_files import gen_geo
+
+
+# settup inital conditions
+# aircraft parameters
+Sref = 1060
+MAC = 14.63
+Bref = 92.02
+
+cg = [51.44619, 0, 0]
+ 
+CDp = 0
+
+Xle = [41.8333, 45.19918, 58.663, 75.4948]
+Yle = [0, 7.14237, 24.42585, 46.0302]
+C = [15.0591, 13.975434, 9.64077, 4.22244]
+
+
+
+gen_geo(Sref, MAC, Bref, cg, CDp, Xle, Yle, C, Xle_c, Yle_c, C_c)
+    
+
+quit()
+
+# for sweep in xrange
+
+
+# for taper in xrange
+
+
+
+
+# for area in range 
+
+
+# for 
+
+
+
+
 
 case = pyAVL.avlAnalysis(geo_file='aircraft.txt', mass_file = 'aircraft.mass')
+
+
+
+
+
 # Steady level flight contraints
 case.addConstraint('elevator', 0.00)
 case.addConstraint('rudder', 0.00)
