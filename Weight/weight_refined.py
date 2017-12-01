@@ -232,7 +232,7 @@ def prelim_weight(Sref_wing, T0, consts):
 	# for i in range(1000):
 		# CL = calcCL(w_0/Sref_wing)
 		
-		Wwing_carichner = (0.00428*Sref_wing**0.48)*((consts.AR*consts.M**0.43)/(100*consts.tc)**0.76)*((w_0*consts.N)**0.84*consts.w_lambda**0.14)/(np.cos(consts.lambda_half)**1.54)
+		Wwing_carichner = (0.00428*Sref_wing**0.48)*((consts.AR*consts.M**0.43)/(100*consts.tc)**0.76)*((w_0*consts.N)**0.84*consts.w_lambda**0.14)/(np.cos(consts.sweep_half)**1.54)
 		# print 'carichner', Wwing_carichner
 		Wwing_raymer = 0.0051*((w_0*consts.N)**0.557)*(Sref_wing**0.649)*(consts.AR**0.5)*(consts.tc**(-0.4))*((1+consts.w_lambda)**0.1)*(np.cos(consts.sweep)**(-1))*(consts.wing_mounted_area**0.1)
 		# print 'raymer', Wwing_raymer
@@ -331,13 +331,13 @@ if __name__ == '__main__':
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
 
-	# w_0, w_f = prelim_weight(constants.S_wing, constants.thrust_req, constants)
+	w_0, w_f = prelim_weight(constants.S_wing, constants.thrust_req, constants)
 
-	# print 'w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
+	print 'J481: w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
 
 	w_0, w_f = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
 
-	print 'w_0',w_0 , 'w_f', w_f
+	print 'G550: w_0',w_0 , 'w_f', w_f
 
 	# n = 10.0
 	# Sref_wing = consts.S_wing

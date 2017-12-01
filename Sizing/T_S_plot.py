@@ -238,10 +238,10 @@ for i in range(len(Sref_landing)):
 
 plt.fill_between(Sref_landing, T,thrustCon['Climb']['Balked Climb OEI'], where=T > thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 
-plt.plot([1080], [consts.thrust_req], 'ro', label='Design Point')
+plt.plot([consts.S_wing], [consts.thrust_req], 'ro', label='Design Point')
 # plt.plot([1080], [consts.thrust_req], 'ro', label='da design pnt')
-design_point_str = '1080' + ' ft^2, ' + str(consts.thrust_req) + ' lbs'
-plt.annotate(design_point_str, xy=(1080, consts.thrust_req), xytext=(1080+10, consts.thrust_req+100), weight = 'bold')
+design_point_str = str(int(consts.S_wing)) + ' ft^2, ' + str(consts.thrust_req) + ' lbs'
+plt.annotate(design_point_str, xy=(consts.S_wing, consts.thrust_req), xytext=(consts.S_wing+10, consts.thrust_req+100), weight = 'bold')
 
 plt.legend(lines, labels)
 plt.legend(loc = 'upper left')
