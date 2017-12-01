@@ -6,7 +6,7 @@ runLength = 4948   							# ft
 alt = 53000       							# ft
 R = 5200           							# nMi
 machCruise = 0.85
-SFC = 0.69      							# 1/hr
+SFC = 0.72      							# 1/hr
 SFC_sealevel = 0.346                        # 1/hr
 L_D = 15 									#used in weight_estimation
 speed_kts = 566.7279
@@ -37,7 +37,7 @@ w_payload = 8.0*(180+60) + w_crew    #lbs (passenger weight + luggage)
 # R = 6750 # nmi
 
 numEngines = 2
-engine_thrust = 9220 #lbs
+engine_thrust = 6970 #lbs
 
 
 e = {'takeoff':{'gearUp':0.775,
