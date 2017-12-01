@@ -319,7 +319,27 @@ def prelim_weight(Sref_wing, T0, consts):
 	# print('CL ', CL, 'CD0', CD0, ' w_0/Sref_wing ',  w_0/Sref_wing)
 	# print w_nose_gear, 2*w_main_gear, w_xtra
 	# print w_fuse+w_xtra
-	return w_0, w_f
+
+	other_weights = {'engine_total':w_eng_total,
+					'avionics':w_avionics,
+					'interior':w_interior,
+					'wing':w_wing,
+					'HT':w_HT,
+					'canard':w_c,
+					'VT':w_VT,
+					'fuselage':w_fuse,
+					'surface_control':w_surfcont,
+					'fuel_control':w_fuelcontrol,
+					'indicators':w_indicators,
+					'nose_gear':w_nose_gear,
+					'main_gear':w_main_gear,
+					'misc':w_miscfurnish,
+					'electronics':w_elec 
+					}
+
+
+
+	return w_0, w_f, other_weights
 
 if __name__ == '__main__':
 
@@ -331,7 +351,7 @@ if __name__ == '__main__':
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
 
-	w_0, w_f = prelim_weight(constants.S_wing, constants.thrust_req, constants)
+	w_0, w_f, _ = prelim_weight(constants.S_wing, constants.thrust_req, constants)
 
 	print 'J481: w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
 

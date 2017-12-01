@@ -10,7 +10,7 @@ def fuel_weight(sref_range, t_range, consts):
 	X, Y = np.meshgrid(sref_range, t_range)
 	for i in range(len(sref_range)):
 		for j in range(len(t_range)):
-			_, Z[j][i] = prelim_weight(sref_range[i], t_range[j],consts)
+			_, Z[j][i], _ = prelim_weight(sref_range[i], t_range[j],consts)
 	return X, Y, Z
 	# Z = prelim_weight(X, Y)
 
