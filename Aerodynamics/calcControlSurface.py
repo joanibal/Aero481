@@ -27,6 +27,7 @@ def calcControlSurface(Croot, b, taperRatio, chordRatio, spanRatio, endSpanPosit
 	Croot_cs = mac_cs*3/2*((1 + lambda_main + lambda_main**2)/(1 + lambda_main))
 	Ctip_cs = Croot_cs*lambda_main
 	print(csName + " MAC: " + str(mac_cs) + "m")
+	print(csName + " MAC%: "+ str(chordRatio*100)+"%")
 	print(csName + " Root Chord:" + str(Croot_cs) + "m") 
 	print(csName + " Root Chord Percentage:" + str((Croot_cs/mac_main)*100) + "%")
 	print(csName + " Tip Chord:" + str(Ctip_cs) + "m")
@@ -52,6 +53,6 @@ if __name__ == '__main__':
 	# Solve for Main Wing Parameters
 	# calcControlSurface(Croot, b, taperRatio, chordRatio, spanRatio, endSpanPosition, controlSurface)
 	calcControlSurface(constants.c_root, constants.b, 0.26, 0.08, 0.80, 0.90, "Slat")
-	calcControlSurface(constants.c_root, constants.b, 0.26, 0.25, 0.40, 0.50, "Flap")
+	calcControlSurface(constants.c_root, constants.b, 0.26, 0.25, 0.35, 0.50, "Flap")
 	calcControlSurface(constants.c_root, constants.b, 0.26, 0.25, 0.40, 0.90, "Aileron")
 	calcControlSurface(constants.c_root_HT, 7.68, 0.41, 0.40, 0.95, 1.00, "Elevator")
