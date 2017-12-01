@@ -248,3 +248,20 @@ surfaces = {
                         }
 
             }
+
+
+cg_locations = {'wing':60.0,
+                'HT':105.0117,
+                'canard':13.5491,
+                'VT':93.7585,
+                'fuselage':40.48,
+                'main_gear':54.4441,
+                'nose_gear':13.4351,
+                'propulsion':70.4627}
+
+cg_additional = {'engine_control':cg_locations['propulsion'],
+                'start_systems':cg_locations['propulsion'],
+                'instruments':cg_locations['fuselage'],
+                'furnishings':cg_locations['fuselage'],
+                'avionics':cg_locations['fuselage'],
+                'electornics':cg_locations['fuselage']}
