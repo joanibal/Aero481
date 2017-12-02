@@ -235,11 +235,7 @@ SURFACE
 Main Wing
 
 # Nchord Cspace [ Nspan Sspace ]
-13 1.00
-
-
-INDEX
-6440
+13 1.00  
 
 
 YDUPLICATE
@@ -259,22 +255,18 @@ TRANSLATE
 
 
 
-# SECTION
-# # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-# 5 0 -2.16535 61 2.00 2 3
-# NACA
-# 0008
-# CLAF
-# 1.1078
+SECTION
+# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+5 0 -2.16535 61 2.00 2 3
+AFILE
+naca0008.dat
 
 
-# SECTION
-# # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-# 10.9592 2. -2.16535 51.21 3 1 3
-# NACA
-# 0008
-# CLAF
-# 1.1078
+SECTION
+# Xle Yle Zle Chord Ainc [ Nspan Sspace ]
+10.9592 2. -2.16535 51.21 3 1 3
+AFILE
+naca0008.dat
 
 
 
@@ -283,7 +275,7 @@ TRANSLATE
 #ROOT CHORD
 SECTION
 # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-41.8333 0 -2.16535 15.0591 4 6 3
+41.8333 3 -2.16535 15.0591 4 3 3
 
 AFILE
 sc20612-il.dat
@@ -310,7 +302,7 @@ Flap 1.00 0.70 0 0 0 1.00
 #10%
 SECTION
 # Xle Yle Zle Chord Ainc           [ Nspan Sspace ]
-45.19918 7.14237 -2.2244105 13.975434 4 5 3
+45.19918 7.14237 -2.2244105 13.975434 4 10 3
 
 AFILE
 sc20612-il.dat
@@ -326,7 +318,7 @@ Flap 1.00 0.70 0 0 0 1.00
 #50%
 SECTION
 # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-58.663 24.42585 -2.4606325 9.64077 1 3 3
+58.663 24.42585 -2.4606325 9.64077 1 10 3
 AFILE
 sc20612-il.dat
 
@@ -344,7 +336,7 @@ Flap 1.00 0.70 0 0 0 1.00
 #TIP CHORD
 SECTION
 # Xle Yle Zle Chord Ainc [ Nspan Sspace ]
-75.4948 46.0302 -2.75591 4.22244 -14 2 3
+75.4948 46.0302 -2.75591 4.22244 -14 10 3
 
 AFILE
 sc20612-il.dat
@@ -359,8 +351,7 @@ Horizontal Tail
 7 1.00 20 2.0
 
 
-INDEX
-6442
+
 
 YDUPLICATE
 0.0
@@ -370,7 +361,7 @@ SCALE
 
 
 ANGLE
-2.5
+0.0
 
 TRANSLATE
 0.0 0.0 0.0
@@ -382,8 +373,6 @@ SECTION
 96.919 0.0000 18.2415 7.70997 0.000 7 1
 NACA
 0012
-CLAF
-1.1078
 
 CONTROL
 # name gain Xhinge VYZhvec SgnDup
@@ -396,8 +385,6 @@ SECTION
 108.795 12.5984 18.2415 3.16109 0.000 7 1
 NACA
 0012
-CLAF
-1.1078
 
 CONTROL
 # name gain Xhinge VYZhvec SgnDup
@@ -436,8 +423,6 @@ SECTION
 86.6496 0.0000 5.8727 11.4829 0.000 7 1
 NACA
 0012
-CLAF
-1.1078
 
 CONTROL
 # name gain Xhinge VYZhvec SgnDup
@@ -450,8 +435,6 @@ SECTION
 97.706 0.0000 19.2257 8.61221 0.000 7 1
 NACA
 0012
-CLAF
-1.1078
 
 CONTROL
 # name gain Xhinge VYZhvec SgnDup

@@ -77,7 +77,8 @@ class avlAnalysis():
 
             avl.avl()   
             avl.loadgeo(geo_file)
-            avl.loadmass(mass_file)
+            if not(mass_file is None):
+                avl.loadmass(mass_file)
 
 
         elif not(aircraft_object == None):
@@ -133,7 +134,7 @@ class avlAnalysis():
 
 
         avl.trmset('C1','1 ',options[varible][0],(str(val) +'  \n'))
-        pass
+        
         return
 
 
