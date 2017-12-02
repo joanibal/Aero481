@@ -37,7 +37,7 @@ w_payload = 8.0*(180+60) + w_crew    #lbs (passenger weight + luggage)
 # R = 6750 # nmi
 
 numEngines = 2
-engine_thrust = 6970 #lbs
+engine_thrust = 6970 #lbs - sealevel
 
 
 e = {'takeoff':{'gearUp':0.775,

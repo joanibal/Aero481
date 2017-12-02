@@ -273,12 +273,12 @@ def prelim_weight(Sref_wing, T0, consts):
 
 		CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
 		
-		CL = np.sqrt(CD0*np.pi*consts.AR*consts.e['cruise'])
-		CD = CD0 + CL**2/(np.pi*consts.AR*consts.e['cruise'])
-		ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, CL)
-		w_f = ff*w_0
-		# ff_step = fuel_fraction_update(consts.SFC, consts.SFC_sealevel, Sref_wing, T0, w_0, CD0, consts.alt, consts.speed_kts, consts.R, 1.0/(np.pi*consts.AR*consts.e['cruise']), consts.cruise_steps)
-		# w_f = ff_step*w_0
+		# CL = np.sqrt(CD0*np.pi*consts.AR*consts.e['cruise'])
+		# CD = CD0 + CL**2/(np.pi*consts.AR*consts.e['cruise'])
+		# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, CL)
+		# w_f = ff*w_0
+		ff_step = fuel_fraction_update(consts.SFC, consts.SFC_sealevel, Sref_wing, T0, w_0, CD0, consts.alt, consts.speed_kts, consts.R, 1.0/(np.pi*consts.AR*consts.e['cruise']), consts.cruise_steps)
+		w_f = ff_step*w_0
 
 		# print 'CL original '+str(CL)
 		# print 'originial '+str(ff)
@@ -365,17 +365,17 @@ if __name__ == '__main__':
 
 	print 'J481: w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
 
-	print 'fuselage:', w_other['fuselage']+w_other['interior']+w_other['indicators']+w_other['misc']+w_other['electronics']+w_other['avionics']
-	print 'wing:', w_other['wing']+w_other['surface_control']+w_other['fuel_control']
-	print 'HT:', w_other['HT']
-	print 'VT:', w_other['VT']
-	print 'canard:', w_other['canard']
-	print 'landing gears', w_other['main_gear'], w_other['nose_gear']
-	print 'engine(x2):', w_other['engine_total']
+	# print 'fuselage:', w_other['fuselage']+w_other['interior']+w_other['indicators']+w_other['misc']+w_other['electronics']+w_other['avionics']
+	# print 'wing:', w_other['wing']+w_other['surface_control']+w_other['fuel_control']
+	# print 'HT:', w_other['HT']
+	# print 'VT:', w_other['VT']
+	# print 'canard:', w_other['canard']
+	# print 'landing gears', w_other['main_gear'], w_other['nose_gear']
+	# print 'engine(x2):', w_other['engine_total']
 
-	w_0, w_f, _ = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
+	# w_0, w_f, _ = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
 
-	print 'G550: w_0',w_0 , 'w_f', w_f
+	# print 'G550: w_0',w_0 , 'w_f', w_f
 
 	# n = 10.0
 	# Sref_wing = consts.S_wing
