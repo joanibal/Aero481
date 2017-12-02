@@ -1,6 +1,4 @@
 
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import numpy as np
 import os
 
@@ -32,35 +30,34 @@ def gen_mass( m_total, cg, I, filename = 'aircraft.mass'):
 	out('+   0.    0.    0.    0.    0.     0.    0.    0.    0.    0.') 
 	out( str(m_total) + ' ' + str(cg[0]) + ' ' + str(cg[1]) + ' ' + str(cg[2]) + ' ' + str(I[0]) + ' ' + str(I[1])  + ' ' + str(I[2]) + ' ' + str(I[3]) + ' ' + str(I[4]) + ' ' + str(I[5]) +	' !	Aircraft')
 
-def gen_geo(Sref, MAC, b_wing, cg, CDp, Xle, Yle, C, Xle_t, Yle_t, C_t):
+def gen_geo(Sref, MAC, Bref, cg, CDp, wing, AFILE, canard, AFILE_c, file='./aircraft.txt'):
 
-	incAng = [0,   0,    0,  0,   0  ]
+	# incAng = [0,   0,    0,  0,   0  ]
 
 	try:
-		os.remove('./aircraft.txt')
+		os.remove(file)
 	except:
 		pass
 
-	f = open('./aircraft.txt', 'w')
+	f = open(file, 'w')
 
 
 	def out(cmd):
 		f.write(cmd + '\n')
 
-	out('MACH MDAO AVL\n')
+	out('481\n')
 		
 	out('#======================================================')
 	out('#------------------- Geometry File --------------------')
 	out('#======================================================')
-	out('# AVL Conventions')
-	out('# SI Used: m, kg, etc\n')
+	out('# Imperial Used: ft, lbm, etc\n')
 
 	out('#Mach')
-	out('0.0')
+	out('0.8')
 	out('#IYsym   IZsym   Zsym')
 	out(' 0       0       0')
-	out('#Sref    Cref    b_wing')
-	out(str(Sref) + '  ' + str(MAC) + '  '+ str(b_wing)) 
+	out('#Sref    Cref    Bref')
+	out(str(Sref) + '  ' + str(MAC) + '  '+ str(Bref)) 
 	out('#Xref    Yref    Zref')
 	out(str(cg[0]) + ' '+ str(cg[1]) + ' '+ str(cg[2])) 
 	out('# CDp')
@@ -72,7 +69,7 @@ def gen_geo(Sref, MAC, b_wing, cg, CDp, Xle, Yle, C, Xle_t, Yle_t, C_t):
 	out('SURFACE')
 	out('Wing')
 	out('#Nchordwise  Cspace   [Nspan   Sspace]')
-	out('     7        1.0      20      -2.0')
+	out('13 1.00 ')
 	out('YDUPLICATE')
 	out('0.0')
 	out('SCALE')
@@ -80,15 +77,61 @@ def gen_geo(Sref, MAC, b_wing, cg, CDp, Xle, Yle, C, Xle_t, Yle_t, C_t):
 	out('TRANSLATE')
 	out('0.0  0.0  0.0')
 	out('ANGLE')
-	out('0.0')
+	out('2.500')
 	out('#------------------------------------------------------\n')
 
-	for i in range(0, len(C)):
+	for i in xrange(np.shape(wing)[0]):
+		out('SECTION')	
+		out('#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace')
+
+		line = ''
+		for j in xrange(np.shape(wing)[1]):
+			line += str(wing[i][j]) + ' '
+
+		out(line)
+		out('AFILE')
+		out(AFILE[i])
+		out('')
+
+
+
+
+	out('#======================================================')
+	out('#----------------------- Canard -----------------------')
+	out('#======================================================')
+	out('SURFACE')
+	out('Canard')
+	out('#Nchordwise  Cspace   [Nspan   Sspace]')
+	out('6 1.00 ')
+	out('YDUPLICATE')
+	out('0.0')
+	out('SCALE')
+	out('1.0  1.0  1.0')
+	out('TRANSLATE')
+	out('0.0  0.0  0.0')
+	out('ANGLE')
+	out('0')
+	out('#------------------------------------------------------\n')
+
+	for i in xrange(np.shape(canard)[0]):
 		out('SECTION')
 		out('#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace')
-		out(str(Xle[i]) + '    ' + str(Yle[i]) + '    0       '+ str(C[i]) + '     '+ str(incAng[i])+'      '+ '5      3')
+
+		line = ''
+		for j in xrange(np.shape(canard)[1]):
+			line += str(canard[i][j]) + ' '
+
+		out(line)
 		out('AFILE')
-		out('airfoils/A_'+str(i+1) + '.dat')
+
+		out(AFILE_c[i])
+		out('')
+		out('CONTROL')
+		out('# name gain Xhinge VYZhvec SgnDup')
+		out('Canard 1.00 0.0   0 1 0    1.00')
+		out('')
+
+
 
 
 
@@ -100,7 +143,7 @@ def gen_geo(Sref, MAC, b_wing, cg, CDp, Xle, Yle, C, Xle_t, Yle_t, C_t):
 	out('SURFACE')
 	out('Horizontal Tail')
 	out('#Nchordwise  Cspace   Nspan   Sspace')
-	out('7       1.0           10        -2 ')
+	out('7 1.00 20 2.0 ')
 	out('YDUPLICATE')
 	out('0.0')
 	out('SCALE')
@@ -113,7 +156,7 @@ def gen_geo(Sref, MAC, b_wing, cg, CDp, Xle, Yle, C, Xle_t, Yle_t, C_t):
 	out('#------------------TAIL ROOT/ELEVATOR------------------')
 	out('SECTION')
 	out('#Xle   Yle     Zle     Chord   Ainc')
-	out(str(Xle_t[0]) + '  ' +  str(Yle_t[0]) + '   0.0  '+ str(C_t[0]) +'  0.000')
+	out('96.919 0.0000 18.2415 7.70997 0.000 7 1')
 	out('NACA')
 	out('0012')
 	out('CLAF')
@@ -126,7 +169,7 @@ def gen_geo(Sref, MAC, b_wing, cg, CDp, Xle, Yle, C, Xle_t, Yle_t, C_t):
 	out('#--------------------TAIL Tip--------------------------')
 	out('SECTION')
 	out('#Xle   Yle     Zle     Chord   Ainc')
-	out(str(Xle_t[1]) + '  ' +  str(Yle_t[1]) + ' 0.000   '+ str(C_t[1]) +'  0.000')
+	out('108.795 12.5984 18.2415 3.16109 0.000 7 1')
 	out('NACA')
 	out('0012')
 	out('CLAF')
@@ -142,9 +185,7 @@ def gen_geo(Sref, MAC, b_wing, cg, CDp, Xle, Yle, C, Xle_t, Yle_t, C_t):
 	out('SURFACE')
 	out('Vertical Tail')
 	out('# Nchordwise Cspace Nspanwise Sspace')
-	out('10 1.00 10 -2.0')
-	out('YDUPLICATE')
-	out('0.0')
+	out('7 1 10 -2.0')
 	out('#Xscale Yscale Zscale')
 	out('SCALE')
 	out('1.0 1.0 1.0')
@@ -154,13 +195,10 @@ def gen_geo(Sref, MAC, b_wing, cg, CDp, Xle, Yle, C, Xle_t, Yle_t, C_t):
 	out('TRANSLATE')
 	out('0.0 0.0 0.0')
 	out('')
-	out('INDEX')
-	out('2')
-	out('')
 	out('#----------------------ROOT/RUDDER---------------------')
 	out('SECTION')
 	out('#Xle   Yle     Zle     Chord   Ainc')
-	out(str(Xle_t[0]) + ' 0.0   0 ' +str(C_t[0]) + '   0.000')
+	out('86.6496 0.0000 5.8727 11.4829 0.000 7 1')
 	out('NACA')
 	out('0012')
 	out('CLAF')
@@ -173,7 +211,7 @@ def gen_geo(Sref, MAC, b_wing, cg, CDp, Xle, Yle, C, Xle_t, Yle_t, C_t):
 	out('#-----------------------TIP/RUDDER---------------------')
 	out('SECTION')
 	out('#Xle   Yle     Zle     Chord   Ainc')
-	out(str(Xle_t[0]) + ' 0.0   0.2  ' +str(C_t[0]) + '   0.000')
+	out('97.706 0.0000 19.2257 8.61221 0.000 7 1')
 	out('NACA')
 	out('0012')
 	out('CLAF')
