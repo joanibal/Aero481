@@ -16,7 +16,7 @@ def cg_location(consts):
 	VT = w_other['VT']*consts.cg_locations['VT']
 	fuselage = w_other['fuselage']*consts.cg_locations['fuselage']
 	surf_cont = w_other['surface_control']*consts.cg_additional['surface_control']
-	fuel_cont = w_other['fuel_control']*consts.cg_additional['engine_control']
+	fuel_cont = w_other['fuel_control']*consts.cg_additional['fuel_control']
 	indicators = w_other['indicators']*consts.cg_additional['instruments']
 	nose_gear = w_other['nose_gear']*consts.cg_locations['nose_gear']
 	main_gear = w_other['main_gear']*consts.cg_locations['main_gear']

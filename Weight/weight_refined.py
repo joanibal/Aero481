@@ -147,14 +147,17 @@ def prelim_weight(Sref_wing, T0, consts):
 	#Sref in ft^2, T0 in lbs
 	'''
 
-	wing_comp = 0.8
-	tail_comp = 0.75
-	fuse_comp = 0.75
-	# flapsslats_comp = 0.6
-	gear_comp = 0.92
-	nacelle_comp = 0.7
+
 
 	try:
+		#for J481
+		wing_comp = 0.8
+		tail_comp = 0.75
+		fuse_comp = 0.75
+		# flapsslats_comp = 0.6
+		gear_comp = 0.92
+		nacelle_comp = 0.7
+
 		c_MAC_wing, _ = Sizing.horizontal_surf_sizing.MAC(consts.c_root, consts.w_lambda, consts.b) #m
 		#finds total required area
 		S_total = Sizing.horizontal_surf_sizing.hor_Sref(consts.c_HT, c_MAC_wing, 0.092903*Sref_wing, consts.L_HT) #m^2
@@ -168,6 +171,13 @@ def prelim_weight(Sref_wing, T0, consts):
 		AR_VT = calcAR_VT(b_VT, S_VT)
 
 	except:
+		#for G550
+		wing_comp = 1.0
+		tail_comp = 1.0
+		fuse_comp = 1.0
+		gear_comp = 1.0
+		nacelle_comp = 1.0
+
 		S_HT = consts.S_HT
 		S_VT = consts.S_VT
 		AR_VT = consts.AR_VT
@@ -320,7 +330,7 @@ def prelim_weight(Sref_wing, T0, consts):
 	# print w_nose_gear, 2*w_main_gear, w_xtra
 	# print w_fuse+w_xtra
 
-	w_components = {'engine_total':w_eng_total,
+	w_breakdown = {'engine_total':w_eng_total,
 					'avionics':w_avionics,
 					'interior':w_interior,
 					'wing':w_wing,
@@ -339,7 +349,7 @@ def prelim_weight(Sref_wing, T0, consts):
 
 
 
-	return w_0, w_f, w_components
+	return w_0, w_f, w_breakdown
 
 if __name__ == '__main__':
 
@@ -351,11 +361,19 @@ if __name__ == '__main__':
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
 
-	w_0, w_f, _ = prelim_weight(constants.S_wing, constants.thrust_req, constants)
+	w_0, w_f, w_other = prelim_weight(constants.S_wing, constants.thrust_req, constants)
 
 	print 'J481: w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
 
-	w_0, w_f = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
+	print 'fuselage:', w_other['fuselage']+w_other['interior']+w_other['indicators']+w_other['misc']+w_other['electronics']+w_other['avionics']
+	print 'wing:', w_other['wing']+w_other['surface_control']+w_other['fuel_control']
+	print 'HT:', w_other['HT']
+	print 'VT:', w_other['VT']
+	print 'canard:', w_other['canard']
+	print 'landing gears', w_other['main_gear'], w_other['nose_gear']
+	print 'engine(x2):', w_other['engine_total']
+
+	w_0, w_f, _ = prelim_weight(constantsG550.Sref*10.7639, constantsG550.thrust_req, constantsG550)
 
 	print 'G550: w_0',w_0 , 'w_f', w_f
 
@@ -371,3 +389,4 @@ if __name__ == '__main__':
 	# ff_step = fuel_fraction_update(consts.SFC, consts.SFC_sealevel, Sref_wing, T0, w_0, CD0, consts.alt, consts.ceiling, consts.speed_kts, consts.rho_imperial, consts.R, 1.0/(np.pi*consts.AR*consts.e['cruise']), n)
 	# print 'originial '+str(ff)
 	# print 'stepped '+str(ff_step)
+	

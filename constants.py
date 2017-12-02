@@ -259,7 +259,7 @@ cg_locations = {'wing':60.0,
                 'nose_gear':13.4351,
                 'propulsion':70.4627}
 
-cg_additional = {'engine_control':cg_locations['propulsion'],
+cg_additional = {'fuel_control':cg_locations['wing'],
                 'start_systems':cg_locations['propulsion'],
                 'surface_control':cg_locations['wing'],
                 'instruments':cg_locations['fuselage'],

@@ -34,7 +34,7 @@ engine_thrust = 15385							#lbs
 SFC = 0.6414       							# 1/hr
 numEngines = 2
 thrust_req = engine_thrust*numEngines
-C_f = 0.0040 #Skin-friction coefficient based on equivalent skin-friction coefficients
+C_f = 0.0030 #Skin-friction coefficient based on equivalent skin-friction coefficients
 
 Swet_rest = 5096.18 - 2*Sref/0.09203 #ft^2
 Swet_fuse = 1731.70 #ft^2
