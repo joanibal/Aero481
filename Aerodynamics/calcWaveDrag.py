@@ -9,7 +9,8 @@ import constants
 
 kappa = 0.95
 sweep = constants.sweep
-thickness = constants.surfaces['wing']['t/c']			#Average
+#thickness = constants.surfaces['wing']['t/c']			#Average
+thickness = 0.16
 cruiseCL = constants.CL['cruise']
 M = constants.M
 
@@ -17,7 +18,9 @@ MDD = kappa/math.cos(sweep)-thickness/(math.cos(sweep)**2)-cruiseCL/(10*math.cos
 Mcrit = MDD-(0.1/80)**(1.0/3)
 
 if M > Mcrit:
+	CD_wave = 20*(M-Mcrit)**4
 	print("Valid")
-
-CD_wave = 20*(M-Mcrit)**4
+elif M < Mcrit:
+	CD_wave = 0
+	print("Invalid")
 print("CD_wave: " + str(CD_wave))
