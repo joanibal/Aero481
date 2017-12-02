@@ -249,8 +249,8 @@ surfaces = {
 
             }
 
-
-cg_locations = {'wing':60.0,
+# cg locations referenced from tip of nose
+cg_locations = {'wing':60.0,                
                 'HT':105.0117,
                 'canard':13.5491,
                 'VT':93.7585,
@@ -261,7 +261,8 @@ cg_locations = {'wing':60.0,
 
 cg_additional = {'engine_control':cg_locations['propulsion'],
                 'start_systems':cg_locations['propulsion'],
+                'surface_control':cg_locations['wing'],
                 'instruments':cg_locations['fuselage'],
                 'furnishings':cg_locations['fuselage'],
                 'avionics':cg_locations['fuselage'],
-                'electornics':cg_locations['fuselage']}
+                'electronics':cg_locations['fuselage']}

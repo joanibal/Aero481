@@ -320,7 +320,7 @@ def prelim_weight(Sref_wing, T0, consts):
 	# print w_nose_gear, 2*w_main_gear, w_xtra
 	# print w_fuse+w_xtra
 
-	other_weights = {'engine_total':w_eng_total,
+	w_components = {'engine_total':w_eng_total,
 					'avionics':w_avionics,
 					'interior':w_interior,
 					'wing':w_wing,
@@ -339,7 +339,7 @@ def prelim_weight(Sref_wing, T0, consts):
 
 
 
-	return w_0, w_f, other_weights
+	return w_0, w_f, w_components
 
 if __name__ == '__main__':
 
