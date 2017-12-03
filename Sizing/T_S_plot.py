@@ -5,7 +5,7 @@ import os,sys,inspect
 import pdb
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-
+import shelve
 # ==================== 481  Packages =============================== #
 
 import constants as consts
@@ -14,7 +14,7 @@ from Weight.weight_refined import prelim_weight
 from Weight.weight_estimation import calcWeights
 from Weight.fuel_weight_curves import fuel_weight
 from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeoff, calcWSLanding
-
+from Aerodynamics.avlLib import changeSref
 # =================== Calculations ================================= #
 # for i in range(6)
 
@@ -22,7 +22,7 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 itermax = 1000
 T_guess = 4400
 
-S = np.linspace(700, 1200, 10)
+S = np.linspace(700, 1200, 3)
 
 
 
@@ -33,6 +33,15 @@ contraints = {
 		'Climb':['Takeoff Climb', 'Trans. Seg. Climb', '2nd Seg. Climb', 'Enroute Climb', 'Balked Climb AEO', 'Balked Climb OEI'],
 		'Takeoff': 'Takeoff',
 }
+
+
+
+
+# my_shelf = shelve.open('/tmp/shelve4.out')
+# for key in my_shelf:
+#     globals()[key]=my_shelf[key]
+# my_shelf.close()
+
 
 thrustCon = {
 		'Ceiling': np.ones(len(S))*T_guess,
@@ -51,20 +60,24 @@ thrustCon = {
 Sref_landing = np.ones(len(S))*S[0];
 
 
-tolerance = 0.1
+tolerance = 20.0
+
 
 
 for i in range(len(S)):
+	# print('i', i)
 	for flightCond in contraints.keys():
 		notconverged = True
 		T_upper = 1e12
 		T_lower = 0
 
+		# print('flightCond', flightCond)
 
 
 		if flightCond == 'Climb':
 			for climbCond in contraints[flightCond]:
 				for j in range(itermax):
+					changeSref(consts, S[i])
 					W = prelim_weight(S[i] , thrustCon['Climb'][climbCond][i], consts)[0]
 					# W_S = W/S[i]
 
@@ -85,6 +98,7 @@ for i in range(len(S)):
 
 		elif flightCond == 'Ceiling':
 			for j in range(itermax):
+				changeSref(consts, S[i])
 				W = prelim_weight(S[i] , thrustCon[flightCond][i], consts)[0]
 				W_S = W/S[i]
 
@@ -106,6 +120,8 @@ for i in range(len(S)):
 
 		elif flightCond == 'Cruise':
 			for j in range(itermax):
+				changeSref(consts, S[i])
+
 				W = prelim_weight(S[i] , thrustCon[flightCond][i], consts)[0]
 				W_S = W/S[i]
 
@@ -127,6 +143,7 @@ for i in range(len(S)):
 
 		elif flightCond == 'Takeoff':
 			for j in range(itermax):
+				changeSref(consts, S[i])
 				W = prelim_weight(S[i] , thrustCon[flightCond][i], consts)[0]
 				W_S = W/S[i]
 
@@ -145,11 +162,14 @@ for i in range(len(S)):
 
 
 
+
 W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
 
-T = np.linspace(0,80000, len(S))
+T = np.linspace(0,10000, len(S))
 for i in range(len(T)):
 	for j in range(itermax):
+		changeSref(consts, Sref_landing[i])
+
 		W_new = prelim_weight(Sref_landing[i] , T[i], consts)[0]
 		# W_S = W/Sref_landing[i]
 		# S_new = T_W*W
@@ -165,14 +185,40 @@ for i in range(len(T)):
 		raise ValueError(flightCond + ' didnt converge')
 
 
-
-
 # pdb.set_trace()
+
+# filename='/tmp/shelve.out'
+# my_shelf = shelve.open('/tmp/shelve.out','n') # 'n' for new
+
+# for key in dir():
+#     try:
+#         my_shelf[key] = globals()[key]
+#     except TypeError:
+#         #
+#         # __builtins__, my_shelf, and imported modules can not be shelved.
+#         #
+#         print('ERROR shelving: {0}'.format(key))
+# my_shelf.close()
 
 X, Y, fuel_curves = fuel_weight(S, np.linspace(0, T_guess*20, 10), consts)
 # print fuel_curves
 # X, Y = np.meshgrid(np.linspace(4000, 30000, 20), np.linspace(750, 1400, 20))
 
+filename='/tmp/shelve4.out'
+my_shelf = shelve.open(filename,'n') # 'n' for new
+
+for key in dir():
+    try:
+        my_shelf[key] = globals()[key]
+    except TypeError:
+        #
+        # __builtins__, my_shelf, and imported modules can not be shelved.
+        #
+        print('ERROR shelving: {0}'.format(key))
+my_shelf.close()
+
+
+# quit()
 CS = plt.contour(X, Y, fuel_curves, 20,linestyles='dashed', alpha=0.5, label='Fuel Burn', colors='black')
 # CS = plt.contourf(X, Y, fuel_curves, 50, alpha=0.5)
 
@@ -230,7 +276,7 @@ for i in range(len(Sref_landing)):
 		raise ValueError(flightCond + ' ' + climbCond + ' didnt converge')
 
 
-
+print 'done' 
 
 
 

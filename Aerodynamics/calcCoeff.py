@@ -1,3 +1,4 @@
+import numpy as np
 def calcCL(wingloading):  # wingloading [W/S] [lb/f^2]
 	rho = (5.87e-4) * 32.174  # density at 40,000 ft [lb/f^3]
 	V = 823  # cruise speed at 40,000 ft [ft/s]
@@ -11,12 +12,12 @@ def calcCD(Cf, Swet, Sref, CL, e, AR):
 	return CD
 
 
-def compentCDMethod(consts):
+def compentCDMethod(consts, surfaces):
 	'''
 	surfaces is a dictionary of surfaces. where each entry is another dictionary of the surface properties
 	'''
 
-	surfaces = consts.surfaces
+	# surfaces = consts.surfaces
 	Cd_0 = 0
 	for surface in surfaces.keys():
 
@@ -43,7 +44,7 @@ def compentCDMethod(consts):
 	da_engine_windmill = 0.3*2* np.pi *( surfaces['nacelle']['diameter'] / 2)**2
 	CD_mis = (da_fuse + da_engine_windmill) / consts.Sref
 
-	print Cd_0
+	# print Cd_0
 
 	Cd_0 += CD_mis
 	Cd_0 *= 1.035  # Account for Leak and Protuberance Drag
@@ -74,10 +75,12 @@ def compentCDMethod(consts):
 	Mcrit = MDD - (0.1 / 80)**(1.0 / 3)
 
 	if M > Mcrit:
-		print("Valid")
+		# print("Valid")
+		Cd_0_wave = 20 * (M - Mcrit)**4
+	else:
+		Cd_0_wave = 0.0
 
-	Cd_0_wave = 20 * (M - Mcrit)**4
-	print Cd_0_wave
+	# print Cd_0_wave
 	Cd0 = {
 		'takeoff': {'gear up': Cd_0 + delC_d0_to,
                     'gear down': Cd_0 + delC_d0_lg + delC_d0_to},
@@ -92,7 +95,7 @@ def compentCDMethod(consts):
 		'landing': 0.70
 	}
 
-	print Cd_0
+	# print Cd_0
 
 	k = {}
 	for key in e.keys():
@@ -138,8 +141,8 @@ def calcCf(surface, v, mu, rho, M):
 		Re_laminar = Re
 
 	Cf = 0.455 / (np.log10(Re)**2.58 * (1 + 0.144 * M**2)**0.65) * (1 - fracLaminar) + \
-            1.328 / np.sqrt(Re_laminar) * fracLaminar
-
+	        1.328 / np.sqrt(Re_laminar) * fracLaminar
+	# print Cf, Re, surface['charLeng']
 	return Cf
 
 

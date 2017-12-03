@@ -4,12 +4,14 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import numpy as np
 from weight_refined import *
 import matplotlib.pyplot as plt
+from Aerodynamics.avlLib import changeSref
 
 def fuel_weight(sref_range, t_range, consts):
 	Z = np.empty([len(t_range), len(sref_range)])
 	X, Y = np.meshgrid(sref_range, t_range)
 	for i in range(len(sref_range)):
 		for j in range(len(t_range)):
+			changeSref(consts, sref_range[i])			
 			_, Z[j][i], _ = prelim_weight(sref_range[i], t_range[j],consts)
 	return X, Y, Z
 	# Z = prelim_weight(X, Y)

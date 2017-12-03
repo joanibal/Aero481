@@ -10,6 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 # import constants as consts
 from Sizing.Svt_calc import *
+from Sizing.horizontal_surf_sizing import *
+from Aerodynamics.avlLib import runAVL, changeSref
 
 #------------------------------------------------------------------#
 
@@ -117,8 +119,14 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 		# V constant because a = sqrt(gamma*R*T) -> T is approx. constant
 		CL = 2.0*w_cruise_i/(rho*(V*1.68781)**2.0*Sref)
 		# print rho, Sref, w_cruise_i
-		
-		L_D = CL/(CD0 + K*CL**2)
+
+
+		# print('start')
+		L_D = CL/(CD0 + runAVL(CL=CL ,geo_file='./Aerodynamics/J481T.avl'))
+
+		# print('L_D', L_D, CL/(CD0 + K*CL**2))
+		# print(CL/(CD0 + K*CL**2))
+
 		# print CL, CD0, K, L_D
 		ff_cruise_step = np.exp(-(R/n)*c/(V*L_D))
 		# print 'cruise_step '+str(ff_cruise_step)
@@ -164,12 +172,61 @@ def prelim_weight(Sref_wing, T0, consts):
 		
 		#formula explanation: new tail area = (tail only area * distance to tail - distance to canard * area of canard)/distance to tail
 		S_HT = (S_total*consts.L_HT - consts.Sref_c*consts.L_c)/consts.L_HT #m^2
+		
+		print S_total
+
+
 		S_VT = Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)
 		# print w_c
 		c_tip_VT = calcTipChord(consts.c_root_VT, consts.taper_VT)
 		b_VT = calcb_VT(S_VT, consts.c_root_VT, c_tip_VT)
 		AR_VT = calcAR_VT(b_VT, S_VT)
 
+		b_HT, AR_HT = hor_surf_prop(S_HT, consts.c_root_HT, consts.taper_HT)
+
+
+
+		surfaces = consts.surfaces
+		# print(surfaces['wing']['swet'])
+		# print(surfaces['wing']['charLeng'])
+
+
+		# print(surfaces['vTail']['swet'])
+		# print(surfaces['vTail']['charLeng'])
+
+		# print(surfaces['hTail']['swet'])
+		# print(surfaces['hTail']['charLeng'])
+
+		surfaces['wing']['swet'] = 2*Sref_wing
+		surfaces['wing']['charLeng'] = c_MAC_wing*3.28084
+
+
+		surfaces['vTail']['swet'] = 2*S_VT*3.28084*3.28084
+		surfaces['vTail']['charLeng'] = MAC(consts.c_root_VT,consts.taper_VT, b_VT)[0]*3.28084
+
+		surfaces['hTail']['swet'] = 2*S_HT*3.28084*3.28084
+		surfaces['hTail']['charLeng'] = MAC(consts.c_root_HT,consts.taper_HT, b_HT)[0]*3.28084
+
+		# print surfaces
+
+
+		# print(surfaces['wing']['swet'])
+		# print(surfaces['wing']['charLeng'])
+
+
+		# print(surfaces['vTail']['swet'])/2
+		# print(surfaces['vTail']['charLeng'])
+
+		# print(surfaces['hTail']['swet'])/2
+		# print(surfaces['hTail']['charLeng'])
+
+		# quit()
+
+
+		CD0 = compentCDMethod(consts, surfaces)[0]['clean']
+		# CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
+
+		# print CD0
 	except:
 		#for G550
 		wing_comp = 1.0
@@ -182,19 +239,20 @@ def prelim_weight(Sref_wing, T0, consts):
 		S_VT = consts.S_VT
 		AR_VT = consts.AR_VT
 
+		CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
+	# quit()
 
-
-	# w_wing = 7.5*Sref_wing
-	# w_HT = 4.0*S_HT*10.7639
-	# w_VT = 4.0*S_VT*10.7639
-	# # w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
-
-
-	# w_fuse = 3.5*consts.Swet_fuse
+	w_wing = 7.5*Sref_wing
+	w_HT = 4.0*S_HT*10.7639
+	w_VT = 4.0*S_VT*10.7639
 	# w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
 
 
-	# w_fuse = 2.5*consts.Swet_fuse
+	w_fuse = 3.5*consts.Swet_fuse
+	w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
+
+
+	w_fuse = 2.5*consts.Swet_fuse
 
 
 	# # engine weight calculations (lbs)
@@ -234,9 +292,10 @@ def prelim_weight(Sref_wing, T0, consts):
 	w_0, _, _, w_crew_payload = Weight.weight_estimation.calcWeights(consts.R,consts.L_D, consts.SFC, consts.machCruise, consts.w_payload)
 
 
-	tolerance = 1.0
-	converged = 0
+	# quit()
 
+	tolerance = 10.0
+	converged = 0
 
 	while True:
 	# for i in range(1000):
@@ -271,8 +330,15 @@ def prelim_weight(Sref_wing, T0, consts):
 		w_surfcont = 56.01*(w_0*consts.q*10**(-5))**0.576
 		# print w_surfcont
 
-		CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
+		# CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
+
+
 		
+
+
+
+
+		# print(consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing, compentCDMethod(consts)[0]['clean'])
 		# CL = np.sqrt(CD0*np.pi*consts.AR*consts.e['cruise'])
 		# CD = CD0 + CL**2/(np.pi*consts.AR*consts.e['cruise'])
 		# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, CL)
@@ -323,7 +389,8 @@ def prelim_weight(Sref_wing, T0, consts):
 		if abs(w_0new - w_0) <= tolerance:
 			converged = 1
 			break	
-		w_0 += 0.1*(w_0new - w_0)
+		w_0 += 1.00*(w_0new - w_0)
+		# w_0 += 0.5*(w_0new - w_0)
 		# print w_0
 	
 	# print('CL ', CL, 'CD0', CD0, ' w_0/Sref_wing ',  w_0/Sref_wing)
@@ -360,6 +427,7 @@ if __name__ == '__main__':
 	# CD = calcCD(consts.C_f, consts.Swet_rest*10.7639 + 2.0*consts.Sref, consts.Sref,  consts.CL['cruise'], consts.e['cruise'], consts.AR )
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
+	changeSref(consts, constants.S_wing)
 
 	w_0, w_f, w_other = prelim_weight(constants.S_wing, constants.thrust_req, constants)
 

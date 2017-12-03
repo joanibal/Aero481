@@ -23,7 +23,7 @@ Yle = np.array([0,       2,        3,    46.0302])
 Zle = np.array([-2.16535, -2.16535, -2.16535,   -2.75591])
 C =   np.array([61,  51.21,  15.0591,   4.22244])
 incAng = np.array([5, 5, 0, 0 ])
-Nspan = np.array([4, 4, 30, 30])
+Nspan = np.array([2, 2, 10, 10])
 Sspace = np.array([3, 3, 3, 3])
 AFILE = np.array(['naca0008.dat', 'naca0008.dat', 'sc20612-il.dat', 'sc20612-il.dat'])
 
@@ -99,14 +99,14 @@ sweep_final = 45.0
 hspan = wing0[-1,1]
 
 
-# for angle in np.linspace(sweep_inital, sweep_final, 10):
+for angle in np.linspace(sweep_inital, sweep_final, 10):
 
 
-# 	d = np.tan(np.deg2rad(angle))*hspan
-# 	wing[-1,0] = round(wing0[2,0]+0.25*wing0[2,3]+d-0.25*wing0[-1,3], 4)
+	d = np.tan(np.deg2rad(angle))*hspan
+	wing[-1,0] = round(wing0[2,0]+0.25*wing0[2,3]+d-0.25*wing0[-1,3], 4)
 
-# 	gen_geo(Sref, MAC, Bref, cg, CDp,  wing, AFILE, canard0, AFILE_c, file='J481T.avl')
-# 	print runAVL()
+	gen_geo(Sref, MAC, Bref, cg, CDp,  wing, AFILE, canard0, AFILE_c, file='J481T.avl')
+	print runAVL()
 
 
 

@@ -76,7 +76,7 @@ cruise_steps = 1                            # number of altitude levels for crui
 CL= {
     'max': {
     'takeoff': 2.0,
-    'cruise':  1.2,
+    'cruise':  1.3,
     'landing': 2.6,
     'balked landing': 2.6*0.85,
     },
@@ -88,7 +88,7 @@ c_VT =  0.041
 c_HT = 0.66
 
 # Horizontal Stabilizer Properties
-L_HT = 13.25								# m
+L_HT = 8.68								# m
 c_root_HT = 2.35 							# m
 taper_HT = 0.41
 span_h = 25.197                             # ft
@@ -109,7 +109,7 @@ sweep_c = 31.0 * 0.0174533                  # rad
 c_root_VT = 3.5       						# m
 taper_VT = 0.75								# vertical tail taper ratiop
 sweep_VT = 0.628319							# radians (36 degrees)
-L_VT = 9.75                                 # m
+L_VT = 4.4                                 # m
 Arudder = 43.09                             # ft^2
 
 # Wing Properties
@@ -130,8 +130,8 @@ Swet_fuse = 2225.8999 #ft^2
 
 # Wing Properties
 # Sref = 950.0 * 0.09203 #m^2 (wing area)
-S_wing = 950.0  # ft^2 Wing area
-Sref = 1080 #ft^2 (Referance area)
+S_wing = 666.5  # ft^2 Wing area
+Sref = 800 #ft^2 (Referance area)
 
 b = 33.89 #m (span)
 c_root = 4.95 #m
@@ -198,17 +198,17 @@ surfaces = {
                     },
             'wing':{
                         'charLeng':3.17, #ft
-                        't/c':.12,
+                        't/c':0.093,
                         'Xmaxt/c':.4,
                         'interfernceFactor': 1.0,
-                        'swet': 1746.54 ,#ft^2
+                        'swet': 1333 ,#ft^2
                         'sweep': sweep  ,# rad
                         'fracLaminar': 0.35,
                         'finish': 'polishedSM'
                         },
             'vTail':{
-                        'charLeng':3.09, #ft
-                        't/c':.12,
+                        'charLeng':11.407, #ft
+                        't/c':0.093,
                         'Xmaxt/c':.4,
                         'interfernceFactor': 1.0,
                         'swet': 252.18 ,#ft^2
@@ -217,8 +217,8 @@ surfaces = {
                         'finish': 'smoothPaint'
                     },
             'hTail':{
-                        'charLeng':1.79,
-                        't/c':.12,
+                        'charLeng':11.407,
+                        't/c':0.093,
                         'Xmaxt/c':.4,
                         'interfernceFactor': 1.0,
                         'swet': 216.24 ,#ft^2
@@ -227,8 +227,8 @@ surfaces = {
                         'finish': 'polishedSM'
                     },
             'canard':{
-                        'charLeng':1.79,
-                        't/c':.12,
+                        'charLeng':11.407,
+                        't/c':0.093,
                         'Xmaxt/c':.4,
                         'interfernceFactor': 1.0,
                         'swet': 267.4, #ft^2.
@@ -266,3 +266,51 @@ cg_additional = {'fuel_control':cg_locations['wing'],
                 'furnishings':cg_locations['fuselage'],
                 'avionics':cg_locations['fuselage'],
                 'electronics':cg_locations['fuselage']}
+
+
+
+
+            
+Xle = np.array([5,       10.9592,  41.8333,   75.4948])
+Yle = np.array([0,       2,        3,    46.0302])
+Zle = np.array([-2.16535, -2.16535, -2.16535,   -2.75591])
+C =   np.array([61,  51.21,  15.0591,   4.22244])
+incAng = np.array([5, 5, 0, 0 ])
+Nspan = np.array([2, 2, 10, 10])
+Sspace = np.array([3, 3, 3, 3])
+AFILE = np.array(['naca0008.dat', 'naca0008.dat', 'sc20612-il.dat', 'sc20612-il.dat'])
+
+wing= np.vstack((Xle, Yle, Zle, C, incAng, Nspan, Sspace)).T
+
+
+
+
+# Xle = np.array([41.8333,   75.4948])
+# Yle = np.array([     0,    46.0302])
+# Zle = np.array([ -2.16535,   -2.75591])
+# C =   np.array([ 15.0591,   4.22244])
+# incAng = np.array([0, 0 ])
+# Nspan = np.array([60, 60])
+# Sspace = np.array([3, 3])
+# AFILE = np.array(['sc20612-il.dat', 'sc20612-il.dat'])
+
+# wing= np.vstack((Xle, Yle, Zle, C, incAng, Nspan, Sspace)).T
+
+
+
+
+
+
+
+Xle_c = np.array([10.9592, 18.7808])
+Yle_c = np.array([0.0, 16.9])
+Zle_c = np.array([-0.73, -0.984252])
+C_c = np.array([7, 3])
+incAng_c = np.array([2, 2])
+Nspan_c = np.array([8, 8])
+Sspace_c = np.array([3, 3])
+AFILE_c = np.array(['sc20612-il.dat', 'sc20612-il.dat'])
+
+canard= np.vstack((Xle_c, Yle_c, Zle_c,  C_c, incAng_c, Nspan_c, Sspace_c)).T
+
+cg = [51.44619, 0, 0]
