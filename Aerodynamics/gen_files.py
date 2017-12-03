@@ -69,7 +69,7 @@ def gen_geo(Sref, MAC, Bref, cg, CDp, wing, AFILE, canard, AFILE_c, file='./airc
 	out('SURFACE')
 	out('Wing')
 	out('#Nchordwise  Cspace   [Nspan   Sspace]')
-	out('13 1.00 ')
+	out('6 1.00 ')
 	out('YDUPLICATE')
 	out('0.0')
 	out('SCALE')
@@ -86,7 +86,7 @@ def gen_geo(Sref, MAC, Bref, cg, CDp, wing, AFILE, canard, AFILE_c, file='./airc
 
 		line = ''
 		for j in xrange(np.shape(wing)[1]):
-			line += str(wing[i][j]) + ' '
+			line += str( wing[i][j]) + ' '
 
 		out(line)
 		out('AFILE')
@@ -102,7 +102,7 @@ def gen_geo(Sref, MAC, Bref, cg, CDp, wing, AFILE, canard, AFILE_c, file='./airc
 	out('SURFACE')
 	out('Canard')
 	out('#Nchordwise  Cspace   [Nspan   Sspace]')
-	out('6 1.00 ')
+	out('4 1.00 ')
 	out('YDUPLICATE')
 	out('0.0')
 	out('SCALE')
@@ -143,7 +143,7 @@ def gen_geo(Sref, MAC, Bref, cg, CDp, wing, AFILE, canard, AFILE_c, file='./airc
 	out('SURFACE')
 	out('Horizontal Tail')
 	out('#Nchordwise  Cspace   Nspan   Sspace')
-	out('7 1.00 20 2.0 ')
+	out('4 1.00 20 2.0 ')
 	out('YDUPLICATE')
 	out('0.0')
 	out('SCALE')
@@ -185,7 +185,7 @@ def gen_geo(Sref, MAC, Bref, cg, CDp, wing, AFILE, canard, AFILE_c, file='./airc
 	out('SURFACE')
 	out('Vertical Tail')
 	out('# Nchordwise Cspace Nspanwise Sspace')
-	out('7 1 10 -2.0')
+	out('4 1 10 -2.0')
 	out('#Xscale Yscale Zscale')
 	out('SCALE')
 	out('1.0 1.0 1.0')

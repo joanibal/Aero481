@@ -22,7 +22,7 @@ from Aerodynamics.avlLib import changeSref
 itermax = 1000
 T_guess = 4400
 
-S = np.linspace(700, 1200, 3)
+S = np.linspace(1000, 1200, 5)
 
 
 
@@ -57,15 +57,40 @@ thrustCon = {
 			}
 
 
-Sref_landing = np.ones(len(S))*S[0];
+Sref_landing = S;
 
 
-tolerance = 20.0
+
+tolerance = 10.0
 
 
+W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
+
+T = np.linspace(0,40000, len(S))
+for i in range(len(T)):
+	# Sref_landing[i] = Sref_landing[i -1]
+	print Sref_landing[i], Sref_landing[i -1]
+	for j in range(itermax):
+
+		changeSref(consts, Sref_landing[i])
+
+		W_new = prelim_weight(Sref_landing[i] , T[i], consts)[0]
+		# W_S = W/Sref_landing[i]
+		# S_new = T_W*W
+		print("Landing " +   str(i) + " " + str(np.abs(W_new - W_S_landing*Sref_landing[i])))
+		if np.abs(W_new - W_S_landing*Sref_landing[i]) <= tolerance:
+			notconverged = False
+			break
+
+
+		Sref_landing[i] = W_new/W_S_landing
+
+	if notconverged:
+		raise ValueError(flightCond + ' didnt converge')
 
 for i in range(len(S)):
 	# print('i', i)
+	# S[i] = S[i-1]
 	for flightCond in contraints.keys():
 		notconverged = True
 		T_upper = 1e12
@@ -96,113 +121,72 @@ for i in range(len(S)):
 				if notconverged:
 					raise ValueError(flightCond + ' ' + climbCond + ' didnt converge')
 
-		elif flightCond == 'Ceiling':
-			for j in range(itermax):
-				changeSref(consts, S[i])
-				W = prelim_weight(S[i] , thrustCon[flightCond][i], consts)[0]
-				W_S = W/S[i]
+		# elif flightCond == 'Ceiling':
+		# 	for j in range(itermax):
+		# 		changeSref(consts, S[i])
+		# 		W = prelim_weight(S[i] , thrustCon[flightCond][i], consts)[0]
+		# 		W_S = W/S[i]
 
-				CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
+		# 		CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
 
-				T_W = calcTWCeiling(consts.Density_Ceiling/consts.Density_SL , CD0['clean'])
+		# 		T_W = calcTWCeiling(consts.Density_Ceiling/consts.Density_SL , CD0['clean'])
 
-				T_new = T_W*W
-				print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
-				if np.abs(T_new - thrustCon[flightCond][i]) <= tolerance:
-					notconverged = False
-					break
+		# 		T_new = T_W*W
+		# 		print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
+		# 		if np.abs(T_new - thrustCon[flightCond][i]) <= tolerance:
+		# 			notconverged = False
+		# 			break
 
-				thrustCon[flightCond][i] = T_new
+		# 		thrustCon[flightCond][i] = T_new
 
-			if notconverged:
-				raise ValueError(flightCond + ' didnt converge')
-
-
-		elif flightCond == 'Cruise':
-			for j in range(itermax):
-				changeSref(consts, S[i])
-
-				W = prelim_weight(S[i] , thrustCon[flightCond][i], consts)[0]
-				W_S = W/S[i]
-
-				CD0 = DragPolar(W)[0] # [0:2] <-- only use the first two ouputs
-
-				T_W = calcTWCruise(W_S, CD0['clean'], consts.AR, consts.e['cruise'], consts.q)
-
-				T_new = T_W*W
-				print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
-				if np.abs(T_new - thrustCon[flightCond][i]) <= tolerance:
-					notconverged = False
-					break
-
-				thrustCon[flightCond][i] = T_new
-
-			if notconverged:
-				raise ValueError(flightCond + ' didnt converge')
+		# 	if notconverged:
+		# 		raise ValueError(flightCond + ' didnt converge')
 
 
-		elif flightCond == 'Takeoff':
-			for j in range(itermax):
-				changeSref(consts, S[i])
-				W = prelim_weight(S[i] , thrustCon[flightCond][i], consts)[0]
-				W_S = W/S[i]
+		# elif flightCond == 'Cruise':
+		# 	for j in range(itermax):
+		# 		changeSref(consts, S[i])
 
-				T_W = calcTWTakeoff(W_S, consts.CL['max']['takeoff'], consts.runLength)
+		# 		W = prelim_weight(S[i] , thrustCon[flightCond][i], consts)[0]
+		# 		W_S = W/S[i]
 
-				T_new = T_W*W
-				print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
-				if np.abs(T_new - thrustCon[flightCond][i]) <= tolerance:
-					notconverged = False
-					break
+		# 		CD0 = DragPolar(W)[0] # [0:2] <-- only use the first two ouputs
 
-				thrustCon[flightCond][i] = T_new
+		# 		T_W = calcTWCruise(W_S, CD0['clean'], consts.AR, consts.e['cruise'], consts.q)
 
-			if notconverged:
-				raise ValueError(flightCond + ' didnt converge')
+		# 		T_new = T_W*W
+		# 		print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
+		# 		if np.abs(T_new - thrustCon[flightCond][i]) <= tolerance:
+		# 			notconverged = False
+		# 			break
 
+		# 		thrustCon[flightCond][i] = T_new
 
-
-
-W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
-
-T = np.linspace(0,10000, len(S))
-for i in range(len(T)):
-	for j in range(itermax):
-		changeSref(consts, Sref_landing[i])
-
-		W_new = prelim_weight(Sref_landing[i] , T[i], consts)[0]
-		# W_S = W/Sref_landing[i]
-		# S_new = T_W*W
-		print("Landing " +   str(i) + " " + str(np.abs(W_new - W_S_landing*Sref_landing[i])))
-		if np.abs(W_new - W_S_landing*Sref_landing[i]) <= tolerance:
-			notconverged = False
-			break
+		# 	if notconverged:
+		# 		raise ValueError(flightCond + ' didnt converge')
 
 
-		Sref_landing[i] = W_new/W_S_landing
+		# elif flightCond == 'Takeoff':
+		# 	for j in range(itermax):
+		# 		changeSref(consts, S[i])
+		# 		W = prelim_weight(S[i] , thrustCon[flightCond][i], consts)[0]
+		# 		W_S = W/S[i]
 
-	if notconverged:
-		raise ValueError(flightCond + ' didnt converge')
+		# 		T_W = calcTWTakeoff(W_S, consts.CL['max']['takeoff'], consts.runLength)
 
+		# 		T_new = T_W*W
+		# 		print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
+		# 		if np.abs(T_new - thrustCon[flightCond][i]) <= tolerance:
+		# 			notconverged = False
+		# 			break
 
-# pdb.set_trace()
+		# 		thrustCon[flightCond][i] = T_new
 
-# filename='/tmp/shelve.out'
-# my_shelf = shelve.open('/tmp/shelve.out','n') # 'n' for new
+		# 	if notconverged:
+		# 		raise ValueError(flightCond + ' didnt converge')
 
-# for key in dir():
-#     try:
-#         my_shelf[key] = globals()[key]
-#     except TypeError:
-#         #
-#         # __builtins__, my_shelf, and imported modules can not be shelved.
-#         #
-#         print('ERROR shelving: {0}'.format(key))
-# my_shelf.close()
 
 X, Y, fuel_curves = fuel_weight(S, np.linspace(0, T_guess*20, 10), consts)
-# print fuel_curves
-# X, Y = np.meshgrid(np.linspace(4000, 30000, 20), np.linspace(750, 1400, 20))
 
 filename='/tmp/shelve4.out'
 my_shelf = shelve.open(filename,'n') # 'n' for new
@@ -252,31 +236,31 @@ labels = [ x._label for x in lines]
 
 
 
-for i in range(len(Sref_landing)):
+# for i in range(len(Sref_landing)):
 
-	flightCond = 'Climb'
-	climbCond = 'Balked Climb OEI'
-	for j in range(itermax):
-		W = prelim_weight(Sref_landing[i] , thrustCon['Climb'][climbCond][i], consts)[0]
-		# W_S = W/S[i]
+# 	flightCond = 'Climb'
+# 	climbCond = 'Balked Climb OEI'
+# 	for j in range(itermax):
+# 		W = prelim_weight(Sref_landing[i] , thrustCon['Climb'][climbCond][i], consts)[0]
+# 		# W_S = W/S[i]
 
-		CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
+# 		CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
 
-		T_W_climb = calcTWClimb(consts.CL['max'], CD0, k, consts.numEngines)[climbCond]
+# 		T_W_climb = calcTWClimb(consts.CL['max'], CD0, k, consts.numEngines)[climbCond]
 
-		T_climb_new = T_W_climb*W
-		print(flightCond + " " + climbCond + " " +  str(i) + " " + str(np.abs(T_climb_new - thrustCon['Climb'][climbCond][i])))
-		if np.abs(T_climb_new - thrustCon['Climb'][climbCond][i]) <= tolerance:
-			notconverged = False
-			break
+# 		T_climb_new = T_W_climb*W
+# 		print(flightCond + " " + climbCond + " " +  str(i) + " " + str(np.abs(T_climb_new - thrustCon['Climb'][climbCond][i])))
+# 		if np.abs(T_climb_new - thrustCon['Climb'][climbCond][i]) <= tolerance:
+# 			notconverged = False
+# 			break
 
-		thrustCon['Climb'][climbCond][i] = T_climb_new
+# 		thrustCon['Climb'][climbCond][i] = T_climb_new
 
-	if notconverged:
-		raise ValueError(flightCond + ' ' + climbCond + ' didnt converge')
+# 	if notconverged:
+# 		raise ValueError(flightCond + ' ' + climbCond + ' didnt converge')
 
 
-print 'done' 
+# print 'done' 
 
 
 
@@ -284,10 +268,10 @@ print 'done'
 
 plt.fill_between(Sref_landing, T,thrustCon['Climb']['Balked Climb OEI'], where=T > thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 
-plt.plot([consts.S_wing], [consts.thrust_req], 'ro', label='Design Point')
+plt.plot([consts.Sref], [consts.thrust_req], 'ro', label='Design Point')
 # plt.plot([1080], [consts.thrust_req], 'ro', label='da design pnt')
-design_point_str = str(int(consts.S_wing)) + ' ft^2, ' + str(consts.thrust_req) + ' lbs'
-plt.annotate(design_point_str, xy=(consts.S_wing, consts.thrust_req), xytext=(consts.S_wing+10, consts.thrust_req+100), weight = 'bold')
+design_point_str = str(int(consts.Sref)) + ' ft^2, ' + str(consts.thrust_req) + ' lbs'
+plt.annotate(design_point_str, xy=(consts.Sref, consts.thrust_req), xytext=(consts.Sref+10, consts.thrust_req+100), weight = 'bold')
 
 plt.legend(lines, labels)
 plt.legend(loc = 'upper left')

@@ -22,6 +22,9 @@ def runAVL(CL=0.57, geo_file='J481T.avl'):
 	# Execute the case
 	case.executeRun()
 
+	case.calcNP()
+	# print case.NP
+
 	return case.CD[0]
 
 
@@ -181,18 +184,17 @@ def runAVL(CL=0.57, geo_file='J481T.avl'):
 
 def changeSref(consts, Sref):
 
-	sweep_quarterchord = np.arctan((consts.wing[-1,0] - consts.wing[0,0]+0.25*consts.wing[0,3] +0.25*consts.wing[-1,3])/consts.wing[-1,1] )
+	sweep_quarterchord = consts.sweep
+	# print(sweep_quarterchord)
+	root_X_quarterchord = consts.wing[2,0] + 0.25*consts.wing[2,3]
 
-	root_X_quarterchord = consts.wing[0,0] + 0.25*consts.wing[0,3]
-
-
-	consts.wing[-1, 1] = (consts.AR*consts.S_wing)**(0.5)
+	consts.wing[-1, 1] = (consts.AR*consts.S_wing)**(0.5)/2
 	# print 'wing[-1,1]', wing[-1,1]
-	consts.wing[0, 0] = consts.S_wing/(consts.wing[-1,1]*(1+consts.w_lambda))
+	consts.wing[2, 0] = consts.S_wing/(consts.wing[-1,1]*(1+consts.w_lambda))
 	# print consts.wing[0, 0]
 	# print (consts.wing[-1,1]*(1+consts.w_lambda))
 # 
-	root_X_LE = root_X_quarterchord - 0.25*consts.wing[0, 3]
+	root_X_LE = root_X_quarterchord - 0.25*consts.wing[2, 3]
 	# print root_X_quarterchord , 0.25*consts.wing[0, 0]
 	# quit()
 	tan_sweep_LE = np.tan(sweep_quarterchord)+ (1-consts.w_lambda)/(consts.AR*(1+consts.w_lambda))
@@ -203,14 +205,14 @@ def changeSref(consts, Sref):
 	tip_X_LE = tan_sweep_LE*consts.wing[-1, 1]*0.5 + root_X_LE
 
 
-	consts.wing[0,0] = root_X_LE
+	consts.wing[2,0] = root_X_LE
 	# consts.wing[0,3] = c_root
 
 	consts.wing[-1,0] = tip_X_LE
 	# consts.wing[-1,1] = b/2
 
-	consts.wing[-1,3] = consts.wing[0, 3]*consts.w_lambda
-
+	consts.wing[-1,3] = consts.wing[2, 3]*consts.w_lambda
+	# print consts.wing
 	gen_geo( Sref, consts.c_MAC, consts.b, consts.cg, 0,  consts.wing, consts.AFILE, consts.canard, consts.AFILE_c, file='./Aerodynamics/J481T.avl')
 	
 	return 

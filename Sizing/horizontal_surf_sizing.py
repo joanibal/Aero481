@@ -22,6 +22,7 @@ def hor_surf_prop(Sref,root_chord, taper):
 if __name__ == '__main__':
 
 	#MAC
+	print constants.c_root, constants.w_lambda, constants.b
 	c_MAC, y_MAC = MAC(constants.c_root, constants.w_lambda, constants.b) #m
 	print c_MAC, y_MAC #m
 
@@ -32,7 +33,7 @@ if __name__ == '__main__':
 	#horizontal stabilizer calculations
 	S_total = hor_Sref(constants.c_HT, c_MAC, constants.S_wing*0.092903, constants.L_HT)
 	print S_total, S_total*constants.L_HT
-	print constants.L_c*constants.Sref_c
+	print constants.L_c, constants.Sref_c
 	#HT calculations
 	Sref_HT = (S_total*constants.L_HT-constants.L_c*constants.Sref_c)/constants.L_HT
 	print 'Sref HT:', Sref_HT #m^2

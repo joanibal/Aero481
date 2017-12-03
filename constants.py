@@ -89,16 +89,16 @@ c_HT = 0.66
 
 # Horizontal Stabilizer Properties
 L_HT = 8.68								# m
-c_root_HT = 2.35 							# m
-taper_HT = 0.41
+c_root_HT = 2.0							# m
+taper_HT = 0.35
 span_h = 25.197                             # ft
 t_root_h = 0.9251                           # ft
 sweep_HT = 36 * 0.0174533                    # deg
 
 # Canard Properties
-L_c = 14.7808 								# m
-Sref_c = 2	 								# m^2
-c_root_c = 2 								# m
+L_c = 12.7 								# m
+Sref_c = 6								# m^2
+c_root_c = 1.35 								# m
 taper_c = 0.25
 Sref_c_actual = 130/10.7639                 # m^2
 t_root_c = 0.837                            # ft
@@ -106,10 +106,10 @@ span_c = 26.06                              # ft
 sweep_c = 31.0 * 0.0174533                  # rad
 
 # Vertical Stabilizer Properties
-c_root_VT = 3.5       						# m
-taper_VT = 0.75								# vertical tail taper ratiop
+c_root_VT = 4       						# m
+taper_VT = 0.8							# vertical tail taper ratiop
 sweep_VT = 0.628319							# radians (36 degrees)
-L_VT = 4.4                                 # m
+L_VT = 6.35                                 # m
 Arudder = 43.09                             # ft^2
 
 # Wing Properties
@@ -130,11 +130,11 @@ Swet_fuse = 2225.8999 #ft^2
 
 # Wing Properties
 # Sref = 950.0 * 0.09203 #m^2 (wing area)
-S_wing = 666.5  # ft^2 Wing area
-Sref = 800 #ft^2 (Referance area)
+S_wing = 765.5  # ft^2 Wing area
+Sref = 850 #ft^2 (Referance area)
 
-b = 33.89 #m (span)
-c_root = 4.95 #m
+b = 23.58 #m (span)
+c_root = 4.16 #m
 w_lambda = 0.26 #(taper ratio
 c_MAC = 2.0/3.0*c_root*(1.0+w_lambda+w_lambda**2)/(1.0+w_lambda)
 # print(c_MAC)
@@ -271,16 +271,31 @@ cg_additional = {'fuel_control':cg_locations['wing'],
 
 
             
-Xle = np.array([5,       10.9592,  41.8333,   75.4948])
-Yle = np.array([0,       2,        3,    46.0302])
+Xle = np.array([5,       10.9592,  39.8333,   69.4948])
+Yle = np.array([0,       2,        3,    b/2*3.28084])
 Zle = np.array([-2.16535, -2.16535, -2.16535,   -2.75591])
-C =   np.array([61,  51.21,  15.0591,   4.22244])
+C =   np.array([61,  51.21,  c_root*3.28084, c_root*3.28084*w_lambda])
 incAng = np.array([5, 5, 0, 0 ])
-Nspan = np.array([2, 2, 10, 10])
+Nspan = np.array([2, 2, 9, 9])
 Sspace = np.array([3, 3, 3, 3])
 AFILE = np.array(['naca0008.dat', 'naca0008.dat', 'sc20612-il.dat', 'sc20612-il.dat'])
 
-wing= np.vstack((Xle, Yle, Zle, C, incAng, Nspan, Sspace)).T
+wing= (np.vstack((Xle, Yle, Zle, C, incAng, Nspan, Sspace))).T
+# print wing
+
+# print 39.8333 + c_root/4
+# #    
+# Xle = np.array([5,       10.9592,  39.27,   69.91948])
+# Yle = np.array([0,       2,        3,    b/2])
+# print b/2
+# Zle = np.array([-2.16535, -2.16535, -2.16535,   -2.75591])
+# C =   np.array([61,  51.21,  c_root*3.28084,   c_root*3.28084*w_lambda])
+# incAng = np.array([5, 5, 0, 0 ])
+# Nspan = np.array([2, 2, 9, 9])
+# Sspace = np.array([3, 3, 3, 3])
+# AFILE = np.array(['naca0008.dat', 'naca0008.dat', 'sc20612-il.dat', 'sc20612-il.dat'])
+
+# wing= np.vstack((Xle, Yle, Zle, C, incAng, Nspan, Sspace)).T
 
 
 
@@ -302,12 +317,12 @@ wing= np.vstack((Xle, Yle, Zle, C, incAng, Nspan, Sspace)).T
 
 
 
-Xle_c = np.array([10.9592, 18.7808])
-Yle_c = np.array([0.0, 16.9])
-Zle_c = np.array([-0.73, -0.984252])
-C_c = np.array([7, 3])
+Xle_c = np.array([8.98, 16.82])
+Yle_c = np.array([0.0, 4.8*3.28084])
+Zle_c = np.array([-.75, -0.75])
+C_c = np.array([1.35*3.28084, 1.35*3.28084*.25])
 incAng_c = np.array([2, 2])
-Nspan_c = np.array([8, 8])
+Nspan_c = np.array([6, 6])
 Sspace_c = np.array([3, 3])
 AFILE_c = np.array(['sc20612-il.dat', 'sc20612-il.dat'])
 

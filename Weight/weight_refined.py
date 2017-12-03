@@ -123,6 +123,7 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 
 		# print('start')
 		L_D = CL/(CD0 + runAVL(CL=CL ,geo_file='./Aerodynamics/J481T.avl'))
+		# L_D = CL/(CD0 + K*CL**2)
 
 		# print('L_D', L_D, CL/(CD0 + K*CL**2))
 		# print(CL/(CD0 + K*CL**2))
@@ -173,10 +174,9 @@ def prelim_weight(Sref_wing, T0, consts):
 		#formula explanation: new tail area = (tail only area * distance to tail - distance to canard * area of canard)/distance to tail
 		S_HT = (S_total*consts.L_HT - consts.Sref_c*consts.L_c)/consts.L_HT #m^2
 		
-		print S_total
 
 
-		S_VT = Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, Sref_wing/10.7639)
+		S_VT = Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, 0.092903*Sref_wing)
 		# print w_c
 		c_tip_VT = calcTipChord(consts.c_root_VT, consts.taper_VT)
 		b_VT = calcb_VT(S_VT, consts.c_root_VT, c_tip_VT)
@@ -223,8 +223,8 @@ def prelim_weight(Sref_wing, T0, consts):
 		# quit()
 
 
-		CD0 = compentCDMethod(consts, surfaces)[0]['clean']
-		# CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
+		# CD0 = compentCDMethod(consts, surfaces)[0]['clean']
+		CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
 
 		# print CD0
 	except:
@@ -294,7 +294,7 @@ def prelim_weight(Sref_wing, T0, consts):
 
 	# quit()
 
-	tolerance = 10.0
+	tolerance = 5.0
 	converged = 0
 
 	while True:
@@ -429,7 +429,7 @@ if __name__ == '__main__':
 	# print ff
 	changeSref(consts, constants.S_wing)
 
-	w_0, w_f, w_other = prelim_weight(constants.S_wing, constants.thrust_req, constants)
+	w_0, w_f, w_other = prelim_weight(constants.Sref, constants.thrust_req, constants)
 
 	print 'J481: w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
 
