@@ -40,5 +40,5 @@ x.add_output('Build', r'$MTOW$', side='right')
 
 # x.connect('conAnalysis', 'conCurve', r'$\frac{T}{W}$', stack=True)
 
-x.write('weight')
+x.write('test')
 

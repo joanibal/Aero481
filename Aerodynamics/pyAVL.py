@@ -60,6 +60,12 @@ class avlAnalysis():
 
 
     
+        self.sec_CL2 = []
+
+        self.sec_Chord2 = []
+        self.sec_Yle2 = []
+
+
         if not(geo_file == None):
             try:
                 # check to make sure files exist 
@@ -158,13 +164,17 @@ class avlAnalysis():
 
         # get section properties
         NS = avl.surf_i.nj[0]
+        NS2 = avl.surf_i.nj[2]
 
         self.sec_CL.append(np.asarray(avl.strp_r.clstrp[:NS]))
+        self.sec_CL2.append(np.asarray(avl.strp_r.clstrp[NS*2:(NS*2+ NS2)]))
         self.sec_CD.append(np.asarray(avl.strp_r.cdstrp[:NS]))
         self.sec_Chord.append(np.asarray(avl.strp_r.chord[:NS]))
+        self.sec_Chord2.append(np.asarray(avl.strp_r.chord[NS*2:(NS*2+ NS2)]))
         self.sec_Yle.append(np.asarray(avl.strp_r.rle[1][:NS]))
+        self.sec_Yle2.append(np.asarray(avl.strp_r.rle[1][NS*2:(NS*2+ NS2)]))
 
-
+        # print avl.surf_i.nj
         # print( 'alfa:', avl.case_r.alfa   )
 
         # print( 'CLTOT:', avl.case_r.cltot)

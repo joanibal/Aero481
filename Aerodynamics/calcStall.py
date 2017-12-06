@@ -10,7 +10,8 @@ from Weight.weight_buildup import prelim_weight
 
 def stallSpeed(Clmax, W, rho):
 	# weight is input in lbf 
-	Sref = constants.Sref
+	Sref = constants.Sref/10.7639
+	# print Sref
 
 	Vstall = math.sqrt((2*W*4.44822)/(rho*Sref*Clmax))
 	return Vstall*3.28084
@@ -18,7 +19,10 @@ def stallSpeed(Clmax, W, rho):
 if __name__=='__main__':
 	import constants as consts 
 
-	w_0, w_fuel = prelim_weight((consts.Sref+consts.Sref_c_actual)/0.09203, consts.thrust_req, consts)
+	# w_0, w_fuel = prelim_weight(consts.Sref*0.92, consts.thrust_req, consts)
+	w_0 = 66861.0416784
+	w_fuel =  26910.285329
+
 	print(w_0, w_fuel)
 	weight_landing = 0.88*w_0
 

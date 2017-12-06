@@ -1,4 +1,13 @@
+import os,sys
+
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+
+
+from AircraftClass.classes import surface, Object
+
 import numpy as np
+
+
 def calcCL(wingloading):  # wingloading [W/S] [lb/f^2]
 	rho = (5.87e-4) * 32.174  # density at 40,000 ft [lb/f^3]
 	V = 823  # cruise speed at 40,000 ft [ft/s]
@@ -12,107 +21,124 @@ def calcCD(Cf, Swet, Sref, CL, e, AR):
 	return CD
 
 
-def compentCDMethod(consts, surfaces):
+def compentCDMethod(plane, full=True):
 	'''
-	surfaces is a dictionary of surfaces. where each entry is another dictionary of the surface properties
+	plane is a module that diffines the aircraft
+
+	full is used for recursion -> no need to bother with it
 	'''
 
-	# surfaces = consts.surfaces
-	Cd_0 = 0
-	for surface in surfaces.keys():
 
-		Cf = calcCf(surfaces[surface] , consts.speed_kts * 0.51444448824222,
-			consts.mu, consts.Density_Cruise, consts.machCruise, )
+	CD_0 = 0
+	for name, part in vars(plane).iteritems():
+		if (type(part) == surface or type(part) ==Object):
+			# print name, ": ", part
 
-		FF = calcFF(surface, surfaces[surface], consts.machCruise)
 
-		# print surface, Cf, FF, surfaces[surface]['interfernceFactor'], surfaces[surface]['swet']/ consts.Sref
-		Cd_0 += surfaces[surface]['swet'] / consts.Sref * FF * Cf * surfaces[surface]['interfernceFactor'] 
-		# print Cd_0
+			Cf = calcCf(part.MAC_c, part.finish, part.frac_laminar,  plane.speed_fps, plane.mu_cruise, plane.density_cruise, plane.mach)
+			FF = calcFF(name, part, plane.mach)
 
-	# quit()
-	# Missing Form Drag (da = drag area (D\q))
-	empennage_upsweep = 6.08853 * 0.0174533														# rad
-	da_fuse = 3.83 * empennage_upsweep**2.5 * np.pi * \
-		(( surfaces['fuselage']['diameter'] / 2.0)**2)
+			# print name,part.wetted_area / plane.Sref * FF * Cf * part.interfernce_factor 
+			CD_0 += part.wetted_area / plane.Sref * FF * Cf * part.interfernce_factor 
+
+
+
+
+	if not(full):
+		return CD_0
+
+	# Missing Form Drag (DA = drag area (D\q))
+	DA_fuse = 3.83 * (plane.fuselage.empennage_upsweep* 0.0174533)**2.5 * np.pi * \
+		(( plane.fuselage.diameter/ 2.0)**2)
+
 	# regular wheel and tire, in tandem, and round strut (for nose, and two aft main gears)
-	da_lg = (0.25 + 0.15 + 0.30) * (2 * 4.5 + 2.15)
-	delC_d0_lg = (da_lg) / consts.Sref
-	# 4.5 sq ft for main landing gear
+	DA_lg = ((0.25 + 0.15)*1.59*2 + 0.15*1.23)*2 + ( (0.25 + 0.15)*0.52*2 + 0.15*1) 
+	delCD0_lg = (DA_lg) / plane.Sref
+
+
+	CD_mis = (DA_fuse) / plane.Sref
+
+
 
 	# engine windmilling effects
-	da_engine_windmill = 0.3*2* np.pi *( surfaces['nacelle']['diameter'] / 2)**2
-	CD_mis = (da_fuse + da_engine_windmill) / consts.Sref
-
-	# print Cd_0
-
-	Cd_0 += CD_mis
-	Cd_0 *= 1.035  # Account for Leak and Protuberance Drag
-
-	Cf = calcCf(surfaces['wing'], consts.speed_kts * 0.51444448824222,
-				consts.mu, consts.Density_Cruise, consts.machCruise, )
-
-	# solving for the area of the flap
-	c_flap_start = 0.9 * consts.c_root + consts.w_lambda * 0.1 * consts.c_root
-	c_flap_end = 0.5 * consts.c_root + consts.w_lambda * 0.5 * consts.c_root
-	S_flapped = consts.b / 2 * (c_flap_start + c_flap_end) / 2  # m^2
-
-	# calc additional drag at landing and takeoff
-	delC_d0_to = calcFlapDrag(
-		0.25, S_flapped,  consts.S_wing / 10.7639,  15 * 0.0174533)
-	delC_d0_lf = calcFlapDrag(
-		0.25, S_flapped,  consts.S_wing / 10.7639,  40 * 0.0174533)
+	# DA_engine_windmill = 0.3*2* np.pi *( surfaces['nacelle']['diameter'] / 2)**2
 
 
-	kappa = 0.95
-	sweep = consts.sweep
-	thickness = consts.surfaces['wing']['t/c']  # Average
-	cruiseCL = consts.CL['cruise']
-	M = consts.M
+	CD_0 += CD_mis
+	CD_0 *= 1.035  # Account for Leak and Protuberance Drag
 
-	MDD = kappa / np.cos(sweep) - thickness / (np.cos(sweep)
-												** 2) - cruiseCL / (10 * np.cos(sweep)**3)
+
+	if plane.name == 'j481':
+		flapped_surfaces = [plane.wing, plane.canard]
+	else:
+		flapped_surfaces = [plane.wing]
+
+	delCD_0_to = 0.0
+	delCD_0_lf = 0.0
+	for surf in flapped_surfaces:
+		# # solving for the area of the flap
+		c_flap_start = surf.chord_root + surf.flap_position[0]*(surf.taper - 1) * surf.chord_root 
+		c_flap_end = surf.chord_root + surf.flap_position[1]*(surf.taper - 1) * surf.chord_root 
+		S_flapped = surf.span*(surf.flap_position[1]- surf.flap_position[0]) * (c_flap_start + c_flap_end) / 2  
+
+		# # calc additional drag at landing and takeoff
+		delCD_0_to += calcFlapDrag(
+			0.25, S_flapped,  surf.area ,  np.deg2rad(surf.flap_deflection['takeoff']))
+		delCD_0_lf += calcFlapDrag(
+			0.25, S_flapped,  surf.area ,  np.deg2rad(surf.flap_deflection['landing']))
+
+
+	kappa = 0.95 # technology factor which assumes supercrtical airfoils
+
+
+	MDD = kappa / np.cos(np.deg2rad(plane.wing.sweep)) - plane.wing.thickness_chord / (np.cos(np.deg2rad(plane.wing.sweep))
+												** 2) - plane.CL['cruise'] / (10. * np.cos(np.deg2rad(plane.wing.sweep))**3)
 	Mcrit = MDD - (0.1 / 80)**(1.0 / 3)
 
-	if M > Mcrit:
-		# print("Valid")
-		Cd_0_wave = 20 * (M - Mcrit)**4
+	
+	if plane.mach > Mcrit:
+		
+		CD_0_wave = 20 * (plane.mach - Mcrit)**4
 	else:
-		Cd_0_wave = 0.0
+		CD_0_wave = 0.0
 
-	# print Cd_0_wave
-	Cd0 = {
-		'takeoff': {'gear up': Cd_0 + delC_d0_to,
-                    'gear down': Cd_0 + delC_d0_lg + delC_d0_to},
-		'clean': Cd_0 + Cd_0_wave,
-		'landing': {'gear up': Cd_0 + delC_d0_lf,
-                    'gear down': Cd_0 + delC_d0_lf + delC_d0_lg}
+
+
+	# values at sea level to calculate CD_0 at takeoff and landing
+	plane.v = 200.  # ft/s
+	plane.mu = 23.77e-4 # slug/ft^3
+	plane.mach = plane.v * 0.514444 /340 
+	CD_0_sea_level = compentCDMethod(plane, full=False)
+	# quit()
+	CD_0_dict = {
+		'takeoff': {'gear up': CD_0_sea_level + delCD_0_to,
+                    'gear down': CD_0_sea_level + delCD0_lg + delCD_0_to},
+		'cruise': CD_0 + CD_0_wave,
+		'landing': {'gear up': CD_0_sea_level + delCD_0_lf,
+                    'gear down': CD_0_sea_level + delCD_0_lf + delCD0_lg}
 	}
 
-	e = {
-		'takeoff': 0.75,
-		'clean': 1.78 * (1 - 0.045 * consts.AR**0.68) - 0.64,
-		'landing': 0.70
-	}
 
-	# print Cd_0
-
-	k = {}
-	for key in e.keys():
-		k[key] = 1 / (np.pi * consts.AR * e[key])
-
-	#return
-	return Cd0, k
+	# print CD_mis, DA_fuse, delCD0_lg
+	# print CD_0_sea_level
+	# print 'CD_mis', CD_mis
+	# print 'delCD0_lg', delCD0_lg
+	# print 'delCD0_lf', delCD_0_lf
+	# print 'delCD0_to', delCD_0_to
+	# print 'leak and pro', (CD_0/1.035)* 0.035
+	# print 'CD_0_wave', CD_0_wave
+	# print '--------------------------------'
 
 
-def calcCf(surface, v, mu, rho, M):
-    # every varible must be in SI!!!
+	return CD_0_dict
+
+
+def calcCf(C, finish, fracLaminar,  v, mu, rho, M):
 
 	# Reynolds number breakdown
-	# Cruise conditions (40k ft)
 
-	skinRoughness = {
-				'camPaint': 3.3e-5,
+	skinRoughness = {					# all units of ft
+				'camPaint': 3.3e-5,		
 				'smoothPaint': 2.08e-5,
 				'producitonSM': 1.33e-5,
 				'polishedSM': 0.50e-5,
@@ -122,14 +148,16 @@ def calcCf(surface, v, mu, rho, M):
 	# print surface, surface['charLeng']
 
 
-	C = surface['charLeng']
-	fracLaminar = surface['fracLaminar']
-	k = skinRoughness[surface['finish']]
+	# print rho , v
+	k = skinRoughness[finish]
 
 	Re = rho * v * C / mu
+
+	
 	Re_cutoff_turb = 44.62 * (C / k)**1.053 * M**1.16
 	Re_cutoff_laminar = 32.21 * (C / k)**1.053
 
+	# print Re, Re_cutoff_turb < Re, Re_cutoff_laminar < Re
 	if Re_cutoff_turb < Re:
 		Re_turb = Re_cutoff_turb
 	else:
@@ -147,17 +175,16 @@ def calcCf(surface, v, mu, rho, M):
 
 
 
-def calcFF(name, surface, M):
-	if name is 'fuselage':
-		f = surface['charLeng'] / surface['diameter']
-		FF = 1 + 60 / f**3 + f / 400
-	elif name is 'nacelle':
-		f = surface['charLeng'] / surface['diameter']
+def calcFF(name, part, M):
+	if name == 'fuselage':
+		f = part.MAC_c/ part.diameter
+		FF = 1 + 60 / f**3 + f / 400.
+	elif name == 'nacelle':
+		f = part.MAC_c/ part.diameter
 		FF = 1 + 0.65 / f
 	else:
-		FF = (1 + 0.6 / surface['Xmaxt/c'] * surface['t/c'] + 100 *
-		      surface['t/c']**4) * (1.34 * M**0.18 * np.cos(surface['sweep'])**0.28)
-		# print (1.34 * M**0.18 * np.cos(surface['sweep'])**0.28), 1.34 * M**0.18, np.cos(surface['sweep'])**0.28
+		FF = (1 + 0.6 / part.Xmaxt * part.thickness_chord + 100 *
+		      part.thickness_chord**4) * (1.34 * M**0.18 * np.cos(np.deg2rad(part.sweep))**0.28)
 
 	return FF
 
@@ -173,33 +200,33 @@ if __name__ == '__main__':
 	import matplotlib.pyplot as plt
 	import os
 	import sys
-	import inspect
 
 	sys.path.insert(1, os.path.join(sys.path[0], '..'))
 	import numpy as np
-	import constants as consts
+	import j481
 	# w_0 = calcWeights((5000+200),15, 0.657, M=0.85)[0]	 # [0] <-- only use the first
-	# Cd_0, k = DragPolar(w_0, plot=True)[0:2] # [0:2] <-- only use the first two ouputs
-	# print Cd_0
+	# CD_0, k = DragPolar(w_0, plot=True)[0:2] # [0:2] <-- only use the first two ouputs
+	# print CD_0
 	plot = True
+	k = j481.k
 
-	Cd_0, k = compentCDMethod(consts)
+	CD_0 = compentCDMethod(j481)
+
 	if plot:
-				#Need to update with appropriate CL limits
-			import constants as consts
+				#Need to upDAte with appropriate CL limits
 
-			CL_range_clean = np.linspace(-0.8, consts.CL['max']['cruise'], 100)
-			CL_range_landing = np.linspace(0.2, consts.CL['max']['landing'], 100)
-			CL_range_takeoff = np.linspace(-0.1, consts.CL['max']['takeoff'], 100)
+			CL_range_clean = np.linspace(-0.8, j481.CL['max']['cruise'], 100)
+			CL_range_landing = np.linspace(0.2, j481.CL['max']['landing'], 100)
+			CL_range_takeoff = np.linspace(-0.1, j481.CL['max']['takeoff'], 100)
 
-			CD_clean = Cd_0['clean'] + k['clean'] * CL_range_clean**2
-			CD_takeoff_flaps_gear_down = Cd_0['takeoff']['gear down'] + \
+			CD_clean = CD_0['cruise'] + k['cruise'] * CL_range_clean**2
+			CD_takeoff_flaps_gear_down = CD_0['takeoff']['gear down'] + \
 				k['takeoff'] * CL_range_takeoff**2
-			CD_takeoff_flaps_gear_up = Cd_0['takeoff']['gear up'] + \
+			CD_takeoff_flaps_gear_up = CD_0['takeoff']['gear up'] + \
 				k['takeoff'] * CL_range_takeoff**2
-			CD_landing_flaps_gear_down = Cd_0['landing']['gear down'] + \
+			CD_landing_flaps_gear_down = CD_0['landing']['gear down'] + \
 				k['landing'] * CL_range_landing**2
-			CD_landing_flaps_gear_up = Cd_0['landing']['gear up'] + \
+			CD_landing_flaps_gear_up = CD_0['landing']['gear up'] + \
 				k['landing'] * CL_range_landing**2
 
 			cruise, = plt.plot(CD_clean, CL_range_clean, linewidth=2,
@@ -207,11 +234,11 @@ if __name__ == '__main__':
 			takegearup, = plt.plot(CD_takeoff_flaps_gear_up, CL_range_takeoff,
 			                       linewidth=2, label='Takeoff Gear Up', color='orangered')
 			takegeardownd, = plt.plot(CD_takeoff_flaps_gear_down, CL_range_takeoff,
-			                          linewidth=2, label='Takeoff Gear Down', color='darkred')
+			                          linewidth=2, label='Takeoff Gear Down', color='DArkred')
 			landgearup, = plt.plot(CD_landing_flaps_gear_down, CL_range_landing,
 			                       linewidth=2, label='Landing Gear Up', color='skyblue')
 			landgeardown, = plt.plot(CD_landing_flaps_gear_up, CL_range_landing,
-			                         linewidth=2, label='Landing Gear Down', color='darkblue')
+			                         linewidth=2, label='Landing Gear Down', color='DArkblue')
 			plt.ylabel('$C_L$', weight='bold', size='x-large')
 			plt.xlabel('$C_D$', weight='bold', size='x-large')
 

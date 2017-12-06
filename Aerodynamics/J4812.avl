@@ -10,9 +10,9 @@
 #IYsym   IZsym   Zsym
  0       0       0
 #Sref    Cref    Bref
-874.0  3.33266852874  28.1836968581
+865.5  10.9339522158  92.4662
 #Xref    Yref    Zref
-51.44619 0 0
+48.11 0 0
 # CDp
 0
 
@@ -30,32 +30,118 @@ SCALE
 TRANSLATE
 0.0  0.0  0.0
 ANGLE
-2.500
+-8
+
 #------------------------------------------------------
 
 SECTION
 #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-5.0 0.0 -2.16535 61.0 5.0 3.0 3.0 
-AFILE
-naca0008.dat
-
-SECTION
-#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-10.9592 2.0 -2.16535 51.21 5.0 3.0 3.0 
-AFILE
-naca0008.dat
-
-SECTION
-#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-40.604649229 3.0 -2.16535 12.4804133339 2.0 9.0 -2.0 
+39.8333 4.4 0 15.56581025 15 9.0 -1.0 
 AFILE
 sc20612-il.dat
 
+
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Flap 1.00 0.70 0 0 0 1.00
+
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Slat 1.00 -0.10 0 0 0 1.00
+
+
+# #50 % selection for flap 
+# SECTION
+# #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+# 57   26.08  0 9.7892       -5.0    9.0      0.0 
+# AFILE
+# sc20612-il.dat
+
+
+
+
 SECTION
 #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-79.901448489 58.0386228025 -2.75591 3.24490746682 0.0 9.0 -2.0 
+49.989 17.43 0    12.0939    9   9.0    0
 AFILE
 sc20612-il.dat
+
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Flap 1.00 0.70 0 0 0 1.00
+
+
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Slat 1.00 -0.10 0 0 0 1.00
+
+
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+74.0 47.63 0       4.047    4   9.0    0
+AFILE
+sc20612-il.dat
+
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Slat 1.00 -0.10 0 0 0 1.00
+
+
+#======================================================
+#----------------------- Fuselage ---------------------
+#======================================================
+
+#--------------------------------------------------
+SURFACE
+Fuselage H
+#Nchordwise  Cspace   Nspanwise  Sspace
+24           1.0 
+
+
+COMPONENT
+1
+
+YDUPLICATE 
+0.0
+
+SCALE
+1.0   1.0  1.0
+
+TRANSLATE
+0.0   0.0   0.0
+
+
+ANGLE
+0.000
+
+
+
+SECTION
+#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+ 0.0   0.0    0.0      86   0.    1          0.
+# 124
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+0.36   0.88    0.0     83.5   0.    1          0.
+
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+1.619   1.76    0.0     79.12   0.    1          0.
+
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+3.78   2.64   0.0     73.92   0.    1          0.
+
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+6.3   3.52   0.0      68.67   0.    1          0.
+
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+9   4.4    0.0      61    0.    1          0.
+
+
 
 #======================================================
 #----------------------- Canard -----------------------
@@ -71,12 +157,12 @@ SCALE
 TRANSLATE
 0.0  0.0  0.0
 ANGLE
-0
+5.26
 #------------------------------------------------------
 
 SECTION
 #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-8.98 0.0 -0.75 4.429134 2.0 6.0 3.0 
+9 4.4 0 4.429134 2.0 8.0 -2 
 AFILE
 sc20612-il.dat
 
@@ -86,7 +172,7 @@ Canard 1.00 0.0   0 1 0    1.00
 
 SECTION
 #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-13.2663 13.03 -0.75 1.1072835 2.0 6.0 3.0 
+17.5 17.43 0 1.1072835 2.0 8.0 -2 
 AFILE
 sc20612-il.dat
 
@@ -114,7 +200,7 @@ ANGLE
 #------------------TAIL ROOT/ELEVATOR------------------
 SECTION
 #Xle   Yle     Zle     Chord   Ainc
-96.919 0.0000 18.2415 7.70997 0.000 7 1
+80.919 0.0000 18.2415 7.70997 0.000 7 1
 NACA
 0012
 CLAF
@@ -127,7 +213,7 @@ Elevator -1.00 0.5 0 1 0 1.00
 #--------------------TAIL Tip--------------------------
 SECTION
 #Xle   Yle     Zle     Chord   Ainc
-108.795 12.5984 18.2415 3.16109 0.000 7 1
+92.795 12.5984 18.2415 3.16109 0.000 7 1
 NACA
 0012
 CLAF
@@ -156,7 +242,7 @@ TRANSLATE
 #----------------------ROOT/RUDDER---------------------
 SECTION
 #Xle   Yle     Zle     Chord   Ainc
-86.6496 0.0000 5.8727 11.4829 0.000 7 1
+75.6496 0.0000 5.8727 11.4829 0.000 7 1
 NACA
 0012
 CLAF
@@ -169,7 +255,7 @@ Rudder 1.00 0.5 0 0 1 -1.00
 #-----------------------TIP/RUDDER---------------------
 SECTION
 #Xle   Yle     Zle     Chord   Ainc
-97.706 0.0000 19.2257 8.61221 0.000 7 1
+86.706 0.0000 19.2257 8.61221 0.000 7 1
 NACA
 0012
 CLAF

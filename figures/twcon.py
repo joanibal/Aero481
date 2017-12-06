@@ -25,5 +25,5 @@ x.connect('W', 'Drag', r'$MTOW$')
 x.connect('Drag', 'conAnalysis', r'$C_{D0}, k$')
 x.connect('conAnalysis', 'conCurve', r'$\frac{T}{W}$', stack=True)
 
-x.write('tW')
+x.write('test')
 

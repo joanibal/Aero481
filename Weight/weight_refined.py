@@ -1,18 +1,19 @@
-import os,sys,inspect
+import os,sys
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-import Sizing.horizontal_surf_sizing as hs
-from Aerodynamics.calcCoeff import *
-import Sizing.Svt_calc
-import Weight.weight_estimation
-import numpy as np
-import matplotlib.pyplot as plt
-# import constants as consts
-from Sizing.Svt_calc import *
-from Sizing.horizontal_surf_sizing import *
-from Aerodynamics.avlLib import runAVL, changeSref
+# import Sizing.horizontal_surf_sizing as hs
+from Aerodynamics.calcCoeff import compentCDMethod
+# import Sizing.Svt_calc
+# import Weight.weight_estimation
+# import numpy as np
+# # import matplotlib.pyplot as plt
+# # import constants as consts
+# # from Sizing.Svt_calc import *
+# # from Sizing.horizontal_surf_sizing import *
 
+from Aerodynamics.avlLib import runAVL, changeSref
+from Sizing.tailSizing import genTail
 #------------------------------------------------------------------#
 
 # # wing weight calculations
@@ -55,7 +56,7 @@ from Aerodynamics.avlLib import runAVL, changeSref
 # W_surfcont = 56.01*(MTOW*consts.q*10**(-5))**0.576
 
 #instruments
-# W_flightind = consts.Npil*(15+0.032*(MTOW*10**(-3)))	#flight indicators
+# W_flightind = consts.num_pilots*(15+0.032*(MTOW*10**(-3)))	#flight indicators
 # W_engineind = consts.numEngines*(4.80+0.006*(MTOW*10**(-3)))	#engine indicators
 # W_miscind = 0.15*(MTOW*10**(-3))	#misc indicators
 
@@ -66,14 +67,14 @@ from Aerodynamics.avlLib import runAVL, changeSref
 # w_elec = 1162.66*((w_bladder+w_bladdersupport+w_dumpdrain+w_cgcontrol)*w_avionics*10**(-3))**0.506
 
 #furnishings
-# w_flightdeck = 54.99*consts.Npil	#flight deck seats
-# w_passseats = 32.03*consts.Npass	#passenger seats
-# w_lav = 3.90*(consts.Npass**1.33)	#lavatories
-# w_food = 5.68*(consts.Npass**1.12)	#food
-# w_oxygen = 7*(consts.Npil+consts.Npass+consts.Natt)**0.702	#oxygen
-# w_windows = 109.33*(consts.Npass*(1+consts.cabinpressure)*10**(-2))**0.505	#windows
-# w_baggage = 0.0646*consts.Npass**1.456	#baggage
-# w_ac = 469.30*((45.83*60*(consts.Npil+consts.Natt+consts.Npass)*10**(-4))**0.419)	#air conditioning
+# w_flightdeck = 54.99*consts.num_pilots	#flight deck seats
+# w_passseats = 32.03*consts.num_passengers	#passenger seats
+# w_lav = 3.90*(consts.num_passengers**1.33)	#lavatories
+# w_food = 5.68*(consts.num_passengers**1.12)	#food
+# w_oxygen = 7*(consts.num_pilots+consts.num_passengers+consts.num_attendants)**0.702	#oxygen
+# w_windows = 109.33*(consts.num_passengers*(1+consts.cabinpressure)*10**(-2))**0.505	#windows
+# w_baggage = 0.0646*consts.num_passengers**1.456	#baggage
+# w_ac = 469.30*((45.83*60*(consts.num_pilots+consts.num_attendants+consts.num_passengers)*10**(-4))**0.419)	#air conditioning
 # w_miscfurnish = 0.771*(w_0*10**(-3))	#misc
 
 #----------------------------------------------------#
@@ -123,7 +124,8 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 
 		# print('start')
 		L_D = CL/(CD0 + runAVL(CL=CL ,geo_file='./Aerodynamics/J481T.avl'))
-		# L_D = CL/(CD0 + K*CL**2)
+		# L_D = CL/(CD0 + CL/(CD0 + K*CL**2))
+		# print CL, L_D, CL/(CD0 + K*CL**2)
 
 		# print('L_D', L_D, CL/(CD0 + K*CL**2))
 		# print(CL/(CD0 + K*CL**2))
@@ -151,108 +153,65 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 	return 1-ff
 
 
-def prelim_weight(Sref_wing, T0, consts):
+def prelim_weight(Sref, T0, plane):
 	'''
 	#Sref in ft^2, T0 in lbs
 	'''
 
+	# if plane.name === 
 
+	# update plane with new Sizing info
+	plane.thrust = T0
+
+
+
+	plane.Sref = Sref
+	plane.wing.update(area=plane.Sref*plane.wing_area_ratio)
+
+	# idk why but == works better of string comparison
+	if plane.name=='j481':
+		plane.canard.update(area=plane.Sref*plane.canard_area_ratio)
+		plane.tail_vert, plane.tail_horz = genTail(plane.wing, plane.dist_to_surface ,  canard=plane.canard)
+		plane.canard.weight = 7.5*plane.canard.area
+
+
+	elif plane.name == 'g550':
+		plane.tail_vert, plane.tail_horz = genTail(plane.wing, plane.dist_to_surface)
+	else:
+		raise ValueError('plane name "%s" not recognized' % plane.name)
+
+
+
+
+	plane.CD0 = compentCDMethod(plane);
+	# CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
 
 	try:
-		#for J481
-		wing_comp = 0.8
-		tail_comp = 0.75
-		fuse_comp = 0.75
-		# flapsslats_comp = 0.6
-		gear_comp = 0.92
-		nacelle_comp = 0.7
-
-		c_MAC_wing, _ = Sizing.horizontal_surf_sizing.MAC(consts.c_root, consts.w_lambda, consts.b) #m
-		#finds total required area
-		S_total = Sizing.horizontal_surf_sizing.hor_Sref(consts.c_HT, c_MAC_wing, 0.092903*Sref_wing, consts.L_HT) #m^2
-		
-		#formula explanation: new tail area = (tail only area * distance to tail - distance to canard * area of canard)/distance to tail
-		S_HT = (S_total*consts.L_HT - consts.Sref_c*consts.L_c)/consts.L_HT #m^2
-		
-
-
-		S_VT = Sizing.Svt_calc.calcS_VT(consts.L_VT, consts.c_VT, consts.b, 0.092903*Sref_wing)
-		# print w_c
-		c_tip_VT = calcTipChord(consts.c_root_VT, consts.taper_VT)
-		b_VT = calcb_VT(S_VT, consts.c_root_VT, c_tip_VT)
-		AR_VT = calcAR_VT(b_VT, S_VT)
-
-		b_HT, AR_HT = hor_surf_prop(S_HT, consts.c_root_HT, consts.taper_HT)
-
-
-
-		surfaces = consts.surfaces
-		# print(surfaces['wing']['swet'])
-		# print(surfaces['wing']['charLeng'])
-
-
-		# print(surfaces['vTail']['swet'])
-		# print(surfaces['vTail']['charLeng'])
-
-		# print(surfaces['hTail']['swet'])
-		# print(surfaces['hTail']['charLeng'])
-
-		surfaces['wing']['swet'] = 2*Sref_wing
-		surfaces['wing']['charLeng'] = c_MAC_wing*3.28084
-
-
-		surfaces['vTail']['swet'] = 2*S_VT*3.28084*3.28084
-		surfaces['vTail']['charLeng'] = MAC(consts.c_root_VT,consts.taper_VT, b_VT)[0]*3.28084
-
-		surfaces['hTail']['swet'] = 2*S_HT*3.28084*3.28084
-		surfaces['hTail']['charLeng'] = MAC(consts.c_root_HT,consts.taper_HT, b_HT)[0]*3.28084
-
-		# print surfaces
-
-
-		# print(surfaces['wing']['swet'])
-		# print(surfaces['wing']['charLeng'])
-
-
-		# print(surfaces['vTail']['swet'])/2
-		# print(surfaces['vTail']['charLeng'])
-
-		# print(surfaces['hTail']['swet'])/2
-		# print(surfaces['hTail']['charLeng'])
-
-		# quit()
-
-
-		# CD0 = compentCDMethod(consts, surfaces)[0]['clean']
-		CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
-
-		# print CD0
+		plane.wing.weight
 	except:
-		#for G550
-		wing_comp = 1.0
-		tail_comp = 1.0
-		fuse_comp = 1.0
-		gear_comp = 1.0
-		nacelle_comp = 1.0
+		plane.wing.weight= 7.5*plane.wing.area
+		plane.tail_horz.weight = 4.0*plane.tail_horz.area
+		plane.tail_vert.weight = 4.0*plane.tail_vert.area
+		
 
-		S_HT = consts.S_HT
-		S_VT = consts.S_VT
-		AR_VT = consts.AR_VT
-
-		CD0 = consts.C_f*(consts.Swet_rest + 2.0*Sref_wing)/Sref_wing
-	# quit()
-
-	w_wing = 7.5*Sref_wing
-	w_HT = 4.0*S_HT*10.7639
-	w_VT = 4.0*S_VT*10.7639
-	# w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
+		plane.fuselage.weight = 3.5*plane.fuselage.wetted_area
+		# w_fuse = 2.5*consts.Swet_fuse
 
 
-	w_fuse = 3.5*consts.Swet_fuse
-	w_VT = 2.0*16.1519601701*10.7369 #needs to be replaced by previous line
+		w_avionics = 19.2+11+5+3.5+8.4+44+78.4+168.5+14+38.2+37+15.6
+		# print 'avionics', w_avionics
 
-
-	w_fuse = 2.5*consts.Swet_fuse
+		w_flightdeck = 54.99*plane.num_pilots	#flight deck seats
+		w_passseats = 32.03*plane.num_passengers	#passenger seats
+		w_lav = 3.90*(plane.num_passengers**1.33)	#lavatories
+		w_food = 5.68*(plane.num_passengers**1.12)	#food
+		w_oxygen = 7*(plane.num_pilots+plane.num_passengers+plane.num_attendants)**0.702	#oxygen
+		w_windows = 109.33*(plane.num_passengers*(1+plane.cabinpressure)*10**(-2))**0.505	#windows
+		w_baggage = 0.0646*plane.num_passengers**1.456	#baggage
+		w_ac = 469.30*((45.83*60*(plane.num_pilots+plane.num_attendants+plane.num_passengers)*10**(-4))**0.419)	#air conditioning
+		# print w_flightdeck, w_passseats, w_lav, w_food, w_oxygen, w_windows, w_baggage, w_ac
+		plane.interior.weight = w_flightdeck + w_passseats +  2.0*w_lav + w_food + w_oxygen + w_windows + w_baggage + w_ac
+		# print 'interior', w_interior
 
 
 	# # engine weight calculations (lbs)
@@ -273,20 +232,6 @@ def prelim_weight(Sref_wing, T0, consts):
 	# print w_eng, w_nacelle, w_engcontrol, w_start_cp, w_start_elec
 	# print 'engine', w_eng_total
 
-	w_avionics = 19.2+11+5+3.5+8.4+44+78.4+168.5+14+38.2+37+15.6
-	# print 'avionics', w_avionics
-
-	w_flightdeck = 54.99*consts.Npil	#flight deck seats
-	w_passseats = 32.03*consts.Npass	#passenger seats
-	w_lav = 3.90*(consts.Npass**1.33)	#lavatories
-	w_food = 5.68*(consts.Npass**1.12)	#food
-	w_oxygen = 7*(consts.Npil+consts.Npass+consts.Natt)**0.702	#oxygen
-	w_windows = 109.33*(consts.Npass*(1+consts.cabinpressure)*10**(-2))**0.505	#windows
-	w_baggage = 0.0646*consts.Npass**1.456	#baggage
-	w_ac = 469.30*((45.83*60*(consts.Npil+consts.Natt+consts.Npass)*10**(-4))**0.419)	#air conditioning
-	# print w_flightdeck, w_passseats, w_lav, w_food, w_oxygen, w_windows, w_baggage, w_ac
-	w_interior = w_flightdeck + w_passseats +  2.0*w_lav + w_food + w_oxygen + w_windows + w_baggage + w_ac
-	# print 'interior', w_interior
 
 	#iterating for MTOW	
 	w_0, _, _, w_crew_payload = Weight.weight_estimation.calcWeights(consts.R,consts.L_D, consts.SFC, consts.machCruise, consts.w_payload)
@@ -294,7 +239,7 @@ def prelim_weight(Sref_wing, T0, consts):
 
 	# quit()
 
-	tolerance = 5.0
+	tolerance = 1.0
 	converged = 0
 
 	while True:
@@ -305,7 +250,8 @@ def prelim_weight(Sref_wing, T0, consts):
 		# print 'carichner', Wwing_carichner
 		Wwing_raymer = 0.0051*((w_0*consts.N)**0.557)*(Sref_wing**0.649)*(consts.AR**0.5)*(consts.tc**(-0.4))*((1+consts.w_lambda)**0.1)*(np.cos(consts.sweep)**(-1))*(consts.wing_mounted_area**0.1)
 		# print 'raymer', Wwing_raymer
-		w_wing = wing_comp*(Wwing_raymer + Wwing_carichner)/2.0
+		# w_wing = wing_comp*(Wwing_raymer + Wwing_carichner)/2.0
+		w_wing = Wwing_carichner
 		# print 'wing', w_wing
 
 		gamma_horiz = ((w_0*consts.N)**0.813)*((S_HT*10.7639)**0.584)*((consts.span_h/consts.t_root_h)**0.033)*((consts.c_MAC/0.3048)/(consts.L_HT/0.3048))**0.28
@@ -343,12 +289,9 @@ def prelim_weight(Sref_wing, T0, consts):
 		# CD = CD0 + CL**2/(np.pi*consts.AR*consts.e['cruise'])
 		# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, CL)
 		# w_f = ff*w_0
-		ff_step = fuel_fraction_update(consts.SFC, consts.SFC_sealevel, Sref_wing, T0, w_0, CD0, consts.alt, consts.speed_kts, consts.R, 1.0/(np.pi*consts.AR*consts.e['cruise']), consts.cruise_steps)
+		ff_step = fuel_fraction_update(consts.SFC, consts.SFC_sealevel, Sref_wing, T0, w_0, CD0, consts.alt, consts.speed_kts, consts.R, K['clean'], consts.cruise_steps)
 		w_f = ff_step*w_0
 
-		# print 'CL original '+str(CL)
-		# print 'originial '+str(ff)
-		# print 'stepped '+str(ff_step)
 
 		w_bladder = 23.10*((w_f/consts.jetA_density)*10**(-2))**0.758	#bladder cells
 		w_bladdersupport = 7.91*((w_f/consts.jetA_density)*10**(-2))**0.854	#bladder cells supports
@@ -356,10 +299,8 @@ def prelim_weight(Sref_wing, T0, consts):
 		w_cgcontrol = 28.38*((w_f/consts.jetA_density)*10**(-2))**0.442	#cg control system
 
 		w_fuelcontrol = w_bladder + w_bladdersupport + w_dumpdrain + w_cgcontrol
-		# print 'fuel control', w_fuelcontrol
-		# print w_bladder, w_bladdersupport, w_dumpdrain, w_cgcontrol
 
-		w_flightind = consts.Npil*(15+0.032*(w_0*10**(-3)))	#flight indicators
+		w_flightind = consts.num_pilots*(15+0.032*(w_0*10**(-3)))	#flight indicators
 		w_engineind = consts.numEngines*(4.80+0.006*(w_0*10**(-3)))	#engine indicators
 		w_miscind = 0.15*(w_0*10**(-3))	#misc indicators
 		# print w_flightind, w_engineind, w_miscind
@@ -391,7 +332,7 @@ def prelim_weight(Sref_wing, T0, consts):
 			break	
 		w_0 += 1.00*(w_0new - w_0)
 		# w_0 += 0.5*(w_0new - w_0)
-		# print w_0
+		# print 'w_0', w_0
 	
 	# print('CL ', CL, 'CD0', CD0, ' w_0/Sref_wing ',  w_0/Sref_wing)
 	# print w_nose_gear, 2*w_main_gear, w_xtra
@@ -415,23 +356,33 @@ def prelim_weight(Sref_wing, T0, consts):
 					}
 
 
+	# print w_breakdown
+	# print consts.AR, 'carichner', Wwing_carichner, 'raymer', Wwing_raymer ,w_0, w_f
 
 	return w_0, w_f, w_breakdown
 
 if __name__ == '__main__':
 
-	import numpy as np 
-	import constants as consts
-	import constantsG550
+	# import numpy as np 
+	# import constants as consts
+	# import constantsG550
+	import j481
+
+	w_0, w_f, w_other = prelim_weight(j481.Sref, j481.thrust_req, j481)
+	quit()
+
 
 	# CD = calcCD(consts.C_f, consts.Swet_rest*10.7639 + 2.0*consts.Sref, consts.Sref,  consts.CL['cruise'], consts.e['cruise'], consts.AR )
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, consts.CL['cruise'])
 	# print ff
-	changeSref(consts, constants.S_wing)
+	# changeSref(consts, consts.S_wing, consts.Sref_c*10.7639)
+	# # changeCSref(consts, constants.Sref_c*10.7639)
 
-	w_0, w_f, w_other = prelim_weight(constants.Sref, constants.thrust_req, constants)
+	# # print constants.S_wing, constants.Sref_c
 
-	print 'J481: w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
+	# w_0, w_f, w_other = prelim_weight(consts.S_wing, consts.thrust_req, consts)
+
+	# print 'J481: w_0',w_0 , 'w_f', w_f, 'empty', w_0-w_f-constants.w_payload
 
 	# print 'fuselage:', w_other['fuselage']+w_other['interior']+w_other['indicators']+w_other['misc']+w_other['electronics']+w_other['avionics']
 	# print 'wing:', w_other['wing']+w_other['surface_control']+w_other['fuel_control']
@@ -454,7 +405,7 @@ if __name__ == '__main__':
 	# # print 'CL original '+str(CL)
 	# CD = CD0 + CL**2/(np.pi*consts.AR*consts.e['cruise'])
 	# ff = fuel_fraction(consts.SFC, CD, consts.R, consts.speed_kts, CL)
-	# ff_step = fuel_fraction_update(consts.SFC, consts.SFC_sealevel, Sref_wing, T0, w_0, CD0, consts.alt, consts.ceiling, consts.speed_kts, consts.rho_imperial, consts.R, 1.0/(np.pi*consts.AR*consts.e['cruise']), n)
+	# # ff_step = fuel_fraction_update(consts.SFC, consts.SFC_sealevel, Sref_wing, T0, w_0, CD0, consts.alt, consts.ceiling, consts.speed_kts, consts.rho_imperial, consts.R, 1.0/(np.pi*consts.AR*consts.e['cruise']), n)
 	# print 'originial '+str(ff)
 	# print 'stepped '+str(ff_step)
 	

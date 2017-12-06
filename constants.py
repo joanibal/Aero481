@@ -1,4 +1,5 @@
 
+
 import numpy as np
 import math
 
@@ -6,7 +7,7 @@ runLength = 4948   							# ft
 alt = 53000       							# ft
 R = 5200           							# nMi
 machCruise = 0.85
-SFC = 0.72      							# 1/hr
+SFC = 0.725      							# 1/hr
 SFC_sealevel = 0.346                        # 1/hr
 L_D = 15 									#used in weight_estimation
 speed_kts = 566.7279
@@ -25,6 +26,8 @@ rho_imperial = rho*0.00194032               # Conversion from kg/m^3 to slugs/ft
 u_imperial = u*3.28084                      # Conversion from m/s to ft/s
 q = 0.5*rho_imperial*u_imperial**2          # Dynamic Pressure (imperial)
 
+print q, rho_imperial, u_imperial
+quit()
 
 # print(str(q))
 w_crew = 3.0*(180+60)       #lbs (crew weight + luggage)
@@ -37,7 +40,7 @@ w_payload = 8.0*(180+60) + w_crew    #lbs (passenger weight + luggage)
 # R = 6750 # nmi
 
 numEngines = 2
-engine_thrust = 6970 #lbs - sealevel
+engine_thrust = 7760 #lbs - sealevel
 
 
 e = {'takeoff':{'gearUp':0.775,
@@ -60,7 +63,7 @@ Cd_0 = {'takeoff':{'gearUp':0.0400,
 # ceiling = 60000     						# ft
 T_Ceiling = 216.650  						# K
 # mu = 2.995e-7*47.88026
-mu = 1.704e-5   #N s/m2
+mu_cruise = 1.422-7    #N s/m2
 
 # T_SL
 P_Ceiling = 11053.0  						# Pa
@@ -120,8 +123,10 @@ Arudder = 43.09                             # ft^2
 
 
 # Fuselage Properties
-fuse_length = 101.2*0.3048 					# m
-Swet_fuse = 2225.8999 #ft^2
+fuse_length = 83.77*0.3048 					# m
+Swet_fuse = 1975.14 #ft^2
+
+
 
 # # A/C Properties
 # CGpos = 63.97*0.3048						# m (This is used in SVT calculations)
@@ -130,11 +135,11 @@ Swet_fuse = 2225.8999 #ft^2
 
 # Wing Properties
 # Sref = 950.0 * 0.09203 #m^2 (wing area)
-S_wing = 765.5  # ft^2 Wing area
-Sref = 850 #ft^2 (Referance area)
+S_wing = 865.5  # ft^2 Wing area
+Sref = 950 #ft^2 (Referance area)
 
-b = 23.58 #m (span)
-c_root = 4.16 #m
+b = (46.23310*2 )/3.28084#m (span)
+c_root = 15.56581025 /3.28084#m
 w_lambda = 0.26 #(taper ratio
 c_MAC = 2.0/3.0*c_root*(1.0+w_lambda+w_lambda**2)/(1.0+w_lambda)
 # print(c_MAC)
@@ -271,18 +276,30 @@ cg_additional = {'fuel_control':cg_locations['wing'],
 
 
             
-Xle = np.array([5,       10.9592,  39.8333,   69.4948])
+# [[  5.          10.9592      39.8333      58.13695556]
+#  [  0.           2.           3.          46.23310502]
+#  [ -2.16535     -2.16535     -2.16535     -2.75591   ]
+#  [ 61.          51.21        13.6482944    3.54855654]
+#  [  5.           5.           0.           0.        ]
+#  [  2.           2.           9.           9.        ]
+# #  [  3.           3.          -2.          -2.        ]]
+# print np.tan(sweep)*(b/2*3.28084 - 3)
+# print np.tan(sweep), (b/2*3.28084 - 3)
+
+
+Xle = np.array([  5.0 ,    10.9592  ,  39.8333  , 39.8333 + np.tan(sweep)*(b/2*3.28084 - 3) ])
 Yle = np.array([0,       2,        3,    b/2*3.28084])
 Zle = np.array([-2.16535, -2.16535, -2.16535,   -2.75591])
 C =   np.array([61,  51.21,  c_root*3.28084, c_root*3.28084*w_lambda])
-incAng = np.array([5, 5, 0, 0 ])
-Nspan = np.array([2, 2, 9, 9])
-Sspace = np.array([3, 3, 3, 3])
+incAng = np.array([5, 5, 2, 0 ])
+Nspan = np.array([3, 3, 9, 9])
+Sspace = np.array([3, 3, -2, -2])
 AFILE = np.array(['naca0008.dat', 'naca0008.dat', 'sc20612-il.dat', 'sc20612-il.dat'])
 
 wing= (np.vstack((Xle, Yle, Zle, C, incAng, Nspan, Sspace))).T
-# print wing
-
+# print 'consts'
+# print wing.T
+# quit()
 # print 39.8333 + c_root/4
 # #    
 # Xle = np.array([5,       10.9592,  39.27,   69.91948])
@@ -313,14 +330,21 @@ wing= (np.vstack((Xle, Yle, Zle, C, incAng, Nspan, Sspace))).T
 
 
 
+# [[  8.98        13.26634767]
+#  [  0.          13.03      ]
+#  [ -0.75        -0.75      ]
+#  [  4.429134     1.1072835 ]
+#  [  2.           2.        ]
+#  [  6.           6.        ]
+#  [  3.           3.        ]]
 
 
 
 
-Xle_c = np.array([8.98, 16.82])
-Yle_c = np.array([0.0, 4.8*3.28084])
+Xle_c = np.array([8.98, 13.2663])
+Yle_c = np.array([0.0, 13.03])
 Zle_c = np.array([-.75, -0.75])
-C_c = np.array([1.35*3.28084, 1.35*3.28084*.25])
+C_c = np.array([  4.429134   ,  1.1072835 ])
 incAng_c = np.array([2, 2])
 Nspan_c = np.array([6, 6])
 Sspace_c = np.array([3, 3])

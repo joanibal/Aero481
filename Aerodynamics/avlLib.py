@@ -4,7 +4,7 @@ import pyAVL
 import numpy as np
 
 from gen_files import gen_geo
-
+import matplotlib.pyplot as plt
 
 
 
@@ -22,13 +22,147 @@ def runAVL(CL=0.57, geo_file='J481T.avl'):
 	# Execute the case
 	case.executeRun()
 
-	case.calcNP()
+	# case.calcNP()
 	# print case.NP
 
 	return case.CD[0]
 
+# plt.plot(case.sec_Yle[0], case.sec_CL[0]*case.sec_Chord[0]/10.9339)
+def liftDistPlot(geo_file):
+	CL = 0.57
+	case = pyAVL.avlAnalysis(geo_file=geo_file)
+
+	# Steady level flight contraints
+	case.addConstraint('elevator', 0.00)
+	case.addTrimCondition('CL', CL)
+
+	# Execute the case
+	case.executeRun()
+
+	# case.calcNP()
+	# print case.NP
+	case = pyAVL.avlAnalysis(geo_file=geo_file)
+
+	# Steady level flight contraints
+	case.addConstraint('elevator', 0.00)
+	case.addTrimCondition('CL', CL)
+
+	# Execute the case
+	case.executeRun()
+
+	a = 46.2331050223;
+	a2 = 13.03;
+	b = (CL/2)/(a*np.pi)
+
+	# l_ellipse = np.sqrt((np.linspace(0, a)**2/a**2 - 1)*b**2)
+	l_ellipse = 0.58*np.sqrt((1 - np.linspace(0, a)**2/a**2 ))
+	l_ellipse2 = 0.245*np.sqrt((1 - np.linspace(0, a2)**2/a2**2 ))
+		# print  np.linspace(0, a)**2
+	# print a**2
+	# print b**2
+	# # print (np.linspace(0, a)**2/a**2 - 1)
+	# print l_ellipse
+	# case.calcNP()
+	# print case.NP
+	lift, = plt.plot(case.sec_Yle[0], case.sec_CL[0]*case.sec_Chord[0]/10.9339,label='wing Distribution', linewidth=2)
+	lift2, = plt.plot(case.sec_Yle2[0], case.sec_CL2[0]*case.sec_Chord2[0]/10.9339,label='Canard Distribution', linewidth=2)
+	elip, = plt.plot(np.linspace(0, a), l_ellipse, '--', label='Elliptical')
+	elip2, = plt.plot(np.linspace(0, a2), l_ellipse2, '--', label='Elliptical')
+
+	plt.xlabel('Y Leading Edge [ft]', fontsize=20)
+	plt.ylabel('Cl*C/Cref', fontsize=20)
+	plt.legend(fontsize=12, loc='upper right')
+	plt.show()
+
+def changeSref(consts, Sref, Sref_c):
+	wingSref = consts.Sref
 
 
+	sweep_quarterchord = consts.sweep
+	# print(sweep_quarterchord)
+	root_X_quarterchord = consts.wing[2,0] + 0.25*consts.wing[2,3]
+
+	consts.wing[-1, 1] = (consts.AR*wingSref)**(0.5)/2
+	# print 'wing[-1,1]', wing[-1,1]
+	consts.wing[2, 0] = wingSref/(consts.wing[-1,1]*(1+consts.w_lambda))
+	# print consts.wing[0, 0]
+	# print (consts.wing[-1,1]*(1+consts.w_lambda))
+# 
+	root_X_LE = root_X_quarterchord - 0.25*consts.wing[2, 3]
+	# print root_X_quarterchord , 0.25*consts.wing[0, 0]
+	# quit()
+	tan_sweep_LE = np.tan(sweep_quarterchord)+ (1-consts.w_lambda)/(consts.AR*(1+consts.w_lambda))
+
+	# print tan_sweep_LE
+
+
+	tip_X_LE = tan_sweep_LE*(consts.wing[-1, 1]- consts.wing[2, 1]) + root_X_LE
+
+
+	consts.wing[2,0] = root_X_LE
+	# consts.wing[0,3] = c_root
+
+	consts.wing[-1,0] = tip_X_LE
+	# consts.wing[-1,1] = b/2
+
+	consts.wing[-1,3] = consts.wing[2, 3]*consts.w_lambda
+
+
+
+
+
+
+
+	AR_c = consts.span_c**2/(consts.Sref_c*10.7639) 
+
+	sweep_quarterchord_C = consts.sweep_c
+	# print(sweep_quarterchord_C)
+	root_X_quarterchord_c = consts.canard[0,0] + 0.25*consts.canard[0,3]
+
+	consts.canard[-1, 1] = (AR_c*Sref_c)**(0.5)/2
+	# print 'canard[-1,1]', canard[-1,1]
+	consts.canard[0, 0] = Sref_c/(consts.canard[-1,1]*(1+consts.taper_c))
+	# print consts.canard[0, 0]
+	# print (consts.canard[-1,1]*(1+consts.taper_c))
+# 
+	root_X_LE_c = root_X_quarterchord_c - 0.25*consts.canard[0, 3]
+	# print root_X_quarterchord , 0.25*consts.canard[0, 0]
+	# quit()
+	tan_sweep_LE_c = np.tan(sweep_quarterchord_C)+ (1-consts.taper_c)/(AR_c*(1+consts.taper_c))
+
+	# print tan_sweep_LE_c
+
+
+	tip_X_LE_c = tan_sweep_LE_c*consts.canard[-1, 1] + root_X_LE_c
+
+
+	consts.canard[0,0] = root_X_LE_c
+	# consts.canard[0,3] = c_root
+
+	consts.canard[-1,0] = tip_X_LE_c
+	# consts.canard[-1,1] = b/2
+
+	consts.canard[-1,3] = consts.canard[0, 3]*consts.taper_c
+
+
+
+	gen_geo( Sref , consts.c_MAC*3.28084, consts.b*3.28084, consts.cg, 0,  consts.wing, consts.AFILE, consts.canard, consts.AFILE_c, file='./Aerodynamics/J481T.avl')
+	
+
+
+
+	# print 'updated'
+	# print consts.wing.T
+
+
+
+
+
+
+	return 
+
+if __name__ == '__main__':
+	liftDistPlot('J4812.avl') 
 
 # import pyAVL
 # import numpy as np
@@ -182,40 +316,46 @@ def runAVL(CL=0.57, geo_file='J481T.avl'):
 # sref_end = 2000.0
 
 
-def changeSref(consts, Sref):
 
-	sweep_quarterchord = consts.sweep
-	# print(sweep_quarterchord)
-	root_X_quarterchord = consts.wing[2,0] + 0.25*consts.wing[2,3]
-
-	consts.wing[-1, 1] = (consts.AR*consts.S_wing)**(0.5)/2
-	# print 'wing[-1,1]', wing[-1,1]
-	consts.wing[2, 0] = consts.S_wing/(consts.wing[-1,1]*(1+consts.w_lambda))
-	# print consts.wing[0, 0]
-	# print (consts.wing[-1,1]*(1+consts.w_lambda))
-# 
-	root_X_LE = root_X_quarterchord - 0.25*consts.wing[2, 3]
-	# print root_X_quarterchord , 0.25*consts.wing[0, 0]
-	# quit()
-	tan_sweep_LE = np.tan(sweep_quarterchord)+ (1-consts.w_lambda)/(consts.AR*(1+consts.w_lambda))
-
-	# print tan_sweep_LE
+# def changeCSref(consts, Sref_c):
 
 
-	tip_X_LE = tan_sweep_LE*consts.wing[-1, 1]*0.5 + root_X_LE
+# 	AR_c = consts.span_c**2/(consts.Sref_c*10.7639) 
+
+# 	sweep_quarterchord_C = consts.sweep_c
+# 	# print(sweep_quarterchord_C)
+# 	root_X_quarterchord_c = consts.canard[0,0] + 0.25*consts.canard[0,3]
+
+# 	consts.canard[-1, 1] = (AR_c*Sref_c)**(0.5)/2
+# 	# print 'canard[-1,1]', canard[-1,1]
+# 	consts.canard[0, 0] = Sref_c/(consts.canard[-1,1]*(1+consts.taper_c))
+# 	# print consts.canard[0, 0]
+# 	# print (consts.canard[-1,1]*(1+consts.taper_c))
+# # 
+# 	root_X_LE_c = root_X_quarterchord_c - 0.25*consts.canard[0, 3]
+# 	# print root_X_quarterchord , 0.25*consts.canard[0, 0]
+# 	# quit()
+# 	tan_sweep_LE_c = np.tan(sweep_quarterchord_C)+ (1-consts.taper_c)/(AR*(1+consts.taper_c))
+
+# 	# print tan_sweep_LE_c
 
 
-	consts.wing[2,0] = root_X_LE
-	# consts.wing[0,3] = c_root
+# 	tip_X_LE_c = tan_sweep_LE_c*consts.canard[-1, 1]*0.5 + root_X_LE_c
 
-	consts.wing[-1,0] = tip_X_LE
-	# consts.wing[-1,1] = b/2
 
-	consts.wing[-1,3] = consts.wing[2, 3]*consts.w_lambda
-	# print consts.wing
-	gen_geo( Sref, consts.c_MAC, consts.b, consts.cg, 0,  consts.wing, consts.AFILE, consts.canard, consts.AFILE_c, file='./Aerodynamics/J481T.avl')
+# 	consts.canard[0,0] = root_X_LE_c
+# 	# consts.canard[0,3] = c_root
+
+# 	consts.canard[-1,0] = tip_X_LE_c
+# 	# consts.canard[-1,1] = b/2
+
+# 	consts.canard[-1,3] = consts.canard[0, 3]*consts.taper_c
+# 	# print consts.wing
+# 	gen_geo( Sref, consts.c_MAC, consts.b, consts.cg, 0,  consts.wing, consts.AFILE, consts.canard, consts.AFILE_c, file='./Aerodynamics/J481T.avl')
 	
-	return 
+# 	return 
+
+
 
 
 # print ' # '+str(round((tan_sweep_LE*0.5*b)+root['X'], 4))+' '+str(round(0.5*b,4))

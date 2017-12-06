@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2017.7.24)  4 DEC 2017 04:46
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2017.7.24)  4 DEC 2017 05:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**tW.tex
-(./tW.tex
+**test.tex
+(./test.tex
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, lo
 aded.
@@ -482,23 +482,14 @@ End of file on the terminal!
  
 Here is how much of TeX's memory you used:
  11434 strings out of 495063
- 221094 string characters out of 3182201
+ 221102 string characters out of 3182201
  277978 words of memory out of 3000000
  14409 multiletter control sequences out of 15000+200000
  3640 words of font info for 14 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 56i,1n,73p,411b,136s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 56i,1n,73p,413b,136s stack positions out of 5000i,500n,10000p,200000b,50000s
 !  ==> Fatal error occurred, no output PDF file produced!
-ent
-                       {tikzpicture}
-? 
-
-! LaTeX Error: Unknown option `tightpage' for package `preview'.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
+       
 l.9 \PreviewEnvironment
                        {tikzpicture}
 ? 
@@ -524,8 +515,8 @@ l.9 \PreviewEnvironment{t
 l.10 \setlength{\PreviewBorder}{5pt}
                                     
 ? 
-) (./tW.aux)
-\openout1 = `tW.aux'.
+) (./test.aux)
+\openout1 = `test.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
@@ -638,33 +629,43 @@ e
 \pgf@layerbox@process=\box40
 \pgf@layerboxsaved@process=\box41
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 21.
+LaTeX Font Info:    Try loading font information for U+msa on input line 19.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 21.
+LaTeX Font Info:    Try loading font information for U+msb on input line 19.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1
+)
+! Extra }, or forgotten $.
+l.31 ...D0) {$S_{surface}, \overline{C}_{surface}}
+                                                  $};&
+? 
 
-{/usr/share/texlive/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./tW.aux) ) 
+Overfull \hbox (320.22606pt too wide) in paragraph at lines 156--157
+[][] 
+ []
+
+[1
+
+{/usr/share/texlive/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./test.aux) ) 
 Here is how much of TeX's memory you used:
- 12295 strings out of 495063
- 236163 string characters out of 3182201
- 296896 words of memory out of 3000000
- 15212 multiletter control sequences out of 15000+200000
+ 12459 strings out of 495063
+ 239621 string characters out of 3182201
+ 314510 words of memory out of 3000000
+ 15377 multiletter control sequences out of 15000+200000
  5644 words of font info for 23 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 56i,14n,73p,411b,979s stack positions out of 5000i,500n,10000p,200000b,50000s
-</us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmss10.pfb>
-Output written on tW.pdf (1 page, 47044 bytes).
+ 56i,14n,73p,413b,979s stack positions out of 5000i,500n,10000p,200000b,50000s
+</
+usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmss10.pfb>
+Output written on test.pdf (1 page, 51758 bytes).
 PDF statistics:
  47 PDF objects out of 1000 (max. 8388607)
  22 compressed objects within 1 object stream
