@@ -113,17 +113,19 @@ tail_vert, tail_horz = genTail(wing, dist_to_surface ,  canard=canard)
 
 nacelle = Object()
 nacelle.MAC_c = 12.5 # ft  # this isnt really a MAC, but it will make the loop in drag buildup easier
+nacelle.length = nacelle.MAC_c
 nacelle.diameter = 4.83 # ft
 nacelle.interfernce_factor = 1.0
 nacelle.wetted_area = 215.58 #ft^2,
 nacelle.sweep = 0
 nacelle.frac_laminar = 0.1
 nacelle.finish = 'smoothPaint'
-
+nacelle.comp = 1
 
 fuselage = Object()
 
 fuselage.MAC_c = 101.17 # ft
+fuselage.length = fuselage.MAC_c
 fuselage.diameter = 8.8 # ft
 fuselage.interfernce_factor = 1.0
 fuselage.wetted_area = 2323.66 #ft^2,
@@ -131,6 +133,7 @@ fuselage.sweep = 0
 fuselage.frac_laminar = 0.1
 fuselage.finish = 'smoothPaint'
 fuselage.empennage_upsweep = 6.08853 * 0.0174533        # deg ???                                               # rad
+fuselage.cabinpressure = 11.8  # psi
 
 
 # interior = Object()

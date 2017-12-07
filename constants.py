@@ -150,7 +150,6 @@ sweep = 36*0.0174533
 wing_mounted_area = 132.8011*2      #ft
 nacelle_length = 12.5               #ft
 inlet_area = 8.73                   #ft^2
-nacelle_width = 2.417*2             #ft
 nacelle_wettedarea = 315.789/2      #ft
 cabinpressure = 11.8                #psi
 
