@@ -133,7 +133,7 @@ fuselage.finish = 'smoothPaint'
 fuselage.empennage_upsweep = 6.08853 * 0.0174533        # deg ???                                               # rad
 
 
-interior = Object()
+# interior = Object()
 
 
 #  -------------------- Lift and Drag -------------------------
@@ -201,10 +201,11 @@ nose_x = 180.0*0.0254           #m (from datum at nose)
 main_x = 20.7249521             #m (from datum at nose)
 
 # A/C mass properties (datum at nose)
-np_location = 16.66     #m
-cg_fwd = 15             #m (chosen because forward cg can be modified based on fuel placement)
-cg_aft = 16.07          #empty CG location
-cg_h = 2.50        #m
+np_location = 54.46194  # ft
+# ft (chosen because forward cg can be modified based on fuel placement)
+cg_fwd = 49.2126
+cg_aft = 52.723097  # empty CG location
+cg_h = 8.2021  # ft
 
 # quit()
 

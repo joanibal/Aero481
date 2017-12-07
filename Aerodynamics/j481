@@ -1,0 +1,196 @@
+481
+
+#======================================================
+#------------------- Geometry File --------------------
+#======================================================
+# Imperial Used: ft, lbm, etc
+
+#Mach
+0.8
+#IYsym   IZsym   Zsym
+ 0       0       0
+#Sref    Cref    Bref
+950.0  17.5278476037  87.1779788708
+#Xref    Yref    Zref
+49.2126 0.0 0.0
+# CDp
+{'cruise': 0.013904771054452212, 'landing': {'gear down': 0.048346818422495982, 'gear up': 0.044684713159338085}, 'takeoff': {'gear down': 0.024800201755669771, 'gear up': 0.021138096492511877}}
+
+#======================================================
+#--------------------- canard -------------------
+#======================================================
+SURFACE
+canard
+#Nchordwise  Cspace   [Nspan   Sspace]
+1 1.00 
+YDUPLICATE
+0.0
+SCALE
+1.0  1.0  1.0
+TRANSLATE
+0.0  0.0  0.0
+ANGLE
+0.00
+#------------------------------------------------------
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+9.0 4.4 0.0 6.71096394246 2.0 6.0 0.0 
+AFILE
+Aerodynamics/Airfoils/sc20612-il.dat
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+18.0052094174 16.9830573921 0.0 1.67774098562 2.0 6.0 0.0 
+AFILE
+Aerodynamics/Airfoils/sc20612-il.dat
+
+CONTROL
+# name gain Xhinge VYZhvec SgnDup
+Canard 1.00 0.0   0 1 0    1.00
+
+#======================================================
+#--------------------- wing -------------------
+#======================================================
+SURFACE
+wing
+#Nchordwise  Cspace   [Nspan   Sspace]
+1 1.00 
+YDUPLICATE
+0.0
+SCALE
+1.0  1.0  1.0
+TRANSLATE
+0.0  0.0  0.0
+ANGLE
+0.00
+#------------------------------------------------------
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+40.0 4.4 0.0 15.3753049155 10.0 6.0 0.0 
+AFILE
+Aerodynamics/Airfoils/sc20612-il.dat
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+68.4653965618 47.9889894354 0.0 3.99757927803 2.0 6.0 0.0 
+AFILE
+Aerodynamics/Airfoils/sc20612-il.dat
+
+#======================================================
+#--------------------- tail_vert -------------------
+#======================================================
+SURFACE
+tail_vert
+#Nchordwise  Cspace   [Nspan   Sspace]
+1 1.00 
+SCALE
+1.0  1.0  1.0
+TRANSLATE
+0.0  0.0  0.0
+ANGLE
+0.00
+#------------------------------------------------------
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+61.1021827787 0.0 4.4 10.9206400787 0.0 6.0 0.0 
+AFILE
+Aerodynamics/Airfoils/sc0012.dat
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+70.7248282489 0.0 19.1428641063 8.73651206297 0.0 6.0 0.0 
+AFILE
+Aerodynamics/Airfoils/sc0012.dat
+
+#======================================================
+#--------------------- tail_horz -------------------
+#======================================================
+SURFACE
+tail_horz
+#Nchordwise  Cspace   [Nspan   Sspace]
+1 1.00 
+YDUPLICATE
+0.0
+SCALE
+1.0  1.0  1.0
+TRANSLATE
+0.0  0.0  0.0
+ANGLE
+0.00
+#------------------------------------------------------
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+69.9597471797 0.0 19.1428641063 10.8694864101 0.0 6.0 0.0 
+AFILE
+Aerodynamics/Airfoils/sc0012.dat
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+80.7601361743 14.6738066536 19.1428641063 3.80432024352 0.0 6.0 0.0 
+AFILE
+Aerodynamics/Airfoils/sc0012.dat
+
+CONTROL
+#surface gain xhinge hvec SgnDup
+Elevator -1.00 0.5 0 1 0 1.00
+
+
+#======================================================
+#----------------------- Fuselage ---------------------
+#======================================================
+
+#--------------------------------------------------
+SURFACE
+Fuselage H
+#Nchordwise  Cspace   Nspanwise  Sspace
+24           1.0
+
+
+COMPONENT
+1
+
+YDUPLICATE
+0.0
+
+SCALE
+1.0   1.0  1.0
+
+TRANSLATE
+0.0   0.0   0.0
+
+
+ANGLE
+0.000
+
+
+SECTION
+#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+0.0   0.0    0.0      86   0.    1          0.
+# 124
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+0.36   0.88    0.0     83.5   0.    1          0.
+
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+1.619   1.76    0.0     79.12   0.    1          0.
+
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+3.78   2.64   0.0     73.92   0.    1          0.
+
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+6.3   3.52   0.0      68.67   0.    1          0.
+
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+9   4.4    0.0      61    0.    1          0.
+
+
+
+# -- END OF FILE --
