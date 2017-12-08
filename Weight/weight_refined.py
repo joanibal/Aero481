@@ -239,7 +239,6 @@ def prelim_weight(Sref, T0, plane):
 
 		plane.tail_horz.weight = plane.tail_horz.comp * 0.0034 *( ((w_0 * plane.load_factor)**0.813) * ((plane.tail_horz.area )**0.584) * (
 			(plane.tail_horz.span / (plane.tail_horz.coords[0,3]*plane.tail_horz.thickness_chord))**0.033) * ((plane.tail_horz.MAC_c ) / (plane.dist_to_surface[0] ))**0.28 ) **0.915
-		# print 'HT', w_HT
 
 		try:
 			plane.canard.weight = plane.canard.comp * 0.0034 *( ((w_0 * plane.load_factor)**0.813) * ((plane.canard.area )**0.584) * (\
@@ -248,10 +247,13 @@ def prelim_weight(Sref, T0, plane):
 		except:
 			plane.canard.weight = 0
 
+		# print 'HT', plane.tail_horz.weight+plane.canard.weight
 
 		plane.tail_vert.weight = plane.tail_vert.comp * 0.19 *( ((1 + 1)**0.5) * ((w_0 * plane.load_factor)**0.363) * ((plane.tail_vert.area )**1.089) * (plane.mach**0.601) * ((plane.dist_to_surface[1] )**(-0.726)) * (
 			(1 + 0.3)**0.217) * (plane.tail_vert.aspect_ratio**0.337) * ((1 + plane.tail_vert.taper)**0.363) * (np.cos(np.deg2rad(plane.tail_vert.sweep))**(-0.484)) )**1.014
-			
+		# print 'VT', plane.tail_vert.weight	
+
+
 		plane.fuselage.weight=plane.fuselage.comp * 10.43 * (1.25**1.42) * ((plane.q_cruise * 10**(-2))**0.283) * (
 			(w_0 * 10**(-3))**0.95) * ((plane.fuselage.length / 8.8)**0.71)
 		# print 'fuse', w_fuse

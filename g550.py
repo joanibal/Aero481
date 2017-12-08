@@ -42,7 +42,7 @@ density_cruise = (22650 * np.exp(1.73 - .000157*(altitude*0.3048)))/(287*temp_cr
 speed_fps = mach*np.sqrt(1.4*287*temp_cruise_K)*3.28084  # velocity from m/s to ft/s
 speed_kts = speed_fps*0.592484
 q_cruise = 0.5*density_cruise*speed_fps**2          # Dynamic Pressure (imperial!!!!)
-mu_cruise = 2.969e-7    #lbf*s/ft^2
+# mu_cruise = 2.969e-7    #lbf*s/ft^2
 
 
 # # Sea Level 
