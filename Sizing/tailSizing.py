@@ -39,7 +39,8 @@ def genTail(wing, dist_to_surface, vol_coeff=np.array([0.66, 0.041]), canard=Non
 
 
     # add distance to canard to dist_to_surface
-    dist_to_surface = np.append(dist_to_surface, [ wing.approx_AC_x - canard.approx_AC_x])
+    if not(canard is None):
+        dist_to_surface = np.append(dist_to_surface, [ wing.approx_AC_x - canard.approx_AC_x])
 
 
     #finds total required area

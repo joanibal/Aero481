@@ -8,7 +8,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import shelve
 # ==================== 481  Packages =============================== #
 
-import j481 as plane
+import g550 as plane
 
 
 
@@ -27,10 +27,10 @@ design_point_str = str(int(plane.Sref)) + ' ft^2, ' + str(plane.thrust_req) + ' 
 plt.annotate(design_point_str, xy=(plane.Sref, plane.thrust_req), xytext=(plane.Sref+10, plane.thrust_req+100), weight = 'bold')
 
 
-itermax = 30
+itermax = 100
 T_guess = 4400
 
-S = np.linspace(600, 2000, 100)
+S = np.linspace(1050, 3000, 100)
 
 
 
@@ -196,7 +196,7 @@ for flightCond in contraints.keys():
     				raise ValueError(flightCond + ' didnt converge')
 
 # quit()
-X, Y, fuel_curves = fuel_weight(S, np.linspace(0, T_guess*6, 10), plane)
+X, Y, fuel_curves = fuel_weight(S, np.linspace(1000, T_guess*8, 10), plane)
 
 # filename='/tmp/shelve4.out'
 # my_shelf = shelve.open(filename,'n') # 'n' for new

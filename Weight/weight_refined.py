@@ -61,7 +61,8 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 		rho = rho_metric*0.00194032
 
 		# V constant because a = sqrt(gamma*R*T) -> T is approx. constant
-		CL = np.sqrt(CD0/K)* 0.707
+		# CL = np.sqrt(CD0/K)* 0.707
+		CL = np.sqrt(CD0/K)
 		# print rho, Sref, w_cruise_i
 
 
@@ -119,7 +120,6 @@ def prelim_weight(Sref, T0, plane):
 		plane.tail_vert, plane.tail_horz = genTail(plane.wing, plane.dist_to_surface ,  canard=plane.canard)
 		# plane.canard.weight = 7.5*plane.canard.area
 
-	#for G550
 
 
 
@@ -137,13 +137,19 @@ def prelim_weight(Sref, T0, plane):
 	elif plane.name == 'g550':
 		# plane.tail_vert = plane.tail_vert
 		# plane.tail_horz = plane.tail_horz
+		plane.wing.update(area=plane.Sref )
+
+		plane.tail_vert, plane.tail_horz = genTail(plane.wing, plane.dist_to_surface)
+
+		plane.CD0 = compentCDMethod(
+			plane, plane.mach, plane.mu_cruise, plane.speed_fps, plane.density_cruise)
+
 		plane.wing.comp = 1.0
 		plane.tail_horz.comp = 1.0
 		plane.tail_vert.comp = 1.0
 		plane.fuselage.comp = 1.0
 		plane.propulsion.comp = 1.0
 		gear_comp = 1.0
-
 	else:
     		raise ValueError('plane name "%s" not recognized' % plane.name)
 
@@ -187,10 +193,8 @@ def prelim_weight(Sref, T0, plane):
 	w_windows = 109.33*(plane.num_passengers*(1+plane.fuselage.cabinpressure)*10**(-2))**0.505	#windows
 	w_baggage = 0.0646*plane.num_passengers**1.456	#baggage
 	w_ac = 469.30*((45.83*60*(plane.num_pilots+plane.num_attendants+plane.num_passengers)*10**(-4))**0.419)	#air conditioning
-	# print w_flightdeck, w_passseats, w_lav, w_food, w_oxygen, w_windows, w_baggage, w_ac
 	w_interior = w_flightdeck + w_passseats + 2.0 * w_lav + \
 		w_food + w_oxygen + w_windows + w_baggage + w_ac
-	# print 'interior', w_interior
 
 	try:
 		w_0 = plane.MTOW
@@ -212,60 +216,39 @@ def prelim_weight(Sref, T0, plane):
 	while True:
 	# for i in range(1000):
 
-		# CL = calcCL(w_0/Sref_wing)
 		sweep_halfchord = np.arctan((0.5 *plane.wing.span *np.tan(np.deg2rad(plane.wing.sweep)) -0.25 *plane.wing.chord_root + 0.25 *plane.wing.taper*plane.wing.chord_root) /(0.5 *plane.wing.span))
 		Wwing_carichner = (0.00428 * plane.wing.area**0.48) * ((plane.wing.aspect_ratio * plane.mach**0.43)
                          / (100 * plane.wing.thickness_chord)**0.76) * ((w_0 * plane.load_factor)**0.84 *
                          plane.wing.taper**0.14) / (np.cos(sweep_halfchord)**1.54)
-		# print 'carichner', Wwing_carichner, plane.wing.sweep
 		Wwing_raymer = 0.0051 * ((w_0 * plane.load_factor)**0.557) * (plane.wing.area**0.649)\
                     * (plane.wing.aspect_ratio**0.5) * (plane.wing.thickness_chord**(-0.4))\
                     * ((1 + plane.wing.taper)**0.1) * (np.cos(np.deg2rad(plane.wing.sweep))**(-1))\
                     * (plane.wing.mounted_area**0.1)
-		# print 'raymer', Wwing_raymer
 		plane.wing.weight = plane.wing.comp * (Wwing_raymer + Wwing_carichner) / 2.0
-		# plane.wing.weight = plane.wing.comp * Wwing_raymer 
 
-		# Wcanard_carichner = (0.00428 * canard.area**0.48) * ((canard.aspect_ratio * plane.mach**0.43)
-        #                                            / (100 * plane.canard.thickness_chord)**0.76) * ((w_0 * plane.load_factor)**0.84 *
-        #                                                                                           plane.canard.taper**0.14) / (np.cos(np.rad2deg(plane.canard.sweep / 2))**1.54)
-		# # print 'carichner', Wcanard_carichner
-		# Wcanard_raymer = 0.0051 * ((w_0 * plane.load_factor)**0.557) * (canard.area**0.649)\
-        #             * (plane.canard.aspect_ratio**0.5) * (plane.canard.thickness_chord**(-0.4))\
-        #             * ((1 + plane.taper)**0.1) * (np.cos(plane.sweep)**(-1))\
-        #             * (plane.canard_mounted_area**0.1)
-		# # print 'raymer', Wcanard_raymer
-		# plane.canard.weight = canard_comp * (Wcanard_raymer + Wcanard_carichner) / 2.0
 
 		plane.tail_horz.weight = plane.tail_horz.comp * 0.0034 *( ((w_0 * plane.load_factor)**0.813) * ((plane.tail_horz.area )**0.584) * (
-			(plane.tail_horz.span / (plane.tail_horz.coords[0,3]*plane.tail_horz.thickness_chord))**0.033) * ((plane.tail_horz.MAC_c ) / (plane.dist_to_surface[0] ))**0.28 ) **0.915
+			(plane.tail_horz.span / (plane.tail_horz.chord_root*plane.tail_horz.thickness_chord))**0.033) * ((plane.tail_horz.MAC_c ) / (plane.dist_to_surface[0] ))**0.28 ) **0.915
 
-		try:
-			plane.canard.weight = plane.canard.comp * 0.0034 *( ((w_0 * plane.load_factor)**0.813) * ((plane.canard.area )**0.584) * (\
-				(plane.canard.span / (plane.canard.coords[0, 3] * plane.canard.thickness_chord))**0.033) * ((plane.canard.MAC_c ) / ((plane.wing.coords[0, 0] - plane.canard.coords[0, 0]) ))**0.28 )**0.915
-		# print 'HT', w_HT
-		except:
-			plane.canard.weight = 0
+		if plane.name=='j481':
+    			plane.canard.weight = plane.canard.comp * 0.0034 *( ((w_0 * plane.load_factor)**0.813) * ((plane.canard.area )**0.584) * (\
+				(plane.canard.span / (plane.canard.chord_root * plane.canard.thickness_chord))**0.033) * ((plane.canard.MAC_c ) / ((plane.wing.coords[0, 0] - plane.canard.coords[0, 0]) ))**0.28 )**0.915
 
-		# print 'HT', plane.tail_horz.weight+plane.canard.weight
+
 
 		plane.tail_vert.weight = plane.tail_vert.comp * 0.19 *( ((1 + 1)**0.5) * ((w_0 * plane.load_factor)**0.363) * ((plane.tail_vert.area )**1.089) * (plane.mach**0.601) * ((plane.dist_to_surface[1] )**(-0.726)) * (
 			(1 + 0.3)**0.217) * (plane.tail_vert.aspect_ratio**0.337) * ((1 + plane.tail_vert.taper)**0.363) * (np.cos(np.deg2rad(plane.tail_vert.sweep))**(-0.484)) )**1.014
-		# print 'VT', plane.tail_vert.weight	
 
 
 		plane.fuselage.weight=plane.fuselage.comp * 10.43 * (1.25**1.42) * ((plane.q_cruise * 10**(-2))**0.283) * (
 			(w_0 * 10**(-3))**0.95) * ((plane.fuselage.length / 8.8)**0.71)
-		# print 'fuse', w_fuse
 
 		w_control_surfaces = 56.01*(w_0*plane.q_cruise*10**(-5))**0.576
 
-		# print T0, w_0, plane.CD0['cruise'],  plane.altitude, plane.speed_kts, plane.range_nMi, plane.k['cruise'], plane.cruise_steps
 		
 		ff_step = fuel_fraction_update(plane.SFC, plane.SFC_sealevel, plane.Sref, T0, w_0, plane.CD0['cruise'] , plane.altitude, plane.speed_kts, plane.range_nMi, plane.k['cruise'], plane.cruise_steps)
 		w_fuel = ff_step*w_0
-		# print w_fuel
-		# quit()
+
 
 		w_bladder = 23.10*((w_fuel/plane.jetA_density)*10**(-2))**0.758	#bladder cells
 		w_bladdersupport = 7.91*((w_fuel/plane.jetA_density)*10**(-2))**0.854	#bladder cells supports
@@ -309,7 +292,7 @@ def prelim_weight(Sref, T0, plane):
 						'interior':w_interior,
 						'wing':plane.wing.weight,
 						'HT': plane.tail_horz.weight,
-						'canard':plane.canard.weight,
+						# 'canard':plane.canard.weight,
 						'VT': plane.tail_vert.weight,
 						'fuselage': plane.fuselage.weight,
 						'surface_control':w_control_surfaces,
@@ -330,10 +313,8 @@ def prelim_weight(Sref, T0, plane):
 		
 			return w_0, w_fuel, plane
 
-		# w_0 += 1.00*(w_0new - w_0)
 		w_0 += 1.0*(w_0new - w_0)
-		# print 'w_0', w_0, 'wight_main_comp', wight_main_comp,'w_fuel', w_fuel
-		# quit()
+
 
 	return w_0, w_fuel, plane
 
