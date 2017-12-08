@@ -68,7 +68,7 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 		# print('start')
 		# L_D = CL/(CD0 + runAVL(CL=CL ,geo_file='./Aerodynamics/J481T.avl'))
 		L_D = CL/(CD0 + K*CL**2)
-		print CL, L_D, CD0, CL/(CD0 + K*CL**2)
+		# print CL, L_D, CD0, CL/(CD0 + K*CL**2)
 
 		# print('L_D', L_D, CL/(CD0 + K*CL**2))
 		# print(CL/(CD0 + K*CL**2))
@@ -129,17 +129,23 @@ def prelim_weight(Sref, T0, plane):
 		plane.propulsion.comp = 1.0
 
 		gear_comp = 0.92
+		plane.CD0 = compentCDMethod(plane, plane.mach, plane.mu_cruise, plane.speed_fps, plane.density_cruise)
 
 
 	elif plane.name == 'g550':
-		plane.tail_vert, plane.tail_horz = genTail(plane.wing, plane.dist_to_surface)
-		plane.tail_vert, plane.tail_horz = genTail(plane.wing, plane.dist_to_surface)
-
+		# plane.tail_vert = plane.tail_vert
+		# plane.tail_horz = plane.tail_horz
+		plane.wing.comp = 1.0
+		plane.tail_horz.comp = 1.0
+		plane.tail_vert.comp = 1.0
+		plane.fuselage.comp = 1.0
+		plane.propulsion.comp = 1.0
+		gear_comp = 1.0
 	else:
     		raise ValueError('plane name "%s" not recognized' % plane.name)
 
 
-	plane.CD0 = compentCDMethod(plane, plane.mach, plane.mu_cruise, plane.speed_fps, plane.density_cruise)
+	# plane.CD0 = compentCDMethod(plane, plane.mach, plane.mu_cruise, plane.speed_fps, plane.density_cruise)
 	# print .003*(plane.fuselage.wetted_area + 2.2*plane.Sref)/plane.Sref, plane.CD0['cruise']
 
 
@@ -232,10 +238,12 @@ def prelim_weight(Sref, T0, plane):
 			(plane.tail_horz.span / (plane.tail_horz.coords[0,3]*plane.tail_horz.thickness_chord))**0.033) * ((plane.tail_horz.MAC_c ) / (plane.dist_to_surface[0] ))**0.28 ) **0.915
 		# print 'HT', w_HT
 
-		plane.canard.weight = plane.canard.comp * 0.0034 *( ((w_0 * plane.load_factor)**0.813) * ((plane.canard.area )**0.584) * (\
-			(plane.canard.span / (plane.canard.coords[0, 3] * plane.canard.thickness_chord))**0.033) * ((plane.canard.MAC_c ) / ((plane.wing.coords[0, 0] - plane.canard.coords[0, 0]) ))**0.28 )**0.915
+		try:
+			plane.canard.weight = plane.canard.comp * 0.0034 *( ((w_0 * plane.load_factor)**0.813) * ((plane.canard.area )**0.584) * (\
+				(plane.canard.span / (plane.canard.coords[0, 3] * plane.canard.thickness_chord))**0.033) * ((plane.canard.MAC_c ) / ((plane.wing.coords[0, 0] - plane.canard.coords[0, 0]) ))**0.28 )**0.915
 		# print 'HT', w_HT
-
+		except:
+			plane.canard.weight = 0
 
 
 		plane.tail_vert.weight = plane.tail_vert.comp * 0.19 *( ((1 + 1)**0.5) * ((w_0 * plane.load_factor)**0.363) * ((plane.tail_vert.area )**1.089) * (plane.mach**0.601) * ((plane.dist_to_surface[1] )**(-0.726)) * (
@@ -328,10 +336,14 @@ def prelim_weight(Sref, T0, plane):
 if __name__ == '__main__':
 
 
-	import j481
+	# import j481
+	import g550
 
-	w_0, w_f, plane = prelim_weight(j481.Sref, j481.thrust_req, j481)
-	print w_0, w_f
-	quit()
+	# w_0, w_f, plane = prelim_weight(j481.Sref, j481.thrust_req, j481)
+	# print 'j481:',w_0, w_f
+
+	w_0, w_f, plane = prelim_weight(g550.Sref, g550.thrust_req, g550)
+	print 'g550:', w_0, w_f	
+
 
 

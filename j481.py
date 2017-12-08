@@ -90,7 +90,7 @@ weight_payload = (num_pilots + num_attendants + num_passengers)*wight_per_person
 
 
 # static_margin = 0.15
-Sref = 1100.  # < - include the decimal so python knows it's a double 
+Sref = 950.  # < - include the decimal so python knows it's a double 
 canard_area_ratio = 0.2 #1./9
 wing_area_ratio = 1 - canard_area_ratio
 
