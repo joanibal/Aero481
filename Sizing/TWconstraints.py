@@ -37,7 +37,7 @@ def calcTWClimb(CL_max, CD0, k, numEngines):
 		'Takeoff Climb': CD0['takeoff']['gear up'],
 		'Trans. Seg. Climb': CD0['takeoff']['gear down'],
 		'2nd Seg. Climb': CD0['takeoff']['gear up'],
-		'Enroute Climb': CD0['clean'],
+		'Enroute Climb': CD0['cruise'],
 		'Balked Climb AEO': CD0['landing']['gear down'],
 		'Balked Climb OEI': (CD0['landing']['gear down'] + CD0['takeoff']['gear down'])/2,
 	}
@@ -46,7 +46,7 @@ def calcTWClimb(CL_max, CD0, k, numEngines):
 		'Takeoff Climb': k['takeoff'],
 		'Trans. Seg. Climb': k['takeoff'],
 		'2nd Seg. Climb': k['takeoff'],
-		'Enroute Climb': k['clean'],
+		'Enroute Climb': k['cruise'],
 		'Balked Climb AEO': k['landing'],
 		# 'Balked Climb OEI': (k['landing'] + k['takeoff'])/2,
 		'Balked Climb OEI':k['landing'],
@@ -133,8 +133,8 @@ if __name__ == '__main__':
 	Cd_0, k = DragPolar(w_0)[0:2] # [0:2] <-- only use the first two ouputs
 
 	T_W_takeoff = calcTWTakeoff(W_S, consts.CL['max']['takeoff'], consts.runLength)
-	T_W_cruise =  calcTWCruise(W_S, Cd_0['clean'], consts.AR, consts.e['cruise'], consts.q)
-	T_W_ceiling = np.ones(N)*calcTWCeiling(consts.Density_Ceiling/consts.Density_SL, Cd_0['clean'])
+	T_W_cruise =  calcTWCruise(W_S, Cd_0['cruise'], consts.AR, consts.e['cruise'], consts.q)
+	T_W_ceiling = np.ones(N)*calcTWCeiling(consts.Density_Ceiling/consts.Density_SL, Cd_0['cruise'])
 	W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
 
 

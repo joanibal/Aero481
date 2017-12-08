@@ -21,7 +21,7 @@ def calcCD(Cf, Swet, Sref, CL, e, AR):
 	return CD
 
 
-def compentCDMethod(plane, full=True):
+def compentCDMethod(plane,M, mu, v, rho, full=True):
 	'''
 	plane is a module that diffines the aircraft
 
@@ -35,10 +35,10 @@ def compentCDMethod(plane, full=True):
 			# print name, ": ", part
 
 
-			Cf = calcCf(part.MAC_c, part.finish, part.frac_laminar,  plane.speed_fps, plane.mu_cruise, plane.density_cruise, plane.mach)
-			FF = calcFF(name, part, plane.mach)
+			Cf = calcCf(part.MAC_c, part.finish, part.frac_laminar,  v, mu, rho, M)
+			FF = calcFF(name, part, M)
 
-			# print name,part.wetted_area / plane.Sref * FF * Cf * part.interfernce_factor 
+			# print FF , Cf 
 			CD_0 += part.wetted_area / plane.Sref * FF * Cf * part.interfernce_factor 
 
 
@@ -96,20 +96,22 @@ def compentCDMethod(plane, full=True):
 	Mcrit = MDD - (0.1 / 80)**(1.0 / 3)
 
 	
-	if plane.mach > Mcrit:
+	if M > Mcrit:
 		
-		CD_0_wave = 20 * (plane.mach - Mcrit)**4
+		CD_0_wave = 20 * (M - Mcrit)**4
 	else:
 		CD_0_wave = 0.0
 
 
 
 	# values at sea level to calculate CD_0 at takeoff and landing
-	plane.v = 200.  # ft/s
-	plane.mu = 23.77e-4 # slug/ft^3
-	plane.mach = plane.v * 0.514444 /340 
-	CD_0_sea_level = compentCDMethod(plane, full=False)
-	# quit()
+	# plane = plane.copy()
+	v_sea_level = 200.  # ft/s
+	mu_sea_level = 3.737e-7  # lb s/ft2
+	mach_sea_level = v * 0.514444 / 340
+	rho_sea_level = 0.0023769   # slug/ft^3
+	CD_0_sea_level = compentCDMethod(plane, mach_sea_level, mu_sea_level, v_sea_level, rho_sea_level , full=False)
+
 	CD_0_dict = {
 		'takeoff': {'gear up': CD_0_sea_level + delCD_0_to,
                     'gear down': CD_0_sea_level + delCD0_lg + delCD_0_to},
@@ -128,7 +130,6 @@ def compentCDMethod(plane, full=True):
 	# print 'leak and pro', (CD_0/1.035)* 0.035
 	# print 'CD_0_wave', CD_0_wave
 	# print '--------------------------------'
-
 
 	return CD_0_dict
 
@@ -179,7 +180,7 @@ def calcFF(name, part, M):
 	if name == 'fuselage':
 		f = part.MAC_c/ part.diameter
 		FF = 1 + 60 / f**3 + f / 400.
-	elif name == 'nacelle':
+	elif name == 'propulsion':
 		f = part.MAC_c/ part.diameter
 		FF = 1 + 0.65 / f
 	else:
@@ -210,7 +211,7 @@ if __name__ == '__main__':
 	plot = True
 	k = j481.k
 
-	CD_0 = compentCDMethod(j481)
+	CD_0 = compentCDMethod(j481, j481.mach, j481.mu_cruise, j481.speed_fps, j481.density_cruise)
 
 	if plot:
 				#Need to upDAte with appropriate CL limits

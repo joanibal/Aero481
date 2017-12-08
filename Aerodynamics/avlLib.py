@@ -19,14 +19,14 @@ from AircraftClass.classes import surface, Object
 
 
 
-def runAVL(CL=0.57, geo_file='J481T.avl'):
+def runAVL(CL=0.57, geo_file='j481.avl'):
 	case = pyAVL.avlAnalysis(geo_file=geo_file)
 
 	# Steady level flight contraints
 
 	# this is actually triming using the canard becuse in pyAVl the first sufrace is assumed to be the elevator
 	# thi is something that should be changed, but i didn't bother right now
-	case.addConstraint('elevator', 0.00)
+	# case.addConstraint('rudder', 0.00)
 	case.addTrimCondition('CL', CL)
 
 	# Execute the case
@@ -83,7 +83,7 @@ def gen_geo(Sref, MAC, Bref, cg, CDp, plane, file=None):
 				out('SURFACE')
 				out(name)
 				out('#Nchordwise  Cspace   [Nspan   Sspace]')
-				out('1 1.00 ')
+				out('4 1.00 ')
 				if not(part.vertical):
 					out('YDUPLICATE')
 					out('0.0')
@@ -109,17 +109,17 @@ def gen_geo(Sref, MAC, Bref, cg, CDp, plane, file=None):
 					out(part.airfoil_file)
 					out('')
 
-				if ( name == 'canard'):
-					out('CONTROL')
-					out('# name gain Xhinge VYZhvec SgnDup')
-					out('Canard 1.00 0.0   0 1 0    1.00')
-					out('')
-				
-				if (name == 'tail_horz'):
-					out('CONTROL')
-					out('#surface gain xhinge hvec SgnDup')
-					out('Elevator -1.00 0.5 0 1 0 1.00')
-					out('')
+					if ( name == 'canard'):
+						out('CONTROL')
+						out('# name gain Xhinge VYZhvec SgnDup')
+						out('Canard 1.00 0.0   0 1 0    1.00')
+						out('')
+					
+					if (name == 'tail_horz'):
+						out('CONTROL')
+						out('#surface gain xhinge hvec SgnDup')
+						out('Elevator -1.00 0.5 0 1 0 1.00')
+						out('')
 
 
 	out('')
@@ -131,7 +131,7 @@ def gen_geo(Sref, MAC, Bref, cg, CDp, plane, file=None):
 	out('SURFACE')
 	out('Fuselage H')
 	out('#Nchordwise  Cspace   Nspanwise  Sspace')
-	out('24           1.0')
+	out('10          1.0')
 	out('')
 	out('')
 	out('COMPONENT')
@@ -148,7 +148,7 @@ def gen_geo(Sref, MAC, Bref, cg, CDp, plane, file=None):
 	out('')
 	out('')
 	out('ANGLE')
-	out('0.000')
+	out('4.000')
 	out('')
 	out('')
 	out('SECTION')
@@ -192,9 +192,12 @@ def gen_geo(Sref, MAC, Bref, cg, CDp, plane, file=None):
 # -- END OF FILE --			
 
 if __name__ == '__main__':
-	import j481
+	import j481 as plane
 	from calcCoeff import compentCDMethod
 
-	CD0 = compentCDMethod(j481)
-	gen_geo(j481.Sref, j481.wing.MAC_c, j481.wing.span, np.array([j481.cg_fwd, 0, 0]), CD0, j481)
+	# CD0 = compentCDMethod(
+	# 	plane, plane.mach, plane.mu_cruise, plane.speed_fps, plane.density_cruise)
+	gen_geo(plane.Sref, plane.wing.MAC_c, plane.wing.span,
+	        np.array([plane.cg_fwd, 0, 0]), 0, plane)
+	print runAVL(geo_file='Aerodynamics/j481.avl')
 	print('done')

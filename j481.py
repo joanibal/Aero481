@@ -20,7 +20,8 @@ name = 'j481'
 
 #  ------------ Misson Parameters -----------------
 runway_length = 4948                        # ft
-altitude = 53000                            # ft
+altitude = 50000                            # ft
+altitude_ceiling = 56000                            # ft
 mach = 0.85
 range_nMi = 5200                            # nMi
 cruise_steps = 1                            # number of altitude levels for cruise
@@ -48,7 +49,11 @@ mu_cruise = 2.969e-7    #lbf*s/ft^2
 density_SL = 0.0023769                      # slugs/ft^3
 
 # Ceiling
-density_ceiling =  2.26e-4                  # slugs/ft^3
+
+# density_ceiling =  2.26e-4                  # slugs/ft^3
+
+# assumes that the ceiling is
+density_ceiling =  (22650 * np.exp(1.73 - .000157 * (altitude_ceiling * 0.3048))) / (287 * temp_cruise_K) * 0.00194032  # slugs/ft^3
 a_Ceiling = 573.57                          # knots
 
 
@@ -57,7 +62,8 @@ a_Ceiling = 573.57                          # knots
 SFC = 0.725                                 # 1/hr
 SFC_sealevel = 0.346                        # 1/hr
 numEngines = 2
-engine_thrust = 7760                        #lbs - sea level
+# engine_thrust = 7760                        #lbs - sea level
+engine_thrust = 7760  # lbs - sea level
 
 # design point
 thrust_req = engine_thrust*numEngines #lbs
@@ -65,10 +71,9 @@ thrust_req = engine_thrust*numEngines #lbs
 
 #  -------------------- Weight -------------------------
 wight_per_person = 180          # lbf
-weight = {
-            'crew':(num_pilots + num_attendants)*wight_per_person,
-            'payload':(num_pilots + num_attendants + num_passengers)*wight_per_person
-}
+weight_crew = (num_pilots + num_attendants)*wight_per_person
+weight_payload = (num_pilots + num_attendants + num_passengers)*wight_per_person
+
 
 
 #  -------------------- Geometry Definition -------------------------
@@ -77,24 +82,32 @@ weight = {
 
 # static_margin = 0.15
 Sref = 950.  # < - include the decimal so python knows it's a double 
-canard_area_ratio = 1./9
+canard_area_ratio = 0.2 #1./9
 wing_area_ratio = 1 - canard_area_ratio
 
 # from airfoil exerimental paper
 airfoil_t_c = 0.093
+
+                    # horizonal, vertical
 dist_to_surface = np.array([28.47769, 20.83])  # [distace to H tail, distance to V tail] in ft
 
-wing = surface( wing_area_ratio*Sref, 9, 0.26, 36, offset=np.array([40, 4.4, 0]), twist=np.array([10,2]), \
+wing = surface( wing_area_ratio*Sref, 9, 0.26, 36., offset=np.array([40, 4.4, 0]), twist=np.array([10,-4]), \
                 airfoil_file='Aerodynamics/Airfoils/sc20612-il.dat', finish='polishedSM',\
                 thickness_chord=airfoil_t_c, frac_laminar=0.35 )
 
 wing.flap_position = np.array([0.1, 0.5])
 wing.flap_deflection = {'landing': 30., 'takeoff': 15.}
 wing.slat_position = np.array([0.1, 0.5])
+wing.mounted_area = 132.8011 * 2  # ft
 
-canard = surface( canard_area_ratio*Sref, 6, 0.25, 38, offset=np.array([9, 4.4, 0]), twist=np.array([2,2]), \
+wing.Nspan = 10 
+wing.update()
+
+
+canard = surface( canard_area_ratio*Sref, 6, 0.25, 38., offset=np.array([9, 4.4, 0]), twist=np.array([2,2]), \
                 airfoil_file='Aerodynamics/Airfoils/sc20612-il.dat', finish='polishedSM',\
                 thickness_chord=airfoil_t_c, frac_laminar=0.35 )
+
 
 canard.flap_position = np.array([0.0, 1.0])
 canard.flap_deflection = {'landing': 20., 'takeoff': 10.}
@@ -111,16 +124,16 @@ tail_vert, tail_horz = genTail(wing, dist_to_surface ,  canard=canard)
 
 
 
-nacelle = Object()
-nacelle.MAC_c = 12.5 # ft  # this isnt really a MAC, but it will make the loop in drag buildup easier
-nacelle.length = nacelle.MAC_c
-nacelle.diameter = 4.83 # ft
-nacelle.interfernce_factor = 1.0
-nacelle.wetted_area = 215.58 #ft^2,
-nacelle.sweep = 0
-nacelle.frac_laminar = 0.1
-nacelle.finish = 'smoothPaint'
-nacelle.comp = 1
+propulsion = Object()
+propulsion.MAC_c = 12.5 # ft  # this isnt really a MAC, but it will make the loop in drag buildup easier
+propulsion.length = propulsion.MAC_c
+propulsion.diameter = 4.83 # ft
+propulsion.interfernce_factor = 1.0
+propulsion.wetted_area = 215.58 #ft^2,
+propulsion.sweep = 0
+propulsion.frac_laminar = 0.1
+propulsion.finish = 'smoothPaint'
+propulsion.comp = 1
 
 fuselage = Object()
 
@@ -152,7 +165,7 @@ CL= {
     },
     'cruise': 0.57,
     }
-CL['max']['balked landing'] =  CL['cruise']*0.85
+CL['max']['balked landing'] = CL['max']['landing'] * 0.85
 
 e = {'takeoff':0.775,
      'cruise':0.835,

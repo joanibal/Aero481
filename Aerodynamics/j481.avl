@@ -10,11 +10,11 @@
 #IYsym   IZsym   Zsym
  0       0       0
 #Sref    Cref    Bref
-950.0  17.5278476037  87.1779788708
+950.0  18.5817919802  92.4199653755
 #Xref    Yref    Zref
-49.2126 0.0 0.0
+56.0949917772 0.0 0.0
 # CDp
-{'cruise': 0.013904771054452212, 'landing': {'gear down': 0.048346818422495982, 'gear up': 0.044684713159338085}, 'takeoff': {'gear down': 0.024800201755669771, 'gear up': 0.021138096492511877}}
+0
 
 #======================================================
 #--------------------- canard -------------------
@@ -22,7 +22,7 @@
 SURFACE
 canard
 #Nchordwise  Cspace   [Nspan   Sspace]
-1 1.00 
+4 1.00 
 YDUPLICATE
 0.0
 SCALE
@@ -35,13 +35,17 @@ ANGLE
 
 SECTION
 #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-9.0 4.4 0.0 6.71096394246 2.0 6.0 0.0 
+9.0 4.4 0.0 0.636657940603 2.0 6.0 0.0 
 AFILE
 Aerodynamics/Airfoils/sc20612-il.dat
 
+CONTROL
+# name gain Xhinge VYZhvec SgnDup
+Canard 1.00 0.0   0 1 0    1.00
+
 SECTION
 #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-18.0052094174 16.9830573921 0.0 1.67774098562 2.0 6.0 0.0 
+9.85430917697 5.59373363863 0.0 0.159164485151 2.0 6.0 0.0 
 AFILE
 Aerodynamics/Airfoils/sc20612-il.dat
 
@@ -55,7 +59,7 @@ Canard 1.00 0.0   0 1 0    1.00
 SURFACE
 wing
 #Nchordwise  Cspace   [Nspan   Sspace]
-1 1.00 
+4 1.00 
 YDUPLICATE
 0.0
 SCALE
@@ -68,13 +72,13 @@ ANGLE
 
 SECTION
 #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-40.0 4.4 0.0 15.3753049155 10.0 6.0 0.0 
+40.0 4.4 0.0 16.2998175265 10.0 10.0 0.0 
 AFILE
 Aerodynamics/Airfoils/sc20612-il.dat
 
 SECTION
 #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-68.4653965618 47.9889894354 0.0 3.99757927803 2.0 6.0 0.0 
+70.1770125749 50.6099826877 0.0 4.2379525569 -4.0 10.0 0.0 
 AFILE
 Aerodynamics/Airfoils/sc20612-il.dat
 
@@ -84,7 +88,7 @@ Aerodynamics/Airfoils/sc20612-il.dat
 SURFACE
 tail_vert
 #Nchordwise  Cspace   [Nspan   Sspace]
-1 1.00 
+4 1.00 
 SCALE
 1.0  1.0  1.0
 TRANSLATE
@@ -95,13 +99,13 @@ ANGLE
 
 SECTION
 #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-61.1021827787 0.0 4.4 10.9206400787 0.0 6.0 0.0 
+60.9277183586 0.0 4.4 11.9202839821 0.0 6.0 0.0 
 AFILE
 Aerodynamics/Airfoils/sc0012.dat
 
 SECTION
 #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-70.7248282489 0.0 19.1428641063 8.73651206297 0.0 6.0 0.0 
+71.4311930484 0.0 20.4923833759 9.53622718571 0.0 6.0 0.0 
 AFILE
 Aerodynamics/Airfoils/sc0012.dat
 
@@ -111,7 +115,7 @@ Aerodynamics/Airfoils/sc0012.dat
 SURFACE
 tail_horz
 #Nchordwise  Cspace   [Nspan   Sspace]
-1 1.00 
+4 1.00 
 YDUPLICATE
 0.0
 SCALE
@@ -124,13 +128,17 @@ ANGLE
 
 SECTION
 #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-69.9597471797 0.0 19.1428641063 10.8694864101 0.0 6.0 0.0 
+68.5136271117 0.0 20.4923833759 14.9523444347 0.0 6.0 0.0 
 AFILE
 Aerodynamics/Airfoils/sc0012.dat
 
+CONTROL
+#surface gain xhinge hvec SgnDup
+Elevator -1.00 0.5 0 1 0 1.00
+
 SECTION
 #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
-80.7601361743 14.6738066536 19.1428641063 3.80432024352 0.0 6.0 0.0 
+83.3709193686 20.1856649869 20.4923833759 5.23332055216 0.0 6.0 0.0 
 AFILE
 Aerodynamics/Airfoils/sc0012.dat
 
@@ -147,7 +155,7 @@ Elevator -1.00 0.5 0 1 0 1.00
 SURFACE
 Fuselage H
 #Nchordwise  Cspace   Nspanwise  Sspace
-24           1.0
+10          1.0
 
 
 COMPONENT
@@ -164,7 +172,7 @@ TRANSLATE
 
 
 ANGLE
-0.000
+4.000
 
 
 SECTION

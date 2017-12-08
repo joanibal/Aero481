@@ -87,10 +87,11 @@ def calcWeights(R,L_D, c , M, w_payload ):
 		w += delw
 		# print(i, w , delw, f,df_dw  )
 
-		# plt.plot(w, f, 'o')
+		plt.plot(w, f, 'o')
 
-	raise Error('HiThere')
-
+	print('There was an err converging calc weights')
+	plt.show()
+	return 0
 
 if __name__ == '__main__':
 	import matplotlib.pyplot as plt
