@@ -75,8 +75,8 @@ propulsion.diameter = 5.91 # ft
 propulsion.interfernce_factor = 1.0
 propulsion.wetted_area = 260.53 #ft^2,
 propulsion.sweep = 0
-propulsion.frac_laminar = 0.1
-propulsion.finish = 'smoothPaint'
+# propulsion.frac_laminar = 0.1
+# propulsion.finish = 'smoothPaint'
 
 #  -------------------- Weight -------------------------
 wight_per_person = 180          # lbf
@@ -100,9 +100,22 @@ airfoil_t_c = 0.1
                     # horizonal, vertical
 dist_to_surface = np.array([39.36, 30.26])  # [distace to H tail, distance to V tail] in ft
 
-wing = surface(Sref, 7.4, 0.26, 27., offset=np.array([40, 4.4, 0]), twist=np.array([10,-4]), \
-                airfoil_file='', finish='polishedSM',\
-                thickness_chord=airfoil_t_c, frac_laminar=0.35 )
+# wing = surface(Sref, 7.4, 0.26, 27., offset=np.array([40, 4.4, 0]), twist=np.array([10,-4]), \
+#                 airfoil_file='', finish='polishedSM',\
+#                 thickness_chord=airfoil_t_c, frac_laminar=0.35 )
+
+wing = Object()
+wing.area = Sref
+wing.aspect_ratio = 7.4
+wing.taper = 0.26
+wing.sweep = 27.
+wing.thickness_chord = airfoil_t_c
+wing.span = 91.5
+wing.MAC_c = 13.86
+wing.chord_root = (3.0/2.0*(1.0+wing.taper)/(1.0+wing.taper+wing.taper**2)*wing.MAC_c)
+wing.coords = np.array([[float('NaN'), float('NaN'), float('NaN'), wing.chord_root],[float('NaN'), float('NaN'), float('NaN'), float('NaN')]])
+
+
 
 # wing.flap_position = np.array([0.1, 0.5])
 # wing.flap_deflection = {'landing': 30., 'takeoff': 15.}
@@ -126,13 +139,32 @@ canard = Object()
                         
 
 # tail_vert, tail_horz = genTail(wing, dist_to_surface ,  canard=canard)
-tail_vert = surface(140.16, 0.98, 0.65, 37., offset=np.array([40, 4.4, 0]), twist=np.array([10,-4]), \
-                airfoil_file='', finish='polishedSM',\
-                thickness_chord=0.095, frac_laminar=0.35 )
+tail_vert = Object()
+tail_vert.area = 140.16
+tail_vert.aspect_ratio = 0.98
+tail_vert.taper = 0.65
+tail_vert.sweep = 37.
+tail_vert.thickness_chord = 0.095
 
-tail_horz = surface(244.87, 5.05, 0.41, 30., offset=np.array([40, 4.4, 0]), twist=np.array([10,-4]), \
-                airfoil_file='', finish='polishedSM',\
-                thickness_chord=0.09, frac_laminar=0.35 )
+# tail_vert = surface(140.16, 0.98, 0.65, 37., offset=np.array([40, 4.4, 0]), twist=np.array([10,-4]), \
+#                 airfoil_file='', finish='polishedSM',\
+#                 thickness_chord=0.095, frac_laminar=0.35 )
+
+tail_horz = Object()
+tail_horz.area = 244.87
+tail_horz.aspect_ratio = 5.05
+tail_horz.taper = 0.41
+tail_horz.sweep = 30.
+tail_horz.thickness_chord = 0.09
+tail_horz.span = 35.16
+tail_horz.MAC_c = 7.37
+tail_horz.chord = (3.0/2.0*(1.0+tail_horz.taper)/(1.0+tail_horz.taper+tail_horz.taper**2)*tail_horz.MAC_c)
+tail_horz.coords = np.array([[float('NaN'), float('NaN'), float('NaN'), tail_horz.chord],[float('NaN'), float('NaN'), float('NaN'), float('NaN')]])
+# print tail_horz.coords[0,3]
+# tail_horz.coords[0,3] = tail_horz.chord
+# tail_horz = surface(244.87, 5.05, 0.41, 30., offset=np.array([40, 4.4, 0]), twist=np.array([10,-4]), \
+#                 airfoil_file='', finish='polishedSM',\
+#                 thickness_chord=0.09, frac_laminar=0.35 )
 
 
 # # I'm freestyling a bit here, but info about the nacelle and fuse 
@@ -143,15 +175,15 @@ tail_horz = surface(244.87, 5.05, 0.41, 30., offset=np.array([40, 4.4, 0]), twis
 
 fuselage = Object()
 
-fuselage.MAC_c = 85.83 # ft
-fuselage.length = fuselage.MAC_c
-fuselage.diameter = 7.83 # ft
-fuselage.interfernce_factor = 1.0
+# fuselage.MAC_c = 85.83 # ft
+fuselage.length = 85.83 #ft
+# fuselage.diameter = 7.83 # ft
+# fuselage.interfernce_factor = 1.0
 fuselage.wetted_area = 1731.70 #ft^2,
-fuselage.sweep = 0
-fuselage.frac_laminar = 0.1
-fuselage.finish = 'smoothPaint'
-fuselage.empennage_upsweep = 6.08853 * 0.0174533        # deg ???                                               # rad
+# fuselage.sweep = 0
+# fuselage.frac_laminar = 0.1
+# fuselage.finish = 'smoothPaint'
+# fuselage.empennage_upsweep = 6.08853 * 0.0174533        # deg ???                                               # rad
 fuselage.cabinpressure = 10.17  # psi
 
 
@@ -193,7 +225,7 @@ for key in e.keys():
 # #  -------------------- Loading -------------------------
  
 
-load_factor = 4.5
+load_factor = 3.5
 # # sweep_half = math.atan((0.5*b*math.tan(sweep)-0.25*c_root + 0.25*w_lambda*c_root)/(0.5*b))
 Keco = 0.686
 

@@ -109,10 +109,12 @@ def prelim_weight(Sref, T0, plane):
 
 
 	plane.Sref = Sref
-	plane.wing.update(area=plane.Sref*plane.wing_area_ratio)
+	# plane.wing.update(area=plane.Sref*plane.wing_area_ratio)
 
 	# idk why but == works better of string comparison
 	if plane.name=='j481':
+		plane.wing.update(area=plane.Sref*plane.wing_area_ratio)
+
 		plane.canard.update(area=plane.Sref*plane.canard_area_ratio)
 		plane.tail_vert, plane.tail_horz = genTail(plane.wing, plane.dist_to_surface ,  canard=plane.canard)
 		# plane.canard.weight = 7.5*plane.canard.area
@@ -127,8 +129,8 @@ def prelim_weight(Sref, T0, plane):
 		plane.tail_vert.comp = 0.75
 		plane.fuselage.comp = 0.75
 		plane.propulsion.comp = 1.0
-
 		gear_comp = 0.92
+		
 		plane.CD0 = compentCDMethod(plane, plane.mach, plane.mu_cruise, plane.speed_fps, plane.density_cruise)
 
 
@@ -141,6 +143,7 @@ def prelim_weight(Sref, T0, plane):
 		plane.fuselage.comp = 1.0
 		plane.propulsion.comp = 1.0
 		gear_comp = 1.0
+
 	else:
     		raise ValueError('plane name "%s" not recognized' % plane.name)
 
@@ -149,7 +152,7 @@ def prelim_weight(Sref, T0, plane):
 	# print .003*(plane.fuselage.wetted_area + 2.2*plane.Sref)/plane.Sref, plane.CD0['cruise']
 
 
-
+	# print plane.CD0
 
 	# # engine weight calculations (lbs)
 	w_eng_dry = 0.521*(T0)**0.9
@@ -206,8 +209,8 @@ def prelim_weight(Sref, T0, plane):
 
 
 
-	# while True:
-	for i in range(1000):
+	while True:
+	# for i in range(1000):
 
 		# CL = calcCL(w_0/Sref_wing)
 		sweep_halfchord = np.arctan((0.5 *plane.wing.span *np.tan(np.deg2rad(plane.wing.sweep)) -0.25 *plane.wing.chord_root + 0.25 *plane.wing.taper*plane.wing.chord_root) /(0.5 *plane.wing.span))
@@ -330,17 +333,16 @@ def prelim_weight(Sref, T0, plane):
 		# print 'w_0', w_0, 'wight_main_comp', wight_main_comp,'w_fuel', w_fuel
 		# quit()
 
-
 	return w_0, w_fuel, plane
 
 if __name__ == '__main__':
 
 
-	# import j481
+	import j481
 	import g550
 
-	# w_0, w_f, plane = prelim_weight(j481.Sref, j481.thrust_req, j481)
-	# print 'j481:',w_0, w_f
+	w_0, w_f, plane = prelim_weight(j481.Sref, j481.thrust_req, j481)
+	print 'j481:',w_0, w_f
 
 	w_0, w_f, plane = prelim_weight(g550.Sref, g550.thrust_req, g550)
 	print 'g550:', w_0, w_f	
