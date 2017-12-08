@@ -126,6 +126,7 @@ tail_vert = surface(140.16, 0.98, 0.65, 37., offset=np.array([60, 0, 0]), \
 tail_horz = surface(244.87, 5.05, 0.41, 30., offset=np.array([40, 4.4, 0]), twist=np.array([10,-4]), \
                 finish='polishedSM', thickness_chord=0.09, frac_laminar=0.35 )
 
+
 # #  -------------------- Lift and Drag -------------------------
 # LD_ratio = 15       # used in weight_estimation and replaced later
 

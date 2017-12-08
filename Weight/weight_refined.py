@@ -62,9 +62,10 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 
 		# V constant because a = sqrt(gamma*R*T) -> T is approx. constant
 		# CL = np.sqrt(CD0/K)* 0.707
-		CL = np.sqrt(CD0/K)
+		# selecting CL for cruise altitude and starting cruise climb from there
+		CL = 2*w_0/(rho*(V*1.68781)**2*Sref)
 		# print rho, Sref, w_cruise_i
-
+		# print CL, rho
 
 		# print('start')
 		# L_D = CL/(CD0 + runAVL(CL=CL ,geo_file='./Aerodynamics/J481T.avl'))
@@ -287,12 +288,17 @@ def prelim_weight(Sref, T0, plane):
 				 w_miscfurnish  + w_elec
 
 		#convergence check
+		if plane.name =='j481':
+			canard_weight = plane.canard.weight
+		else:
+			canard_weight = 0.0
+
 		w_breakdown = {'engine_total':plane.propulsion.weight,
 						'avionics':w_avionics,
 						'interior':w_interior,
 						'wing':plane.wing.weight,
 						'HT': plane.tail_horz.weight,
-						# 'canard':plane.canard.weight,
+						'canard':canard_weight,
 						'VT': plane.tail_vert.weight,
 						'fuselage': plane.fuselage.weight,
 						'surface_control':w_control_surfaces,
@@ -310,6 +316,14 @@ def prelim_weight(Sref, T0, plane):
 
 			# for key in w_breakdown.keys():
 			# 	print key, w_breakdown[key]
+
+			# print 'fuselage:', w_breakdown['fuselage']+w_breakdown['interior']+w_breakdown['indicators']+w_breakdown['misc']+w_breakdown['electronics']+w_breakdown['avionics']
+			# print 'wing:', w_breakdown['wing']+w_breakdown['surface_control']+w_breakdown['fuel_control']
+			# print 'HT:', w_breakdown['HT']
+			# print 'VT:', w_breakdown['VT']
+			# print 'canard:', w_breakdown['canard']
+			# print 'landing gears', w_breakdown['main_gear'], w_breakdown['nose_gear']
+			# print 'engine(x2):', w_breakdown['engine_total']
 		
 			return w_0, w_fuel, plane
 

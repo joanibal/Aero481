@@ -20,7 +20,7 @@ name = 'j481'
 
 #  ------------ Misson Parameters -----------------
 runway_length = 4948                        # ft
-altitude = 50000                            # ft
+altitude = 40000                            # ft
 altitude_ceiling = 56000                            # ft
 mach = 0.85
 range_nMi = 5200                            # nMi
