@@ -59,15 +59,24 @@ a_Ceiling = 573.57                          # knots
 
 
 #  -------------------- propulsion -------------------------
-SFC = 0.725                                 # 1/hr
-SFC_sealevel = 0.346                        # 1/hr
+SFC = 0.645                                 # 1/hr
+SFC_sealevel = 0.372                        # 1/hr
 numEngines = 2
 # engine_thrust = 7760                        #lbs - sea level
-engine_thrust = 7760  # lbs - sea level
+engine_thrust = 5725  # lbs - sea level
 
 # design point
 thrust_req = engine_thrust*numEngines #lbs
 
+propulsion = Object()
+propulsion.MAC_c = 12.5 # ft  # this isnt really a MAC, but it will make the loop in drag buildup easier
+propulsion.length = propulsion.MAC_c
+propulsion.diameter = 4.83 # ft
+propulsion.interfernce_factor = 1.0
+propulsion.wetted_area = 215.58 #ft^2,
+propulsion.sweep = 0
+propulsion.frac_laminar = 0.1
+propulsion.finish = 'smoothPaint'
 
 #  -------------------- Weight -------------------------
 wight_per_person = 180          # lbf
@@ -81,7 +90,7 @@ weight_payload = (num_pilots + num_attendants + num_passengers)*wight_per_person
 
 
 # static_margin = 0.15
-Sref = 950.  # < - include the decimal so python knows it's a double 
+Sref = 1100.  # < - include the decimal so python knows it's a double 
 canard_area_ratio = 0.2 #1./9
 wing_area_ratio = 1 - canard_area_ratio
 
@@ -124,16 +133,6 @@ tail_vert, tail_horz = genTail(wing, dist_to_surface ,  canard=canard)
 
 
 
-propulsion = Object()
-propulsion.MAC_c = 12.5 # ft  # this isnt really a MAC, but it will make the loop in drag buildup easier
-propulsion.length = propulsion.MAC_c
-propulsion.diameter = 4.83 # ft
-propulsion.interfernce_factor = 1.0
-propulsion.wetted_area = 215.58 #ft^2,
-propulsion.sweep = 0
-propulsion.frac_laminar = 0.1
-propulsion.finish = 'smoothPaint'
-propulsion.comp = 1
 
 fuselage = Object()
 
@@ -190,6 +189,16 @@ load_factor = 4.5
 # sweep_half = math.atan((0.5*b*math.tan(sweep)-0.25*c_root + 0.25*w_lambda*c_root)/(0.5*b))
 Keco = 0.686
 
+# ------------------ Composite Factors ----------------------
+# listed in weight_refined.py
+# canard.comp = 1
+# wing.comp = 0.8
+# tail_horz.comp = 0.75
+# tail_vert.comp = 0.75
+# fuselage.comp = 0.75
+# propulsion.comp = 1.0
+
+# gear_comp = 0.92
 
 
 cg_locations = {'wing':60.0,                

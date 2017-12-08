@@ -68,7 +68,7 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 		# print('start')
 		# L_D = CL/(CD0 + runAVL(CL=CL ,geo_file='./Aerodynamics/J481T.avl'))
 		L_D = CL/(CD0 + K*CL**2)
-		# print CL, L_D, CD0, CL/(CD0 + K*CL**2)
+		print CL, L_D, CD0, CL/(CD0 + K*CL**2)
 
 		# print('L_D', L_D, CL/(CD0 + K*CL**2))
 		# print(CL/(CD0 + K*CL**2))
@@ -331,7 +331,7 @@ if __name__ == '__main__':
 	import j481
 
 	w_0, w_f, plane = prelim_weight(j481.Sref, j481.thrust_req, j481)
-	print w_0
+	print w_0, w_f
 	quit()
 
 
