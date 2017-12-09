@@ -247,7 +247,7 @@ def prelim_weight(Sref, T0, plane):
                     * (plane.wing.aspect_ratio**0.5) * (plane.wing.thickness_chord**(-0.4))\
                     * ((1 + plane.wing.taper)**0.1) * (np.cos(np.deg2rad(plane.wing.sweep))**(-1))\
                     * (plane.wing.mounted_area**0.1)
-		print Wwing_carichner, Wwing_raymer
+		# print Wwing_carichner, Wwing_raymer
 		plane.wing.weight = plane.wing.comp * (Wwing_raymer + Wwing_carichner) / 2.0
 
 		plane.tail_horz.weight = plane.tail_horz.comp * 0.0034 *( ((w_0 * plane.load_factor)**0.813) * ((plane.tail_horz.area )**0.584) * (
