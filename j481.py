@@ -91,7 +91,7 @@ weight_payload = (num_pilots + num_attendants + num_passengers)*wight_per_person
 
 # static_margin = 0.15
 Sref = 950.  # < - include the decimal so python knows it's a double 
-canard_area_ratio = 0.2 #1./9
+canard_area_ratio = 0.07
 wing_area_ratio = 1 - canard_area_ratio
 
 # from airfoil exerimental paper
@@ -100,7 +100,7 @@ airfoil_t_c = 0.093
                     # horizonal, vertical
 dist_to_surface = np.array([28.47769, 20.83])  # [distace to H tail, distance to V tail] in ft
 
-wing = surface( wing_area_ratio*Sref, 9, 0.26, 36., offset=np.array([40, 4.4, 0]), twist=np.array([10,-4]), \
+wing = surface( wing_area_ratio*Sref, 9, 0.26, 36., offset=np.array([40, 4.4, 0]), twist=np.array([5,0]), \
                 airfoil_file='Aerodynamics/Airfoils/sc20612-il.dat', finish='polishedSM',\
                 thickness_chord=airfoil_t_c, frac_laminar=0.35 )
 
@@ -113,7 +113,7 @@ wing.Nspan = 10
 wing.update()
 
 
-canard = surface( canard_area_ratio*Sref, 6, 0.25, 38., offset=np.array([9, 4.4, 0]), twist=np.array([2,2]), \
+canard = surface( canard_area_ratio*Sref, 6, 0.25, 38., offset=np.array([9, 4.4, 0]), twist=np.array([0,0]), \
                 airfoil_file='Aerodynamics/Airfoils/sc20612-il.dat', finish='polishedSM',\
                 thickness_chord=airfoil_t_c, frac_laminar=0.35 )
 
@@ -136,7 +136,7 @@ tail_vert, tail_horz = genTail(wing, dist_to_surface ,  canard=canard)
 
 fuselage = Object()
 
-fuselage.MAC_c = 101.17 # ft
+fuselage.MAC_c = 83.77 # ft
 fuselage.length = fuselage.MAC_c
 fuselage.diameter = 8.8 # ft
 fuselage.interfernce_factor = 1.0
