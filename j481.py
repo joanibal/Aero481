@@ -136,11 +136,11 @@ tail_vert, tail_horz = genTail(wing, dist_to_surface ,  canard=canard)
 
 fuselage = Object()
 
-fuselage.MAC_c = 101.17 # ft
+fuselage.MAC_c = 83.77 # ft
 fuselage.length = fuselage.MAC_c
 fuselage.diameter = 8.8 # ft
 fuselage.interfernce_factor = 1.0
-fuselage.wetted_area = 2323.66 #ft^2,
+fuselage.wetted_area = 1975.14 #ft^2,
 fuselage.sweep = 0
 fuselage.frac_laminar = 0.1
 fuselage.finish = 'smoothPaint'

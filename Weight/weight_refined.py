@@ -307,7 +307,7 @@ def prelim_weight(Sref, T0, plane):
 		# add the misc. things 
 		w_0new += w_avionics + w_interior + w_control_surfaces +\
 				 w_fuel + w_fuelcontrol + w_indicators + w_landing_gear +\
-				 w_miscfurnish  + w_elec
+				 w_miscfurnish  + w_elec + plane.weight_payload
 
 		#convergence check
 		if plane.name =='j481':
@@ -330,7 +330,8 @@ def prelim_weight(Sref, T0, plane):
 						'main_gear':w_main_gear,
 						'misc':w_miscfurnish,
 						'fuel': w_fuel,
-						'electronics':w_elec 
+						'electronics':w_elec,
+						'payload': plane.weight_payload 
 						}
 		if abs(w_0new - w_0) <= tolerance:
 		# if True:
@@ -339,14 +340,15 @@ def prelim_weight(Sref, T0, plane):
 			# for key in w_breakdown.keys():
 			# 	print key, w_breakdown[key]
 
-			# print 'fuselage:', w_breakdown['fuselage']+w_breakdown['interior']+w_breakdown['indicators']+w_breakdown['misc']+w_breakdown['electronics']+w_breakdown['avionics']
-			# print 'wing:', w_breakdown['wing']+w_breakdown['surface_control']+w_breakdown['fuel_control']
-			# print 'HT:', w_breakdown['HT']
-			# print 'VT:', w_breakdown['VT']
-			# print 'canard:', w_breakdown['canard']
-			# print 'landing gears', w_breakdown['main_gear'], w_breakdown['nose_gear']
-			# print 'engine(x2):', w_breakdown['engine_total']
-		
+			print 'fuselage:', w_breakdown['fuselage']+w_breakdown['interior']+w_breakdown['indicators']+w_breakdown['misc']+w_breakdown['electronics']+w_breakdown['avionics']
+			print 'wing:', w_breakdown['wing']+w_breakdown['surface_control']+w_breakdown['fuel_control']
+			print 'HT:', w_breakdown['HT']
+			print 'VT:', w_breakdown['VT']
+			print 'canard:', w_breakdown['canard']
+			print 'landing gears', w_breakdown['main_gear'], w_breakdown['nose_gear']
+			print 'engine(x2):', w_breakdown['engine_total']
+			print 'payload:', w_breakdown['payload']
+
 			return w_0, w_fuel, plane
 
 		w_0 += 1.0*(w_0new - w_0)
@@ -361,10 +363,10 @@ if __name__ == '__main__':
 	import g550
 
 	w_0, w_f, plane = prelim_weight(j481.Sref, j481.thrust_req, j481)
-	print 'j481:',w_0, w_f
+	print 'j481:',w_0, w_f, w_0-w_f-j481.weight_payload
 
 	w_0, w_f, plane = prelim_weight(g550.Sref, g550.thrust_req, g550)
-	print 'g550:', w_0, w_f	
+	print 'g550:', w_0, w_f,
 
 
 

@@ -27,7 +27,7 @@ range_nMi = 6750                            # nMi
 cruise_steps = 1                            # number of altitude levels for cruise
 
 num_pilots = 2  #number of pilots
-num_passengers = 19  #number of passengers
+num_passengers = 8  #number of passengers (sleeping)
 num_attendants = 2  #number of attendants
 
 jetA_density = 6.71 #lb/gal
