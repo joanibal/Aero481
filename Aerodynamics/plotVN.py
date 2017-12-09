@@ -10,25 +10,29 @@ import math
 import numpy as np
 import constants
 import matplotlib.pyplot as plt
+from atm import calcATM
 
 # Aircraft parameters
 M = constants.M
 Vk = constants.u_imperial*0.592484				# kts
-cruise_altitude = 50000							# Set cruise altitude
-gust_altitude = 20000							# Gust envelope at 20,000 ft
-rho = 3.64e-4									# 50,000 ft (slugs/ft^3)
-rho0 = 12.67e-4									# 20,000 ft (slugs/ft^3)
+cruise_altitude = constants.alt					# Set cruise altitude
+_, _, rho = calcATM(cruise_altitude)			# 50,000 ft (slugs/ft^3)
+rho = 3.64e-4
+gust_altitude = 53000							# Gust envelope at 20,000 ft
+_, _, rho0 = calcATM(gust_altitude)				# Gust altitude ft (slugs/ft^3)
 rho_SL = 23.77e-4								# Sea level density (slugs/ft^3)
 convKts2fts = 1.688
 g = 32.2										# gravity (ft/s) (non-negative)
 
-C_Lmax = 1.3									# Max CL 
+# Clean
+C_Lmax = constants.CL['max']['cruise']			# Max CL 
 C_Lmin = -0.8									# Without high-lift devices
 
-# max
-# wing_loading = 59.254							# lbs/ft^2 (Taken from PDR report)
-# empty
-wing_loading = 37.24
+Sref = constants.Sref
+weight = 55773.7757505						# lbs (mtow) 
+#weight = 36495.9968901						# lbs (empty)
+wing_loading = weight/Sref
+print(wing_loading)
 
 # max
 cf = 0.96										# correction factor to account for fuel burn (MTOW correction)
@@ -37,9 +41,33 @@ cf = 0.96										# correction factor to account for fuel burn (MTOW correction
 
 g_chord = constants.Sref/(constants.b*3.28084) 	# Sref/b (geometric chord) (ft)
 kappa = 0.97									# Assumed estimate from notes
-beta = math.sqrt(1-M**2)
-sweep_c_2 = 33.47								# Half chord sweep
-Cl_alpha = 2*math.pi*constants.AR/(2+math.sqrt(constants.AR**2*(beta/kappa)**2*(1+(math.tan(sweep_c_2)**2)/(beta**2))+4))
+												# Half chord sweep
+
+def cl_a(AR, sweep, M, kappa):
+	beta = math.sqrt(1-M**2)
+	CL_alpha = 2*math.pi*AR/(2+math.sqrt(AR**2*(beta/kappa)**2*(1+(math.tan(sweep))/(beta**2))+4))
+	return CL_alpha
+
+def sweep_c_2(b, sweep, c_root, taper):
+	sweep_halfchord = np.arctan((0.5*b*np.tan(sweep)-0.25*c_root+0.25*taper*c_root)/(0.5*b))
+	return sweep_halfchord
+
+#CL_alpha = 2*math.pi*constants.AR/(2+math.sqrt(constants.AR**2*(beta/kappa)**2*(1+(math.tan(sweep_c_2)**2)/(beta**2))+4))
+
+# Calculate CL_alpha accounting for canard effects
+sweep_c_2_canard = sweep_c_2(constants.span_c, constants.sweep_c, constants.c_root_c, constants.c_lambda)
+sweep_c_2_wing = sweep_c_2(constants.b, constants.sweep, constants.c_root, constants.w_lambda)
+
+CL_alpha_canard = cl_a(constants.AR_c, sweep_c_2_canard, constants.M, kappa)
+CL_alpha_main_wing_0 = cl_a(constants.AR, sweep_c_2_wing, constants.M, kappa)
+# Assuming wing is affected by downwash of canard
+depsilon_dalpha_canard = 2*CL_alpha_canard/(math.pi*constants.AR_c)
+# Corrected wing lift curve slope
+CL_alpha_main_wing = CL_alpha_main_wing_0*(1 - depsilon_dalpha_canard)*0.9
+
+# Calculate total wing (canard + main wing) lift curve slope
+canard_fraction = constants.Sref_c_actual/constants.Sref 	# Percent of canard reference area w.r.t total Sref
+CL_alpha = CL_alpha_canard*canard_fraction+CL_alpha_main_wing*(1-canard_fraction)
 
 # Equivalent airspeed 
 V_TAS = Vk
@@ -107,12 +135,12 @@ print('V_B (rough gust): ' + str(U_e[2]) + ' kts')
 print('V_C (gust at max design speed): ' + str(U_e[1]) + ' kts')
 print('V_D (gust at max dive speed): ' + str(U_e[0]) + ' kts')
 
-mu = 2*(wing_loading*cf)/(rho0*g_chord*Cl_alpha*g)
+mu = 2*(wing_loading*cf)/(rho0*g_chord*CL_alpha*g)
 K_g = 0.88*mu/(5.3+mu)
 
 # Solve roots to determine intersection point (U_e_b)
 a = (rho_SL*convKts2fts**2*C_Lmax)/(2*wing_loading*cf)
-b = -(K_g*Cl_alpha*U_e[2])/(498*wing_loading*cf)
+b = -(K_g*CL_alpha*U_e[2])/(498*wing_loading*cf)
 c = -1
 sol1 = (-b+math.sqrt(b**2-4*a*c))/(2*a)
 sol2 = (-b-math.sqrt(b**2-4*a*c))/(2*a)
@@ -123,17 +151,17 @@ if sol1 < 0:
 # Solve for U_e_B gust
 V_B_loadlimit_upper = (rho_SL*(convKts2fts*V_B_gustlimit_upper)**2*C_Lmax)/(2*cf*wing_loading)
 V_B_loadlimit_lower = (-V_B_loadlimit_upper+2)
-V_B_gustlimit_lower = (V_B_loadlimit_lower-1)*(498*wing_loading*cf)/(-K_g*Cl_alpha*U_e[2])
+V_B_gustlimit_lower = (V_B_loadlimit_lower-1)*(498*wing_loading*cf)/(-K_g*CL_alpha*U_e[2])
 
 # Solve for U_e_C gust
 V_C_gustlimit = V_C
-V_C_loadlimit_upper = 1 + (K_g*Cl_alpha*U_e[1]*V_C_gustlimit)/(498*wing_loading*cf)
-V_C_loadlimit_lower = 1 - (K_g*Cl_alpha*U_e[1]*V_C_gustlimit)/(498*wing_loading*cf)
+V_C_loadlimit_upper = 1 + (K_g*CL_alpha*U_e[1]*V_C_gustlimit)/(498*wing_loading*cf)
+V_C_loadlimit_lower = 1 - (K_g*CL_alpha*U_e[1]*V_C_gustlimit)/(498*wing_loading*cf)
 
 # Solve for U_e_D gust
 V_D_gustlimit = V_D
-V_D_loadlimit_upper = 1 + (K_g*Cl_alpha*U_e[0]*V_D_gustlimit)/(498*wing_loading*cf)
-V_D_loadlimit_lower = 1 - (K_g*Cl_alpha*U_e[0]*V_D_gustlimit)/(498*wing_loading*cf)
+V_D_loadlimit_upper = 1 + (K_g*CL_alpha*U_e[0]*V_D_gustlimit)/(498*wing_loading*cf)
+V_D_loadlimit_lower = 1 - (K_g*CL_alpha*U_e[0]*V_D_gustlimit)/(498*wing_loading*cf)
 
 
 # Plot the v-n diagram
@@ -184,7 +212,7 @@ plt.plot(x14, y14, color = 'r', linewidth = 2.0)
 plt.plot(x15, y15, color = 'r', linewidth = 2.0) 
 plt.plot(x16, y16, color = 'r', linewidth = 2.0)
 
-plt.text(V_B_gustlimit_upper, V_B_loadlimit_upper+0.1, '$V_{B}$', horizontalalignment='center')
+plt.text(V_B_gustlimit_upper, V_B_loadlimit_upper+0.15, '$V_{B}$', horizontalalignment='center')
 plt.text(V_C_gustlimit, V_C_loadlimit_upper+0.1, '$V_{C}$', horizontalalignment='center')
 
 plt.ylim(-1.5, n_limit_max+0.5)
@@ -192,5 +220,5 @@ plt.xlim(0, V_D_gustlimit+50)
 plt.xlabel('$V_{EAS}$' + ' (kts)')
 plt.ylabel('Load Factor ' + '$n$')
 plt.title('V-' + '$n$' + ' at ' + str(gust_altitude) + ' ft')
-plt.grid(True)
+#plt.grid(True)
 plt.show()
