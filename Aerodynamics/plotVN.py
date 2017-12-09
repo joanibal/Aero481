@@ -29,8 +29,8 @@ C_Lmax = constants.CL['max']['cruise']			# Max CL
 C_Lmin = -0.8									# Without high-lift devices
 
 Sref = constants.Sref
-weight = 55773.7757505						# lbs (mtow) 
-#weight = 36495.9968901						# lbs (empty)
+#weight = 55773.7757505						# lbs (mtow) 
+weight = 36495.9968901						# lbs (empty)
 wing_loading = weight/Sref
 
 # max
@@ -40,18 +40,25 @@ cf = 0.96										# correction factor to account for fuel burn (MTOW correction
 
 g_chord = constants.Sref/(constants.b*3.28084) 	# Sref/b (geometric chord) (ft)
 kappa = 0.97									# Assumed estimate from notes
-beta = math.sqrt(1-M**2)
-sweep_c_2 = 33.47								# Half chord sweep
+												# Half chord sweep
 
-def cl_a(AR, eta, sweep, M):
-	CL_alpha = 2*math.pi*AR/(2+math.sqrt((AR/eta)**2*(1+math.tan(sweep)**2-M**2)+4))
+def cl_a(AR, sweep, M, kappa):
+	beta = math.sqrt(1-M**2)
+	CL_alpha = 2*math.pi*AR/(2+math.sqrt(AR**2*(beta/kappa)**2*(1+(math.tan(sweep))/(beta**2))+4))
 	return CL_alpha
+
+def sweep_c_2(b, sweep, c_root, taper):
+	sweep_halfchord = np.arctan((0.5*b*np.tan(sweep)-0.25*c_root+0.25*taper*c_root)/(0.5*b))
+	return sweep_halfchord
 
 #CL_alpha = 2*math.pi*constants.AR/(2+math.sqrt(constants.AR**2*(beta/kappa)**2*(1+(math.tan(sweep_c_2)**2)/(beta**2))+4))
 
 # Calculate CL_alpha accounting for canard effects
-CL_alpha_canard = cl_a(constants.AR_c, 0.97, constants.sweep_c, constants.M)
-CL_alpha_main_wing_0 = cl_a(constants.AR, 0.97, constants.sweep, constants.M)
+sweep_c_2_canard = sweep_c_2(constants.span_c, constants.sweep_c, constants.c_root_c, constants.c_lambda)
+sweep_c_2_wing = sweep_c_2(constants.b, constants.sweep, constants.c_root, constants.w_lambda)
+
+CL_alpha_canard = cl_a(constants.AR_c, sweep_c_2_canard, constants.M, kappa)
+CL_alpha_main_wing_0 = cl_a(constants.AR, sweep_c_2_wing, constants.M, kappa)
 # Assuming wing is affected by downwash of canard
 depsilon_dalpha_canard = 2*CL_alpha_canard/(math.pi*constants.AR_c)
 # Corrected wing lift curve slope
@@ -204,7 +211,7 @@ plt.plot(x14, y14, color = 'r', linewidth = 2.0)
 plt.plot(x15, y15, color = 'r', linewidth = 2.0) 
 plt.plot(x16, y16, color = 'r', linewidth = 2.0)
 
-plt.text(V_B_gustlimit_upper, V_B_loadlimit_upper+0.1, '$V_{B}$', horizontalalignment='center')
+plt.text(V_B_gustlimit_upper, V_B_loadlimit_upper+0.15, '$V_{B}$', horizontalalignment='center')
 plt.text(V_C_gustlimit, V_C_loadlimit_upper+0.1, '$V_{C}$', horizontalalignment='center')
 
 plt.ylim(-1.5, n_limit_max+0.5)

@@ -108,14 +108,13 @@ t_root_c = 0.837                            # ft
 span_c = 26.06                              # ft
 sweep_c = 31.0 * 0.0174533                  # rad
 AR_c = span_c**2/Sref_c_actual
-
 # Vertical Stabilizer Properties
 c_root_VT = 4       						# m
 taper_VT = 0.8							# vertical tail taper ratiop
 sweep_VT = 0.628319							# radians (36 degrees)
 L_VT = 6.35                                 # m
 Arudder = 43.09                             # ft^2
-
+c_lambda = 1.11/4.43
 # Wing Properties
 #Sref = 127.59 								# m^2 (wing area)
 #b = 33.89 									# m (span)
