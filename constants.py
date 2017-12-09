@@ -26,8 +26,8 @@ rho_imperial = rho*0.00194032               # Conversion from kg/m^3 to slugs/ft
 u_imperial = u*3.28084                      # Conversion from m/s to ft/s
 q = 0.5*rho_imperial*u_imperial**2          # Dynamic Pressure (imperial)
 
-print q, rho_imperial, u_imperial
-quit()
+#print q, rho_imperial, u_imperial
+#quit()
 
 # print(str(q))
 w_crew = 3.0*(180+60)       #lbs (crew weight + luggage)
@@ -107,6 +107,7 @@ Sref_c_actual = 130/10.7639                 # m^2
 t_root_c = 0.837                            # ft
 span_c = 26.06                              # ft
 sweep_c = 31.0 * 0.0174533                  # rad
+AR_c = span_c**2/Sref_c_actual
 
 # Vertical Stabilizer Properties
 c_root_VT = 4       						# m
