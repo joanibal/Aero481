@@ -25,12 +25,12 @@ convKts2fts = 1.688
 g = 32.2										# gravity (ft/s) (non-negative)
 
 # Clean
-C_Lmax = 1.3									# Max CL 
+C_Lmax = constants.CL['max']['cruise']			# Max CL 
 C_Lmin = -0.8									# Without high-lift devices
 
 Sref = constants.Sref
-# weight = 55773.7757505						# lbs (mtow) 
-weight = 36495.9968901						# lbs (empty)
+weight = 55773.7757505						# lbs (mtow) 
+#weight = 36495.9968901						# lbs (empty)
 wing_loading = weight/Sref
 
 # max
