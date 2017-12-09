@@ -13,7 +13,7 @@ from Sizing.tailSizing import genTail
 # -  every thing should have a descriptive name, i.e Mach instead of M, nun_passengers instead of num_pass
 # -  Don't name a variable according to a letter typically used to represent to b =/= span, lambda =/= taper
 # -  if you are creating a lot of related variables ( weight_wing, weight_landing_gear, weight_mis) use a dictionary instead
-# -  try not to use the j481 properties module in the lower level functions 
+# -  try not to use the j481 properties module in the lower level functions
 
 # used for selection in the code
 name = 'j481'
@@ -32,9 +32,9 @@ num_attendants = 1  #number of attendants
 
 jetA_density = 6.71 #lb/gal
 
-                   
+
 #  ---------------- state variables -------------------
-#cruise 
+#cruise
 temp_cruise = -69.7                       # Temperature F
 temp_cruise_K = (temp_cruise - 32)*5.0/9 + 273.15
 
@@ -45,7 +45,7 @@ q_cruise = 0.5*density_cruise*speed_fps**2          # Dynamic Pressure (imperial
 mu_cruise = 2.969e-7    #lbf*s/ft^2
 
 
-# Sea Level 
+# Sea Level
 density_SL = 0.0023769                      # slugs/ft^3
 
 # Ceiling
@@ -90,7 +90,7 @@ weight_payload = (num_pilots + num_attendants + num_passengers)*wight_per_person
 
 
 # static_margin = 0.15
-Sref = 950.  # < - include the decimal so python knows it's a double 
+Sref = 950.  # < - include the decimal so python knows it's a double
 canard_area_ratio = 0.07
 wing_area_ratio = 1 - canard_area_ratio
 
@@ -109,7 +109,7 @@ wing.flap_deflection = {'landing': 30., 'takeoff': 15.}
 wing.slat_position = np.array([0.1, 0.5])
 wing.mounted_area = 132.8011 * 2  # ft
 
-wing.Nspan = 10 
+wing.Nspan = 10
 wing.update()
 
 
@@ -122,14 +122,14 @@ canard.flap_position = np.array([0.0, 1.0])
 canard.flap_deflection = {'landing': 20., 'takeoff': 10.}
 
 
-                        
+
 
 tail_vert, tail_horz = genTail(wing, dist_to_surface ,  canard=canard)
 
 
 
-# I'm freestyling a bit here, but info about the nacelle and fuse 
-# is stored the same way as was done for the other surfaces 
+# I'm freestyling a bit here, but info about the nacelle and fuse
+# is stored the same way as was done for the other surfaces
 
 
 
@@ -183,7 +183,7 @@ v_landingstall = 143.977436581 #ft/s
 
 
 #  -------------------- Loading -------------------------
- 
+
 
 load_factor = 4.5
 # sweep_half = math.atan((0.5*b*math.tan(sweep)-0.25*c_root + 0.25*w_lambda*c_root)/(0.5*b))
@@ -201,7 +201,7 @@ Keco = 0.686
 # gear_comp = 0.92
 
 
-cg_locations = {'wing':60.0,                
+cg_locations = {'wing':60.0,
                 'HT':105.0117,
                 'canard':13.5491,
                 'VT':93.7585,
@@ -222,8 +222,16 @@ cg_additional = {'fuel_control':cg_locations['wing'],
 #landing gear
 wheels_nose = 2
 wheels_main = 4
-nose_x = 180.0*0.0254           #m (from datum at nose)
-main_x = 20.7249521             #m (from datum at nose)
+# nose_x = 180.0*0.0254           #m (from datum at nose)
+# main_x = 20.7249521             #m (from datum at nose)
+
+gear = {'Na':34.51,
+        'Nf':33.19,
+        'Ma':1.80,
+        'Mf':3.12,
+        'B':36.30,
+        'H':7.57}
+
 
 # A/C mass properties (datum at nose)
 np_location = 54.46194  # ft
@@ -233,7 +241,3 @@ cg_aft = 52.723097  # empty CG location
 cg_h = 8.2021  # ft
 
 # quit()
-
-
-
-
