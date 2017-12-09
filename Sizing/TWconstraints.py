@@ -37,7 +37,7 @@ def calcTWClimb(CL_max, CD0, k, numEngines):
 		'Takeoff Climb': CD0['takeoff']['gear up'],
 		'Trans. Seg. Climb': CD0['takeoff']['gear down'],
 		'2nd Seg. Climb': CD0['takeoff']['gear up'],
-		'Enroute Climb': CD0['clean'],
+		'Enroute Climb': CD0['cruise'],
 		'Balked Climb AEO': CD0['landing']['gear down'],
 		'Balked Climb OEI': (CD0['landing']['gear down'] + CD0['takeoff']['gear down'])/2,
 	}
@@ -46,7 +46,7 @@ def calcTWClimb(CL_max, CD0, k, numEngines):
 		'Takeoff Climb': k['takeoff'],
 		'Trans. Seg. Climb': k['takeoff'],
 		'2nd Seg. Climb': k['takeoff'],
-		'Enroute Climb': k['clean'],
+		'Enroute Climb': k['cruise'],
 		'Balked Climb AEO': k['landing'],
 		# 'Balked Climb OEI': (k['landing'] + k['takeoff'])/2,
 		'Balked Climb OEI':k['landing'],
@@ -80,7 +80,7 @@ def calcTWClimb(CL_max, CD0, k, numEngines):
 			eng_coeff = numEngines/(numEngines -1.0)
 
 		if flight_condition is 'Balked Climb AEO' or 'Balked Climb OEI':
-			CTOL_coeff = 0.65 	#estimate (high estimate, from notes)
+			CTOL_coeff = 0.75 	#estimate (high estimate, from notes)
 		else:				# else - landing false
 			CTOL_coeff = 1
 
@@ -120,22 +120,24 @@ if __name__ == '__main__':
 	import numpy as np
 	import matplotlib.pyplot as plt
 	# ========================== 481  Packages ===============+=============== #
-	import constants as consts
-
-	from Aerodynamics.calcDragPolar import DragPolar
-	from Weight.weight_estimation import calcWeights
+	# import constants as plane
+	import j481 as plane
+	from Aerodynamics.calcCoeff import compentCDMethod
+	from Weight.weight_refined import prelim_weight
 	# from climb_constraints import calcTWClimb
 
 
 	N = 50000
-	W_S = np.linspace(0, 150, N)
-	w_0 = calcWeights((5000+200),15, 0.657)[0]	 # [0] <-- only use the first
-	Cd_0, k = DragPolar(w_0)[0:2] # [0:2] <-- only use the first two ouputs
+	W_S = np.linspace(10, 150, N)
+	# w_0 = calcWeights((5000+200),15, 0.657)[0]	 # [0] <-- only use the first
+	w_0, _ , plane = prelim_weight(plane.Sref , plane.thrust_req, plane)
 
-	T_W_takeoff = calcTWTakeoff(W_S, consts.CL['max']['takeoff'], consts.runLength)
-	T_W_cruise =  calcTWCruise(W_S, Cd_0['clean'], consts.AR, consts.e['cruise'], consts.q)
-	T_W_ceiling = np.ones(N)*calcTWCeiling(consts.Density_Ceiling/consts.Density_SL, Cd_0['clean'])
-	W_S_landing = calcWSLanding(consts.runLength,consts.CL['max']['landing'])
+	plane.CD0 = compentCDMethod(plane, plane.mach, plane.mu_cruise, plane.speed_fps, plane.density_cruise)
+
+	T_W_takeoff = calcTWTakeoff(W_S, plane.CL['max']['takeoff'], plane.runway_length)
+	T_W_cruise =  calcTWCruise(W_S,  plane.CD0['cruise'], plane.wing.aspect_ratio, plane.e['cruise'], plane.q_cruise)
+	T_W_ceiling = np.ones(N)*calcTWCeiling(plane.density_ceiling/plane.density_SL, plane.CD0['cruise'])
+	W_S_landing = calcWSLanding(plane.runway_length,plane.CL['max']['landing'])
 
 
 
@@ -150,7 +152,7 @@ if __name__ == '__main__':
 	landing, = plt.plot([W_S_landing]*2, [ 0, 1], label='Landing')
 
 
-	T_W_climb = calcTWClimb(consts.CL['max'], Cd_0,k,consts.numEngines)
+	T_W_climb = calcTWClimb(plane.CL['max'], plane.CD0,plane.k,plane.numEngines)
 
 	lines = [ceiling, cruise, takeoff, landing]
 	for key in T_W_climb.keys():
@@ -161,21 +163,27 @@ if __name__ == '__main__':
 	labels = [ x._label for x in lines]
 
 
-	a = np.logical_and(T_W_cruise>=T_W_ceiling, T_W_takeoff<=T_W_ceiling)
-	b = np.logical_and(np.logical_not(a), W_S<=W_S_landing)
-	# c = np.logical_and(T_W_takeoff>=T_W_climb['Balked Climb OEI'], )
+	a = np.logical_and(T_W_cruise>=T_W_climb['Balked Climb OEI'], T_W_takeoff<=T_W_climb['Balked Climb OEI'])
+	# b = np.logical_and(np.logical_not(a), W_S<=W_S_landing)
+	b = np.logical_and(np.logical_not(a), T_W_takeoff< T_W_climb['Balked Climb OEI'])
+	c = np.logical_and(T_W_takeoff>=T_W_climb['Balked Climb OEI'],  W_S<=W_S_landing)
 
-	plt.fill_between(W_S,T_W_cruise,1,where=a     ,interpolate=True, color='skyblue')
-	plt.fill_between(W_S,np.ones(np.shape(W_S))*T_W_ceiling,1,where=b,interpolate=True, color='skyblue')
-	# plt.fill_between(W_S,T_W_takeoff,1,where=c,interpolate=True, color='skyblue')
+	plt.fill_between(W_S,T_W_cruise,1,where=a     ,interpolate=True, color='b', alpha=0.5, edgecolor='none', linewidth=0.0)
+	plt.fill_between(W_S,np.ones(np.shape(W_S))*T_W_climb['Balked Climb OEI'],1,where=b,interpolate=True, color='b', alpha=0.5, edgecolor='none', linewidth=0.0)
+	plt.fill_between(W_S,T_W_takeoff,1,where=c,interpolate=True, color='b', alpha=0.5, edgecolor='none', linewidth=0.0)
 
 	plt.axis((W_S[0], W_S[-1], 0, 0.5))
 
 
-	plt.plot(63.7, 0.258, 'ro', label='Design Point')
-	design_point_str = str(63.7) + 'lb/ft^2, ' + str(0.258) 
+	plt.plot(63.7, 0.258, 'mo', label='PDR Design Point')
+	design_point_str = str(63.7) + 'lb/ft^2, ' + str(0.26) 
 	plt.annotate(design_point_str, xy=(63.7, 0.258), xytext=(63.7-29, 0.258+.01), weight = 'bold')
 
+	plt.plot(w_0/plane.Sref, plane.thrust_req/w_0, 'ro', label='CDR Design Point')
+	design_point_str = str(round(w_0/plane.Sref,1)) + 'lb/ft^2, ' + str(round(plane.thrust_req/w_0,2))
+	plt.annotate(design_point_str, xy=(w_0/plane.Sref, plane.thrust_req/w_0), xytext=(w_0/plane.Sref-29, plane.thrust_req/w_0+.01), weight = 'bold')
+
+	print w_0/plane.Sref, plane.thrust_req/w_0
 
 	plt.legend(lines, labels)
 	plt.legend(loc = 'upper right')

@@ -1,0 +1,270 @@
+481
+
+#======================================================
+#------------------- Geometry File --------------------
+#======================================================
+# Imperial Used: ft, lbm, etc
+
+#Mach
+0.8
+#IYsym   IZsym   Zsym
+ 0       0       0
+#Sref    Cref    Bref
+865.5  10.9339522158  92.4662
+#Xref    Yref    Zref
+48.11 0 0
+# CDp
+0
+
+#======================================================
+#--------------------- Main Wing ----------------------
+#======================================================
+SURFACE
+Wing
+#Nchordwise  Cspace   [Nspan   Sspace]
+6 1.00 
+YDUPLICATE
+0.0
+SCALE
+1.0  1.0  1.0
+TRANSLATE
+0.0  0.0  0.0
+ANGLE
+-8
+
+#------------------------------------------------------
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+39.8333 4.4 0 15.56581025 15 9.0 -1.0 
+AFILE
+sc20612-il.dat
+
+
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Flap 1.00 0.70 0 0 0 1.00
+
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Slat 1.00 -0.10 0 0 0 1.00
+
+
+# #50 % selection for flap 
+# SECTION
+# #Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+# 57   26.08  0 9.7892       -5.0    9.0      0.0 
+# AFILE
+# sc20612-il.dat
+
+
+
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+49.989 17.43 0    12.0939    9   9.0    0
+AFILE
+sc20612-il.dat
+
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Flap 1.00 0.70 0 0 0 1.00
+
+
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Slat 1.00 -0.10 0 0 0 1.00
+
+
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+74.0 47.63 0       4.047    4   9.0    0
+AFILE
+sc20612-il.dat
+
+# CONTROL
+# # name gain Xhinge VYZhvec SgnDup
+# Slat 1.00 -0.10 0 0 0 1.00
+
+
+#======================================================
+#----------------------- Fuselage ---------------------
+#======================================================
+
+#--------------------------------------------------
+SURFACE
+Fuselage H
+#Nchordwise  Cspace   Nspanwise  Sspace
+24           1.0 
+
+
+COMPONENT
+1
+
+YDUPLICATE 
+0.0
+
+SCALE
+1.0   1.0  1.0
+
+TRANSLATE
+0.0   0.0   0.0
+
+
+ANGLE
+0.000
+
+
+
+SECTION
+#Xle   Yle    Zle      Chord   Ainc  Nspanwise  Sspace
+ 0.0   0.0    0.0      86   0.    1          0.
+# 124
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+0.36   0.88    0.0     83.5   0.    1          0.
+
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+1.619   1.76    0.0     79.12   0.    1          0.
+
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+3.78   2.64   0.0     73.92   0.    1          0.
+
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+6.3   3.52   0.0      68.67   0.    1          0.
+
+SECTION
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+9   4.4    0.0      61    0.    1          0.
+
+
+
+#======================================================
+#----------------------- Canard -----------------------
+#======================================================
+SURFACE
+Canard
+#Nchordwise  Cspace   [Nspan   Sspace]
+4 1.00 
+YDUPLICATE
+0.0
+SCALE
+1.0  1.0  1.0
+TRANSLATE
+0.0  0.0  0.0
+ANGLE
+5.26
+#------------------------------------------------------
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+9 4.4 0 4.429134 2.0 8.0 -2 
+AFILE
+sc20612-il.dat
+
+CONTROL
+# name gain Xhinge VYZhvec SgnDup
+Canard 1.00 0.0   0 1 0    1.00
+
+SECTION
+#Xle  Yle  Zle  |  Chord   Ainc   Nspan   Sspace
+17.5 17.43 0 1.1072835 2.0 8.0 -2 
+AFILE
+sc20612-il.dat
+
+CONTROL
+# name gain Xhinge VYZhvec SgnDup
+Canard 1.00 0.0   0 1 0    1.00
+
+
+#======================================================
+#------------------- Horizontal Tail ------------------
+#======================================================
+SURFACE
+Horizontal Tail
+#Nchordwise  Cspace   Nspan   Sspace
+3 1.00 8 -2.0 
+YDUPLICATE
+0.0
+SCALE
+1.0  1.0  1.0
+TRANSLATE
+0.0  0.0  0.0
+ANGLE
+0
+
+#------------------TAIL ROOT/ELEVATOR------------------
+SECTION
+#Xle   Yle     Zle     Chord   Ainc
+80.919 0.0000 18.2415 7.70997 0.000 7 1
+NACA
+0012
+CLAF
+1.1078
+
+CONTROL
+#surface gain xhinge hvec SgnDup
+Elevator -1.00 0.5 0 1 0 1.00
+
+#--------------------TAIL Tip--------------------------
+SECTION
+#Xle   Yle     Zle     Chord   Ainc
+92.795 12.5984 18.2415 3.16109 0.000 7 1
+NACA
+0012
+CLAF
+1.1078
+
+CONTROL
+#surface gain xhinge hvec SgnDup
+Elevator -1.00 0.5 0 1 0 1.00
+
+#======================================================
+#------------------- Vertical Tail --------------------
+#======================================================
+SURFACE
+Vertical Tail
+# Nchordwise Cspace Nspanwise Sspace
+3 1 6 -2.0
+#Xscale Yscale Zscale
+SCALE
+1.0 1.0 1.0
+
+ANGLE
+0.0
+TRANSLATE
+0.0 0.0 0.0
+
+#----------------------ROOT/RUDDER---------------------
+SECTION
+#Xle   Yle     Zle     Chord   Ainc
+75.6496 0.0000 5.8727 11.4829 0.000 7 1
+NACA
+0012
+CLAF
+1.1078
+
+CONTROL
+#surface gain xhinge hvec SgnDup
+Rudder 1.00 0.5 0 0 1 -1.00
+
+#-----------------------TIP/RUDDER---------------------
+SECTION
+#Xle   Yle     Zle     Chord   Ainc
+86.706 0.0000 19.2257 8.61221 0.000 7 1
+NACA
+0012
+CLAF
+1.1078
+CONTROL
+#surface gain xhinge hvec SgnDup
+Rudder 1.00 0.5 0 0 1 -1.00
+#------------------------------------------------------
+
+
+
+# -- END OF FILE --

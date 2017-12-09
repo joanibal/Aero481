@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2017.8.17)  4 NOV 2017 15:36
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2017.7.24)  4 DEC 2017 04:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -472,14 +472,24 @@ Type X to quit or <RETURN> to proceed,
 or enter new name. (Default extension: sty)
 
 Enter file name: 
-
-! LaTeX Error: Unknown option `active' for package `preview'.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
+! Emergency stop.
+<read *> 
+         
 l.9 \PreviewEnvironment
+                       {tikzpicture}^^M
+End of file on the terminal!
+
+ 
+Here is how much of TeX's memory you used:
+ 11434 strings out of 495063
+ 221094 string characters out of 3182201
+ 277978 words of memory out of 3000000
+ 14409 multiletter control sequences out of 15000+200000
+ 3640 words of font info for 14 fonts, out of 3000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 56i,1n,73p,411b,136s stack positions out of 5000i,500n,10000p,200000b,50000s
+!  ==> Fatal error occurred, no output PDF file produced!
+ent
                        {tikzpicture}
 ? 
 
@@ -514,8 +524,7 @@ l.9 \PreviewEnvironment{t
 l.10 \setlength{\PreviewBorder}{5pt}
                                     
 ? 
-)
-No file tW.aux.
+) (./tW.aux)
 \openout1 = `tW.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
@@ -530,6 +539,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
 LaTeX Font Info:    ... okay on input line 11.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -641,9 +651,9 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 {/usr/share/texlive/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./tW.aux) ) 
 Here is how much of TeX's memory you used:
- 12292 strings out of 495063
- 236145 string characters out of 3182201
- 296886 words of memory out of 3000000
+ 12295 strings out of 495063
+ 236163 string characters out of 3182201
+ 296896 words of memory out of 3000000
  15212 multiletter control sequences out of 15000+200000
  5644 words of font info for 23 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191

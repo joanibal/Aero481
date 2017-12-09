@@ -1,0 +1,157 @@
+
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+
+\input{ /home/joanibal/.local/lib/python2.7/site-packages/pyxdsm/diagram_border }
+
+\begin{document}
+
+\input{ /home/joanibal/.local/lib/python2.7/site-packages/pyxdsm/diagram_styles }
+
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+\node [DataIO] (output_sizing) {$S_{ref}, T$};&
+&
+&
+&
+&
+&
+&
+&
+&
+\\
+%Row 1
+\node [Analysis] (sizing) {Surfaces Sizing};&
+\node [DataInter,stack] (sizing-CD0) {$S_{surface}, \overline{C}_{surface}}$};&
+&
+&
+&
+&
+&
+&
+&
+\\
+%Row 2
+&
+\node [Analysis] (CD0) {Component CD0};&
+&
+&
+&
+&
+\node [DataInter] (CD0-AVL) {$C_{D0}$};&
+&
+&
+\\
+%Row 3
+&
+&
+\node [Analysis] (detW) {Detailed Weights};&
+\node [DataInter] (detW-resW) {$W_{interior}, W_{engine}$};&
+&
+&
+&
+&
+&
+\\
+%Row 4
+&
+&
+&
+\node [Analysis] (resW) {Regression Weight};&
+\node [DataInter] (resW-buildW) {$MTOW$};&
+&
+&
+&
+&
+\\
+%Row 5
+&
+&
+&
+&
+\node [MDA] (buildW) {Weight Build Up};&
+\node [DataInter] (buildW-stepC) {$MTOW$};&
+&
+&
+&
+\node [DataIO] (right_output_buildW) {$MTOW$};\\
+%Row 6
+&
+&
+&
+&
+\node [DataInter] (stepC-buildW) {$W_{Fuel} $};&
+\node [MDA] (stepC) {Step Cruise};&
+\node [DataInter] (stepC-AVL) {$/C_{L, cruise}$};&
+&
+&
+\\
+%Row 7
+&
+&
+&
+&
+&
+&
+\node [Function] (AVL) {pyAVL};&
+\node [DataInter] (AVL-BR) {$\frac{L}{D} $};&
+&
+\\
+%Row 8
+&
+&
+&
+&
+&
+\node [DataInter] (BR-stepC) {$W_{Fuel} $};&
+&
+\node [Analysis] (BR) {Breguet Range};&
+&
+\\
+%Row 9
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\\
+};
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(sizing) edge [DataLine] (sizing-CD0)
+(CD0) edge [DataLine] (CD0-AVL)
+(detW) edge [DataLine] (detW-resW)
+(resW) edge [DataLine] (resW-buildW)
+(buildW) edge [DataLine] (buildW-stepC)
+(stepC) edge [DataLine] (stepC-AVL)
+(AVL) edge [DataLine] (AVL-BR)
+(BR) edge [DataLine] (BR-stepC)
+(stepC) edge [DataLine] (stepC-buildW)
+(buildW) edge [DataLine] (right_output_buildW)
+% Vertical edges
+(sizing-CD0) edge [DataLine] (CD0)
+(CD0-AVL) edge [DataLine] (AVL)
+(detW-resW) edge [DataLine] (resW)
+(resW-buildW) edge [DataLine] (buildW)
+(buildW-stepC) edge [DataLine] (stepC)
+(stepC-AVL) edge [DataLine] (AVL)
+(AVL-BR) edge [DataLine] (BR)
+(BR-stepC) edge [DataLine] (stepC)
+(stepC-buildW) edge [DataLine] (buildW)
+(sizing) edge [DataLine] (output_sizing);
+\end{pgfonlayer}
+
+\end{tikzpicture}
+\end{document}

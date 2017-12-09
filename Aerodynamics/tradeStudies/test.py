@@ -74,12 +74,20 @@ canard0 = canard
 # exit
 # run the case
 
+<<<<<<< HEAD
+def runAVL(CL=0.57, geo_file='J481T.avl'):
+=======
 def runAVL():
+>>>>>>> master
 	case = pyAVL.avlAnalysis(geo_file='J481T.avl')
 
 	# Steady level flight contraints
 	case.addConstraint('elevator', 0.00)
+<<<<<<< HEAD
+	case.addTrimCondition('CL', CL)
+=======
 	case.addTrimCondition('CL', 0.57)
+>>>>>>> master
 
 	# Execute the case
 	case.executeRun()

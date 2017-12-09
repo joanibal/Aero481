@@ -3,25 +3,29 @@ import os,sys,inspect
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import math
-import numpy as np
-import matplotlib.pyplot as plt
-import constants
-from Weight.weight_buildup import prelim_weight
+# import numpy as np
+# import matplotlib.pyplot as plt
+import j481
+# from Weight.weight_buildup import prelim_weight
 
 def stallSpeed(Clmax, W, rho):
-	# weight is input in lbf 
-	Sref = constants.Sref
+	# weight is input in lbf
+	Sref = j481.Sref
+	# print Sref
 
-	Vstall = math.sqrt((2*W*4.44822)/(rho*Sref*Clmax))
-	return Vstall*3.28084
+	Vstall = math.sqrt((2*W)/(rho*Sref*Clmax))
+	return Vstall
 
 if __name__=='__main__':
-	import constants as consts 
+	import j481
 
-	w_0, w_fuel = prelim_weight((consts.Sref+consts.Sref_c_actual)/0.09203, consts.thrust_req, consts)
+	# w_0, w_fuel = prelim_weight(consts.Sref*0.92, consts.thrust_req, consts)
+	w_0 = 55774.0
+	w_fuel = 17298.0
+
 	print(w_0, w_fuel)
-	weight_landing = 0.88*w_0
+	weight_landing = 0.77*w_0
 
-	print("Landing Stall Speed (knts): ",  stallSpeed(consts.CL['max']['landing'],weight_landing, 1.225)*0.681818*0.868976)
-	print("Cruise Stall Speed (knts): " ,   stallSpeed(consts.CL['max']['cruise'],w_0, consts.Density_Cruise)*0.681818*0.868976)
-	print("Takeoff Stall Speed (knts): " ,   stallSpeed(consts.CL['max']['takeoff'],w_0, 1.225)*0.681818*0.868976)
+	print("Landing Stall Speed (kts): ",  stallSpeed(j481.CL['max']['landing'],weight_landing, j481.density_SL)*0.592484) #last factor converts ft/s to knots
+	print("Cruise Stall Speed (kts): " ,   stallSpeed(j481.CL['max']['cruise'],w_0, j481.density_cruise)*0.592484)
+	print("Takeoff Stall Speed (kts): " ,   stallSpeed(j481.CL['max']['takeoff'],w_0, j481.density_SL)*0.592484)
