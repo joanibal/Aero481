@@ -12,7 +12,7 @@ import numpy as np
 # # from Sizing.Svt_calc import *
 # # from Sizing.horizontal_surf_sizing import *
 
-# from Aerodynamics.avlLib import runAVL, changeSref
+from Aerodynamics.avlLib import runAVL, gen_geo
 from Sizing.tailSizing import genTail
 
 
@@ -36,7 +36,7 @@ def fuel_fraction(c, CD, R, speed, CL):
 	# print cruiseFrac, ff5, ff, 1-ff
 	return 1-ff
 
-def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, n):
+def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, n, name):
 	
 	ff_startup = 1.0-c_sealevel*(15.0/60.0)*(T*0.05/w_0)	#startup/warmup/taxi
 	w_startup = ff_startup*w_0
@@ -74,10 +74,9 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 		# print cruise_alt_start
 
 		# print('start')
-		# L_D = CL/(CD0 + runAVL(CL=CL ,geo_file='./Aerodynamics/J481T.avl'))
+		# L_D = CL/(CD0 + runAVL(CL=CL, geo_file='./Aerodynamics/'+name+'.avl')[0])
 		L_D = CL/(CD0 + K*CL**2)*0.94
-		# print CL, L_D, CD0, CL/(CD0 + K*CL**2)
-
+		# print CL, CD0, L_D, CL/(CD0 + K*CL**2), runAVL(CL=CL ,geo_file='./Aerodynamics/'+name+'.avl')
 		# print('L_D', L_D, CL/(CD0 + K*CL**2))
 		# print(CL/(CD0 + K*CL**2))
 
@@ -126,6 +125,7 @@ def prelim_weight(Sref, T0, plane):
 		plane.canard.update(area=plane.Sref*plane.canard_area_ratio)
 		plane.tail_vert, plane.tail_horz = genTail(plane.wing, plane.dist_to_surface ,  canard=plane.canard)
 		# plane.canard.weight = 7.5*plane.canard.area
+
 
 		#modified composite constants
 		plane.canard.comp = 0.9
@@ -180,6 +180,9 @@ def prelim_weight(Sref, T0, plane):
 	# plane.CD0 = compentCDMethod(plane, plane.mach, plane.mu_cruise, plane.speed_fps, plane.density_cruise)
 	# print .003*(plane.fuselage.wetted_area + 2.2*plane.Sref)/plane.Sref, plane.CD0['cruise']
 
+	# gen_geo(plane.Sref, plane.wing.MAC_c, plane.wing.span,
+	#         np.array([plane.wing.approx_AC_x, 0, 0]), 0, plane, file='Aerodynamics/'+ plane.name+'.avl')
+
 
 	# print plane.CD0
 
@@ -231,13 +234,12 @@ def prelim_weight(Sref, T0, plane):
 	# print w_0
 	# quit()
 
-	tolerance = 10.0
+	tolerance = 00.5
 	converged = 0
 
 
 
-	while True:
-	# for i in range(1000):
+	for i in range(100):
 
 		sweep_halfchord = np.arctan((0.5 *plane.wing.span *np.tan(np.deg2rad(plane.wing.sweep)) -0.25 *plane.wing.chord_root + 0.25 *plane.wing.taper*plane.wing.chord_root) /(0.5 *plane.wing.span))
 		Wwing_carichner = (0.00428 * plane.wing.area**0.48) * ((plane.wing.aspect_ratio * plane.mach**0.43)
@@ -269,7 +271,7 @@ def prelim_weight(Sref, T0, plane):
 		w_control_surfaces = 56.01*(w_0*plane.q_cruise*10**(-5))**0.576
 
 		
-		ff_step = fuel_fraction_update(plane.SFC, plane.SFC_sealevel, plane.Sref, T0, w_0, plane.CD0['cruise'] , plane.altitude, plane.speed_kts, plane.range_nMi, plane.k['cruise'], plane.cruise_steps)
+		ff_step = fuel_fraction_update(plane.SFC, plane.SFC_sealevel, plane.Sref, T0, w_0, plane.CD0['cruise'] , plane.altitude, plane.speed_kts, plane.range_nMi, plane.k['cruise'], plane.cruise_steps, plane.name)
 		w_fuel = ff_step*w_0
 
 
@@ -350,6 +352,8 @@ def prelim_weight(Sref, T0, plane):
 			return w_0, w_fuel, plane
 
 		w_0 += 1.0*(w_0new - w_0)
+
+		# print 'CD0', plane.CD0['cruise'], 'Sref', plane.Sref, 'wing', plane.wing.weight, 'fuel', w_fuel
 
 
 	return w_0, w_fuel, plane
