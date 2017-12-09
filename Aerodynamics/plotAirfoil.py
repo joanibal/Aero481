@@ -1,8 +1,12 @@
+import os,sys
+
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 import matplotlib.pyplot as plt
 import string
 
-f = open('./sc20612-il.dat', 'r')
+f = open('./ItsCDRdudes.dat', 'r')
+# f = open('./Airfoils/sc0012.dat', 'r')
 flines = f.readlines()
 
 X = []

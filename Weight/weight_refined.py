@@ -239,6 +239,7 @@ def prelim_weight(Sref, T0, plane):
 
 
 
+	# while True:
 	for i in range(100):
 
 		sweep_halfchord = np.arctan((0.5 *plane.wing.span *np.tan(np.deg2rad(plane.wing.sweep)) -0.25 *plane.wing.chord_root + 0.25 *plane.wing.taper*plane.wing.chord_root) /(0.5 *plane.wing.span))
