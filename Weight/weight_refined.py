@@ -315,7 +315,7 @@ def prelim_weight(Sref, T0, plane):
 		else:
 			canard_weight = 0.0
 
-		w_breakdown = {'engine_total':plane.propulsion.weight,
+		plane.w_breakdown = {'engine_total':plane.propulsion.weight,
 						'avionics':w_avionics,
 						'interior':w_interior,
 						'wing':plane.wing.weight,
@@ -337,17 +337,17 @@ def prelim_weight(Sref, T0, plane):
 		# if True:
 			plane.MTOW = w_0
 
-			# for key in w_breakdown.keys():
-			# 	print key, w_breakdown[key]
+			# for key in plane.w_breakdown.keys():
+				# print key, plane.w_breakdown[key]
 
-			# print 'fuselage:', w_breakdown['fuselage']+w_breakdown['interior']+w_breakdown['indicators']+w_breakdown['misc']+w_breakdown['electronics']+w_breakdown['avionics']
-			# print 'wing:', w_breakdown['wing']+w_breakdown['surface_control']+w_breakdown['fuel_control']
-			# print 'HT:', w_breakdown['HT']
-			# print 'VT:', w_breakdown['VT']
-			# print 'canard:', w_breakdown['canard']
-			# print 'landing gears', w_breakdown['main_gear'], w_breakdown['nose_gear']
-			# print 'engine(x2):', w_breakdown['engine_total']
-			# print 'payload:', w_breakdown['payload']
+			# print 'fuselage:', plane.w_breakdown['fuselage']+plane.w_breakdown['interior']+plane.w_breakdown['indicators']+plane.w_breakdown['misc']+plane.w_breakdown['electronics']+plane.w_breakdown['avionics']
+			# print 'wing:', plane.w_breakdown['wing']+plane.w_breakdown['surface_control']+plane.w_breakdown['fuel_control']
+			# print 'HT:', plane.w_breakdown['HT']
+			# print 'VT:', plane.w_breakdown['VT']
+			# print 'canard:', plane.w_breakdown['canard']
+			# print 'landing gears', plane.w_breakdown['main_gear'], plane.w_breakdown['nose_gear']
+			# print 'engine(x2):', plane.w_breakdown['engine_total']
+			# print 'payload:', plane.w_breakdown['payload']
 
 			return w_0, w_fuel, plane
 
