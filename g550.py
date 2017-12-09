@@ -19,7 +19,7 @@ from Sizing.tailSizing import genTail
 name = 'g550'
 
 #  ------------ Misson Parameters -----------------
-runway_length = 5910                        # ft
+runway_length = 7000                        # ft
 altitude = 40000                            # ft
 altitude_ceiling = 56000                    # ft
 mach = 0.80
@@ -27,7 +27,7 @@ range_nMi = 6750                            # nMi
 cruise_steps = 1                            # number of altitude levels for cruise
 
 num_pilots = 2  #number of pilots
-num_passengers = 19  #number of passengers
+num_passengers = 8  #number of passengers
 num_attendants = 2  #number of attendants
 
 jetA_density = 6.71 #lb/gal
@@ -110,21 +110,26 @@ dist_to_surface = np.array([39.36, 30.26])  # [distace to H tail, distance to V 
 
 
 
-wing = surface(Sref, 7.4, 0.26, 27., offset=np.array([33.9, fuselage.diameter/2.0, 0]),\
-                 finish='polishedSM', thickness_chord=0.1, frac_laminar=0.35 )
+wing = surface(Sref, 7.4, 0.26, 27., offset=np.array([33.9, 4.4, 0]),\
+                 airfoil_file='Aerodynamics/Airfoils/sc20612-il.dat', finish='polishedSM', thickness_chord=0.1, frac_laminar=0.35 )
 
 wing.flap_position = np.array([0.1, 0.5])
 wing.flap_deflection = {'landing': 30., 'takeoff': 15.}
 wing.slat_position = np.array([0.1, 0.5])
 wing.mounted_area = 149.62 * 2  # ft
 
+wing.Nspan = 10 
+wing.update()
 
-tail_vert = surface(140.16, 0.98, 0.65, 37., offset=np.array([60, 0, 0]), \
-                airfoil_file='', finish='polishedSM',\
-                thickness_chord=0.095, frac_laminar=0.35 )
+tail_vert = surface(140.16, 0.98, 0.65, 37., offset=np.array([65, 0, 10]), \
+                airfoil_file='Aerodynamics/Airfoils/sc0012.dat', finish='polishedSM',\
+                thickness_chord=0.095, frac_laminar=0.35, vertical=True )
 
-tail_horz = surface(244.87, 5.05, 0.41, 30., offset=np.array([40, 4.4, 0]), twist=np.array([10,-4]), \
-                finish='polishedSM', thickness_chord=0.09, frac_laminar=0.35 )
+tail_horz = surface(244.87, 5.05, 0.41, 30., offset=np.array([75, 0, 23]), twist=np.array([10,-4]), \
+                airfoil_file='Aerodynamics/Airfoils/sc0012.dat', finish='polishedSM', thickness_chord=0.09, frac_laminar=0.35 )
+
+
+# tail_vert, tail_horz = genTail(wing, dist_to_surface )
 
 
 # #  -------------------- Lift and Drag -------------------------
@@ -134,9 +139,9 @@ CD0 = {'cruise':0.01519}
 # # these values should come from AVL
 CL= {
     'max': {
-    'takeoff': 1.76,
+    'takeoff': 1.56,
     'cruise':  1.0,
-    'landing': 2.5,
+    'landing': 2.1,
     },
     'cruise': 0.57,
     }
@@ -162,7 +167,7 @@ for key in e.keys():
 # #  -------------------- Loading -------------------------
  
 
-load_factor = 4.92
+load_factor = 4.5
 # # sweep_half = math.atan((0.5*b*math.tan(sweep)-0.25*c_root + 0.25*w_lambda*c_root)/(0.5*b))
 Keco = 0.686
 
