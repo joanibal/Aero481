@@ -1,7 +1,7 @@
 '''
 pyAVL
 
-pyAVL is a wrapper for Mark Drela's Xfoil code. The purpose of this
+pyAVL is a wrapper for Mark Drela's AVL code. The purpose of this
 class is to provide an easy to use wrapper for avl for intergration
 into other projects. 
 
@@ -11,7 +11,8 @@ Developers:
 
 History
 -------
-	v. 1.0 - Initial Class Creation (JLA, 08 2016)
+    v. 1.0 - Initial Class Creation (JLA, 08 2016)
+    v. 1.1 - Added CDFF and sectional properties for all surfaces (JLA, 12 2017)
 '''
 
 __version__ = 1.1
@@ -20,7 +21,7 @@ __version__ = 1.1
 # Standard Python modules
 # =============================================================================
 
-import os, sys, string, copy, pdb, time
+# import os, copy, pdb, time
 
 # =============================================================================
 # External Python modules
@@ -34,38 +35,34 @@ import numpy as np
 
 import pyavl as avl
 
+class Error(Exception):
+    """
+    Format the error message in a box to make it clear this
+    was a expliclty raised exception.
+    """
+    def __init__(self, message):
+        msg = '\n+'+'-'*76+'+'+'\n' + '| pyAVL Error: '
+        i = 14
+        for word in message.split():
+            if len(word) + i + 1 > 76: # Finish line and start new one
+                msg += ' '*(76-i)+'|\n| ' + word + ' '
+                i = 1 + len(word)+1
+            else:
+                msg += word + ' '
+                i += len(word)+1
+        msg += ' '*(76-i) + '|\n' + '+'+'-'*76+'+'+'\n'
+        print(msg)
+        Exception.__init__(self)
 
 
-class avlAnalysis():
+class avlAnalysis(object):
     def __init__(self, geo_file =None, mass_file =None,  aircraft_object = None ):
 
-        self.__exe = False
+        self.resetData()
 
-        self.alpha =[]
-        self.CL = []
-        self.CD = []
-        self.CM = []
-        self.span_eff = []
-
-        self.elev_def = []
-        self.rud_def = []
-
-        self.velocity = []
-
-
-        self.sec_CL = []
-        self.sec_CD = []
-        self.sec_Chord = []
-        self.sec_Yle = []
 
 
     
-        self.sec_CL2 = []
-
-        self.sec_Chord2 = []
-        self.sec_Yle2 = []
-
-
         if not(geo_file == None):
             try:
                 # check to make sure files exist 
@@ -78,11 +75,12 @@ class avlAnalysis():
                     f = open(mass_file,'r')
                     f.close
             except:
-                print( 'ERROR:  There was an error opening the file %s'%(file))
-                sys.exit(1)
-
+                raise Error(':  There was an error opening the file %s'%(file))
+                
             avl.avl()   
             avl.loadgeo(geo_file)
+      
+
             if not(mass_file is None):
                 avl.loadmass(mass_file)
 
@@ -91,10 +89,10 @@ class avlAnalysis():
 
             pass
 
-        else:
-            print( 'ERROR:  neither a geometry file or aircraft object was given')
-            sys.exit(1)
 
+        else:
+            raise Error('neither a geometry file or aircraft object was given')
+            
         return
 
 
@@ -107,15 +105,14 @@ class avlAnalysis():
                    'roll rate':['R', 'R '],
                    'pitch rate':['P', 'P '],
                    'yaw rate':['Y', 'Y'],
-                   'elevator':['D1', 'PM '],
-                   'rudder': ['D2', 'YM '],
-                   'aileron': ['D3', 'RM ']}
+                   'D1':['D1', 'PM '],
+                   'D2': ['D2', 'YM '],
+                   'D3': ['D3', 'RM ']}
 
 
         if not(varible in options):
-            print( 'ERROR:  constraint varible not a valid option ')
-            sys.exit(1)
-
+            raise Error(':  constraint varible not a valid option ')
+            
         avl.conset(options[varible][0],(options[varible][1] +  str(val) + ' \n'))
         return
 
@@ -134,9 +131,8 @@ class avlAnalysis():
                    'Z_cg': ['Z']}
 
         if not(varible in options):
-            print( 'ERROR:  constraint varible not a valid option ')
-            sys.exit(1)
-
+            raise Error(':  constraint varible not a valid option ')
+            
 
 
         avl.trmset('C1','1 ',options[varible][0],(str(val) +'  \n'))
@@ -150,38 +146,77 @@ class avlAnalysis():
 
         avl.oper()
 
-        self.alpha.append(float(avl.case_r.alfa))  # *(180.0/np.pi) # returend in radians)
-        self.CL.append(float(avl.case_r.cltot))
-        self.CD.append(float(avl.case_r.cdtot))   # append(avl.case_r.cdvtot)  for total viscous)
-        self.CM.append(float(avl.case_r.cmtot))
-        self.span_eff.append(float(avl.case_r.spanef))
+        self.alpha = np.append( self.alpha, float(avl.case_r.alfa))  # *(180.0/np.pi) # returend in radians)
+        self.CL = np.append(self.CL, float(avl.case_r.cltot))
+        self.CD = np.append(self.CD, float(avl.case_r.cdtot))   # = np append(avl.case_r.cdvtot)  for total viscous)
+        self.CDV = np.append(self.CDV, float(avl.case_r.cdvtot))   # = np append(avl.case_r.cdvtot)  for total viscous)
+        self.CDFF = np.append(self.CDFF, float(avl.case_r.cdff))
+        self.CM = np.append(self.CM, float(avl.case_r.cmtot))
+        self.span_eff = np.append(self.span_eff, float(avl.case_r.spanef))
 
 
-        self.elev_def.append(float(avl.case_r.delcon[0]))
-        self.rud_def.append(float(avl.case_r.delcon[1]))
 
-        self.velocity.append(np.asarray(avl.case_r.vinf))
+        deflecs = (np.trim_zeros(avl.case_r.delcon)).reshape( len(np.trim_zeros(avl.case_r.delcon)), 1)
+        # print deflecs,  avl.case_r.delcon
+        # x.astype(int)
+        
+
+        if self.control_deflection.size==0:
+            self.control_deflection = deflecs
+        else:
+            self.control_deflection = np.hstack((self.control_deflection, deflecs) )
+
+
+        self.velocity = np.append(self.velocity, np.asarray(avl.case_r.vinf))
 
         # get section properties
-        NS = avl.surf_i.nj[0]
-        NS2 = avl.surf_i.nj[2]
+        # NS = avl.surf_i.nj[0]
+        NS = np.trim_zeros(avl.surf_i.nj)
+        # print NS
+        # print np.trim_zeros(avl.strp_r.clstrp[:])
 
-        self.sec_CL.append(np.asarray(avl.strp_r.clstrp[:NS]))
-        self.sec_CL2.append(np.asarray(avl.strp_r.clstrp[NS*2:(NS*2+ NS2)]))
-        self.sec_CD.append(np.asarray(avl.strp_r.cdstrp[:NS]))
-        self.sec_Chord.append(np.asarray(avl.strp_r.chord[:NS]))
-        self.sec_Chord2.append(np.asarray(avl.strp_r.chord[NS*2:(NS*2+ NS2)]))
-        self.sec_Yle.append(np.asarray(avl.strp_r.rle[1][:NS]))
-        self.sec_Yle2.append(np.asarray(avl.strp_r.rle[1][NS*2:(NS*2+ NS2)]))
+        # start = 0
+        sec_CLs =[]
+        sec_CDs =[]
+        sec_Chords =[]
+        sec_Yles =[]
+        end = 0
+        for i in xrange(0,len(NS)):
+            start = end  
+            end   = start + NS[i] 
+            sec_CLs.append(avl.strp_r.clstrp[start:end])
+            sec_CDs.append(avl.strp_r.cdstrp[start:end])
+            sec_Chords.append(avl.strp_r.chord[start:end])
+            sec_Yles.append(avl.strp_r.rle[1][start:end])
 
-        # print avl.surf_i.nj
-        # print( 'alfa:', avl.case_r.alfa   )
 
-        # print( 'CLTOT:', avl.case_r.cltot)
-        # print( 'CdTOT:', avl.case_r.cdtot)
-        # print( 'CmTOT:', avl.case_r.cmtot)
-        # print( 'Dname', avl.case_c.dname)
-        # print( 'Delcon', avl.case_r.delcon)
+        self.sec_CL.append(sec_CLs)
+        self.sec_CD.append(sec_CDs)
+        self.sec_Chord.append(sec_Chords)
+        self.sec_Yle.append(sec_Yles)
+
+
+        surf_CLs = (np.trim_zeros(avl.surf_r.clsurf)).reshape( len(np.trim_zeros(avl.surf_r.clsurf)), 1)
+        surf_CDs = (np.trim_zeros(avl.surf_r.cdsurf)).reshape( len(np.trim_zeros(avl.surf_r.cdsurf)), 1)
+
+        if self.surf_CL.size==0:
+            self.surf_CL = surf_CLs
+            self.surf_CD = surf_CDs
+        else:
+            self.surf_CL = surf_CLs = np.hstack((self.surf_CL, surf_CLs) )
+            self.surf_CD = surf_CDs = np.hstack((self.surf_CD, surf_CDs) )
+
+
+
+
+
+        # print 'alfa:', avl.case_r.alfa   
+
+        # print 'CLTOT:', avl.case_r.cltot
+        # print 'CdTOT:', avl.case_r.cdtot
+        # print 'CmTOT:', avl.case_r.cmtot
+        # print 'Dname', avl.case_c.dname
+        # print 'Delcon', avl.case_r.delcon
 
 
         
@@ -192,13 +227,12 @@ class avlAnalysis():
         # executeRun must be run first 
 
         if not(self.__exe):
-            print( 'ERROR:  executeRun most be called first')
-            sys.exit(1)
-
+            raise Error(':  executeRun() must be called first')
+            
 
         avl.calcst()
         self.NP = avl.case_r.xnp
-        # print( 'Xnp:', avl.case_r.xnp)
+        # print 'Xnp:', avl.case_r.xnp
 
         return
 
@@ -225,26 +259,31 @@ class avlAnalysis():
         return
 
 
-    def clearVals(self):
+    def resetData(self):
         self.__exe = False
 
-        self.alpha =[]
-        self.CL = []
-        self.CD = []
-        self.CM = []
-        self.span_eff = []
+        self.alpha =np.zeros(0)
+        self.CL = np.zeros(0)
+        self.CD = np.zeros(0)
+        self.CDV = np.zeros(0)
+        self.CDFF = np.zeros(0)        
+        self.CM = np.zeros(0)
+        self.span_eff = np.zeros(0)
 
-        self.elev_def = []
-        self.rud_def = []
+        self.elev_def = np.zeros(0)
+        self.rud_def = np.zeros(0)
 
-        self.velocity = []
+        self.velocity = np.zeros(0)
 
+        self.control_deflection = np.empty(0)
 
         self.sec_CL = []
         self.sec_CD = []
         self.sec_Chord = []
         self.sec_Yle = []
 
+        self.surf_CL = np.empty(0)
+        self.surf_CD = np.empty(0)
 
     # def calcSectionalCPDist(self):
 
