@@ -236,8 +236,8 @@ def prelim_weight(Sref, T0, plane):
 
 
 
-	while True:
-	# for i in range(1000):
+	# while True:
+	for i in range(100):
 
 		sweep_halfchord = np.arctan((0.5 *plane.wing.span *np.tan(np.deg2rad(plane.wing.sweep)) -0.25 *plane.wing.chord_root + 0.25 *plane.wing.taper*plane.wing.chord_root) /(0.5 *plane.wing.span))
 		Wwing_carichner = (0.00428 * plane.wing.area**0.48) * ((plane.wing.aspect_ratio * plane.mach**0.43)
@@ -340,14 +340,14 @@ def prelim_weight(Sref, T0, plane):
 			# for key in w_breakdown.keys():
 			# 	print key, w_breakdown[key]
 
-			print 'fuselage:', w_breakdown['fuselage']+w_breakdown['interior']+w_breakdown['indicators']+w_breakdown['misc']+w_breakdown['electronics']+w_breakdown['avionics']
-			print 'wing:', w_breakdown['wing']+w_breakdown['surface_control']+w_breakdown['fuel_control']
-			print 'HT:', w_breakdown['HT']
-			print 'VT:', w_breakdown['VT']
-			print 'canard:', w_breakdown['canard']
-			print 'landing gears', w_breakdown['main_gear'], w_breakdown['nose_gear']
-			print 'engine(x2):', w_breakdown['engine_total']
-			print 'payload:', w_breakdown['payload']
+			# print 'fuselage:', w_breakdown['fuselage']+w_breakdown['interior']+w_breakdown['indicators']+w_breakdown['misc']+w_breakdown['electronics']+w_breakdown['avionics']
+			# print 'wing:', w_breakdown['wing']+w_breakdown['surface_control']+w_breakdown['fuel_control']
+			# print 'HT:', w_breakdown['HT']
+			# print 'VT:', w_breakdown['VT']
+			# print 'canard:', w_breakdown['canard']
+			# print 'landing gears', w_breakdown['main_gear'], w_breakdown['nose_gear']
+			# print 'engine(x2):', w_breakdown['engine_total']
+			# print 'payload:', w_breakdown['payload']
 
 			return w_0, w_fuel, plane
 

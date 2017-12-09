@@ -11,20 +11,23 @@ def regression():
 	c = a_lin-1
 	a = 10**b_lin
 
-	# print (a, c)
+	print (a, c)
 
-	# data, = plt.plot(np.log10(WTO[:-3]), np.log10(WE[:-3]), 'bo', label='Original Data', markersize=10)
-	# regLine, = plt.plot(np.log10(WTO[:-3]), a_lin*np.log10(WTO[:-3]) + b_lin, 'b-', label='Fitted line')
+	data, = plt.plot(np.log10(WTO[:-3]), np.log10(WE[:-3]), 'bo', label='Original Data', markersize=10)
+	regLine, = plt.plot(np.log10(WTO[:-3]), a_lin*np.log10(WTO[:-3]) + b_lin, 'b-', label='Fitted line')
 
-	# dseign, = plt.plot(np.log10(94965), np.log10(53502), 'ro', label='Design Point', markersize=10)
-	# design_point_str = '94965 lb MTWO, 53502 lb EW'
-	# plt.annotate(design_point_str, xy=(np.log10(94965), np.log10(53502)), xytext=(np.log10(94965)-0.47, np.log10(53502)), weight = 'bold')
+	design_PDR, = plt.plot(np.log10(94965), np.log10(53502), 'mo', label='PDR Design Point', markersize=10)
+	design_point_str_PDR = '94965 lb MTOW, 53502 lb EW'
+	plt.annotate(design_point_str_PDR, xy=(np.log10(94965), np.log10(53502)), xytext=(np.log10(94965)-0.47, np.log10(53502)), weight = 'bold')
 
+	design_CDR, = plt.plot(np.log10(52925), np.log10(15948), 'mo', label='CDR Design Point', markersize=10)
+	design_point_str_CDR = '52925 lb MTOW, 15948 lb EW'
+	plt.annotate(design_point_str_CDR, xy=(np.log10(52925), np.log10(15948)), xytext=(np.log10(52925)-0.47, np.log10(15948)), weight = 'bold')
 
-	# plt.legend()
-	# plt.xlabel('$Log_{10}$ MTOW', size='large')
-	# plt.ylabel('$Log_{10}$ Empyty Weight', size='large')
-	# plt.show()
+	plt.legend()
+	plt.xlabel('$Log_{10}$ MTOW', size='large')
+	plt.ylabel('$Log_{10}$ Empyty Weight', size='large')
+	plt.show()
 	return a, c
 
 def calcWeights(R,L_D, c , M, w_payload ):
@@ -102,9 +105,8 @@ if __name__ == '__main__':
 
 	import numpy as np
 
-
 	print(constants.R, constants.L_D, constants.SFC)
 	w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R, constants.L_D, constants.SFC, constants.M, constants.w_payload)
 
 	print(w_0, w_empty, w_fuel, w_payload )
-	# plt.show()
+	plt.show()
