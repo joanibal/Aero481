@@ -19,7 +19,7 @@ from Sizing.tailSizing import genTail
 name = 'g550'
 
 #  ------------ Misson Parameters -----------------
-runway_length = 7000                        # ft
+runway_length = 5910                        # ft
 altitude = 40000                            # ft
 altitude_ceiling = 56000                    # ft
 mach = 0.80
@@ -134,9 +134,9 @@ tail_horz = surface(244.87, 5.05, 0.41, 30., offset=np.array([40, 4.4, 0]), twis
 # # these values should come from AVL
 CL= {
     'max': {
-    'takeoff': 1.56,
+    'takeoff': 1.76,
     'cruise':  1.0,
-    'landing': 2.1,
+    'landing': 2.5,
     },
     'cruise': 0.57,
     }

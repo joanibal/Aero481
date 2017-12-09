@@ -61,14 +61,14 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 		rho = rho_metric*0.00194032
 
 		# V constant because a = sqrt(gamma*R*T) -> T is approx. constant
-		# CL = np.sqrt(CD0/K)* 0.707
+		CL = np.sqrt(CD0/K)* 0.707
 		# selecting CL for cruise altitude and starting cruise climb from there
-		CL = 2*w_0/(rho*(V*1.68781)**2*Sref)
+		# CL = 2*w_0/(rho*(V*1.68781)**2*Sref)
 		# print rho, Sref, w_cruise_i
 		# print CL, rho
 
 		# print('start')
-		# L_D = CL/(CD0 + runAVL(CL=CL ,geo_file='./Aerodynamics/J481T.avl'))
+		# L_D = CL/(CD0 + runAVL(CL=CL ,geo_file='./Aerodynamics/j481.avl'))
 		L_D = CL/(CD0 + K*CL**2)
 		# print CL, L_D, CD0, CL/(CD0 + K*CL**2)
 

@@ -30,7 +30,7 @@ plt.annotate(design_point_str, xy=(plane.Sref, plane.thrust_req), xytext=(plane.
 itermax = 100
 T_guess = 4400
 
-S = np.linspace(1050, 3000, 100)
+S = np.linspace(1200, 1500, 10)
 
 
 
