@@ -365,6 +365,10 @@ if __name__ == '__main__':
 	w_0, w_f, plane = prelim_weight(j481.Sref, j481.thrust_req, j481)
 	print 'j481:',w_0, w_f, w_0-w_f-j481.weight_payload
 
+	# print plane.wing.span, plane.wing.area, plane.wing.aspect_ratio, plane.wing.thickness_chord
+	# print plane.canard.span, plane.canard.area, plane.canard.aspect_ratio, plane.canard.thickness_chord
+
+
 	w_0, w_f, plane = prelim_weight(g550.Sref, g550.thrust_req, g550)
 	print 'g550:', w_0, w_f,
 
