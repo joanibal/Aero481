@@ -55,21 +55,27 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 	temp = -56.46 + 273.15 #K - approximately constant for altitude range
 
 	for i in range(int(n)):
-		p = 22.65 * np.exp(1.73 - .000157*(alt_cruise_i*0.3048)) #kPa
-		# print 'pressure '+str(p)
-		rho_metric = p*1000.0/(287.058*temp)
-		rho = rho_metric*0.00194032
+		# p = 22.65 * np.exp(1.73 - .000157*(alt_cruise_i*0.3048)) #kPa
+		# # print 'pressure '+str(p)
+		# rho_metric = p*1000.0/(287.058*temp)
+		# rho = rho_metric*0.00194032
 
 		# V constant because a = sqrt(gamma*R*T) -> T is approx. constant
-		CL = np.sqrt(CD0/K)* 0.707
+		CL = np.sqrt(CD0/K)#* 0.707
 		# selecting CL for cruise altitude and starting cruise climb from there
 		# CL = 2*w_0/(rho*(V*1.68781)**2*Sref)
 		# print rho, Sref, w_cruise_i
 		# print CL, rho
+		
+		# reverse altitude calculation
+		rho_solve = 2*w_0/(CL*(V*1.68781)**2*Sref)/0.00194032
+		p_solve = rho_solve/1000.0*(287.058*temp)
+		cruise_alt_start = (1.73 - np.log(p_solve/22.65))/(0.000157*0.3048)
+		# print cruise_alt_start
 
 		# print('start')
-		# L_D = CL/(CD0 + runAVL(CL=CL ,geo_file='./Aerodynamics/j481.avl'))
-		L_D = CL/(CD0 + K*CL**2)
+		# L_D = CL/(CD0 + runAVL(CL=CL ,geo_file='./Aerodynamics/J481T.avl'))
+		L_D = CL/(CD0 + K*CL**2)*0.94
 		# print CL, L_D, CD0, CL/(CD0 + K*CL**2)
 
 		# print('L_D', L_D, CL/(CD0 + K*CL**2))
@@ -121,16 +127,32 @@ def prelim_weight(Sref, T0, plane):
 		plane.tail_vert, plane.tail_horz = genTail(plane.wing, plane.dist_to_surface ,  canard=plane.canard)
 		# plane.canard.weight = 7.5*plane.canard.area
 
-
-
-
-		plane.canard.comp = 1
-		plane.wing.comp = 0.8
-		plane.tail_horz.comp = 0.75
-		plane.tail_vert.comp = 0.75
-		plane.fuselage.comp = 0.75
+		#modified composite constants
+		plane.canard.comp = 0.9
+		plane.wing.comp = 0.9
+		plane.tail_horz.comp = 0.9
+		plane.tail_vert.comp = 0.9
+		plane.fuselage.comp = 0.9
 		plane.propulsion.comp = 1.0
-		gear_comp = 0.92
+		gear_comp = 1.0
+
+		# nicolai/carichner composite estimates
+		# plane.canard.comp = 0.75
+		# plane.wing.comp = 0.8
+		# plane.tail_horz.comp = 0.75
+		# plane.tail_vert.comp = 0.75
+		# plane.fuselage.comp = 0.75
+		# plane.propulsion.comp = 1.0
+		# gear_comp = 0.92
+
+		# all metal aircraft
+		# plane.canard.comp = 1.0
+		# plane.wing.comp = 1.0
+		# plane.tail_horz.comp = 1.0
+		# plane.tail_vert.comp = 1.0
+		# plane.fuselage.comp = 1.0
+		# plane.propulsion.comp = 1.0
+		# gear_comp = 1.0
 		
 		plane.CD0 = compentCDMethod(plane, plane.mach, plane.mu_cruise, plane.speed_fps, plane.density_cruise)
 
@@ -225,8 +247,8 @@ def prelim_weight(Sref, T0, plane):
                     * (plane.wing.aspect_ratio**0.5) * (plane.wing.thickness_chord**(-0.4))\
                     * ((1 + plane.wing.taper)**0.1) * (np.cos(np.deg2rad(plane.wing.sweep))**(-1))\
                     * (plane.wing.mounted_area**0.1)
+		# print Wwing_carichner, Wwing_raymer
 		plane.wing.weight = plane.wing.comp * (Wwing_raymer + Wwing_carichner) / 2.0
-
 
 		plane.tail_horz.weight = plane.tail_horz.comp * 0.0034 *( ((w_0 * plane.load_factor)**0.813) * ((plane.tail_horz.area )**0.584) * (
 			(plane.tail_horz.span / (plane.tail_horz.chord_root*plane.tail_horz.thickness_chord))**0.033) * ((plane.tail_horz.MAC_c ) / (plane.dist_to_surface[0] ))**0.28 ) **0.915

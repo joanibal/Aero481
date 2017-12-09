@@ -130,7 +130,7 @@ tail_horz = surface(244.87, 5.05, 0.41, 30., offset=np.array([40, 4.4, 0]), twis
 # #  -------------------- Lift and Drag -------------------------
 # LD_ratio = 15       # used in weight_estimation and replaced later
 
-
+CD0 = {'cruise':0.01519}
 # # these values should come from AVL
 CL= {
     'max': {
