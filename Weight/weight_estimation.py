@@ -16,10 +16,13 @@ def regression():
 	# data, = plt.plot(np.log10(WTO[:-3]), np.log10(WE[:-3]), 'bo', label='Original Data', markersize=10)
 	# regLine, = plt.plot(np.log10(WTO[:-3]), a_lin*np.log10(WTO[:-3]) + b_lin, 'b-', label='Fitted line')
 
-	# dseign, = plt.plot(np.log10(94965), np.log10(53502), 'ro', label='Design Point', markersize=10)
-	# design_point_str = '94965 lb MTWO, 53502 lb EW'
-	# plt.annotate(design_point_str, xy=(np.log10(94965), np.log10(53502)), xytext=(np.log10(94965)-0.47, np.log10(53502)), weight = 'bold')
+	# design_PDR, = plt.plot(np.log10(94965), np.log10(53502), 'mo', label='PDR Design Point', markersize=10)
+	# design_point_str_PDR = '94965 lb MTOW, \n53502 lb EW'
+	# plt.annotate(design_point_str_PDR, xy=(np.log10(94965), np.log10(53502)), xytext=(np.log10(94965)-0.235, np.log10(53502)), weight = 'bold')
 
+	# design_CDR, = plt.plot(np.log10(53267), np.log10(34212), 'ro', label='CDR Design Point', markersize=10)
+	# design_point_str_CDR = '53267 lb MTOW, \n34212 lb EW'
+	# plt.annotate(design_point_str_CDR, xy=(np.log10(53267), np.log10(34212)), xytext=(np.log10(53267)-0.235, np.log10(34212)), weight = 'bold')
 
 	# plt.legend()
 	# plt.xlabel('$Log_{10}$ MTOW', size='large')
@@ -98,13 +101,15 @@ if __name__ == '__main__':
 	import os,sys,inspect
 
 	sys.path.insert(1, os.path.join(sys.path[0], '..'))
-	import constants
+	# import constants
 
 	import numpy as np
 
 
-	print(constants.R, constants.L_D, constants.SFC)
-	w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R, constants.L_D, constants.SFC, constants.M, constants.w_payload)
+	# print(constants.R, constants.L_D, constants.SFC)
+	# w_0, w_empty, w_fuel, w_payload = calcWeights(constants.R, constants.L_D, constants.SFC, constants.M, constants.w_payload)
 
-	print(w_0, w_empty, w_fuel, w_payload )
+	# print(w_0, w_empty, w_fuel, w_payload )
 	# plt.show()
+
+	regression()
