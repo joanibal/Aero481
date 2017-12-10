@@ -1,3 +1,5 @@
 *.pyc
 *.pyc
 constants.pyc
+Aerodynamics/*.pyc
+Weights/*.pyc
