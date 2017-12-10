@@ -19,14 +19,15 @@ from AircraftClass.classes import surface, Object
 
 
 
-def runAVL(CL=0.57, geo_file='j481.avl'):
+def runAVL(CL=0.43, geo_file='j481.avl'):
 	case = pyAVL.avlAnalysis(geo_file=geo_file)
 
 	# Steady level flight contraints
 
 	# this is actually triming using the canard becuse in pyAVl the first sufrace is assumed to be the elevator
 	# thi is something that should be changed, but i didn't bother right now
-	# case.addConstraint('rudder', 0.00)
+	case.addConstraint('D1', 0.00)
+	# case.addConstraint('D3', 0.00)
 	case.addTrimCondition('CL', CL)
 
 	# Execute the case
@@ -35,7 +36,7 @@ def runAVL(CL=0.57, geo_file='j481.avl'):
 	# case.calcNP()
 	# print case.NP
 
-	return case.CD[0]
+	return case.CD[0], case.CDFF[0]
 
 
 
@@ -182,22 +183,78 @@ def gen_geo(Sref, MAC, Bref, cg, CDp, plane, file=None):
 	out('# -- END OF FILE --')
 
 	f.close()
-	# close file
 
 
-	# plt.draw()
-	# plt.pause(1)
 
 
-# -- END OF FILE --			
+# plt.plot(case.sec_Yle[0], case.sec_CL[0]*case.sec_Chord[0]/10.9339)
+def liftDistPlot(plane, CL):
+
+	gen_geo(plane.Sref, plane.wing.MAC_c, plane.wing.span,
+	        np.array([plane.cg_fwd, 0, 0]), 0, plane, file='Aerodynamics/'+plane.name +'.avl')
+	
+	case = pyAVL.avlAnalysis(geo_file='Aerodynamics/'+plane.name +'.avl')
+
+	# Steady level flight contraints
+	case.addConstraint('D1', 0.00)
+	case.addTrimCondition('CL', CL)
+
+	# Execute the case
+	case.executeRun()
+
+	print case.surf_CL
+	i = 0
+	for surf in [ plane.canard, plane.wing]:
+
+		b_2 = surf.span/2;
+		# b = (CL/2)/(a*np.pi)
+		print case.surf_CL[i][0]
+		print 4/np.pi*case.surf_CL[i][0]*plane.wing.MAC_c*np.sqrt((1 - np.linspace(0, b_2)**2/b_2**2 ))
+
+
+		# l_ellipse = 4/np.pi*case.surf_CL[0]*surf.MAC_c*np.sqrt((1 - np.linspace(0, b_2)**2/b_2**2 ))
+
+
+
+		# lift, = plt.plot(case.sec_Yle[0], case.sec_CL[0]*case.sec_Chord[0]/10.9339,label='wing Distribution', linewidth=2)
+
+		i += 2
+
+
+
+	# lift2, = plt.plot(case.sec_Yle2[0], case.sec_CL2[0]*case.sec_Chord2[0]/10.9339,label='Canard Distribution', linewidth=2)
+	# elip, = plt.plot(np.linspace(0, a), l_ellipse, '--', label='Elliptical')
+	# elip2, = plt.plot(np.linspace(0, a2), l_ellipse2, '--', label='Elliptical')
+ 
+	# plt.xlabel('Y Leading Edge [ft]', fontsize=20)
+	# plt.ylabel('Cl*C/Cref', fontsize=20)
+	# plt.legend(fontsize=12, loc='upper right')
+	# plt.show()
+	return case.CD[0]
+ 
+
+
+
 
 if __name__ == '__main__':
-	import j481 as plane
+	import j481 
+	import g550 
 	from calcCoeff import compentCDMethod
 
 	# CD0 = compentCDMethod(
 	# 	plane, plane.mach, plane.mu_cruise, plane.speed_fps, plane.density_cruise)
-	gen_geo(plane.Sref, plane.wing.MAC_c, plane.wing.span,
-	        np.array([plane.cg_fwd, 0, 0]), 0, plane)
-	print runAVL(geo_file='Aerodynamics/j481.avl')
+	# gen_geo(j481.Sref, j481.wing.MAC_c, j481.wing.span,
+	#         np.array([j481.cg_fwd, 0, 0]), 0, j481, file='Aerodynamics/j481.avl')
+	# print runAVL(CL=0.55, geo_file='Aerodynamics/j481.avl')
+
+
+
+	# gen_geo(g550.Sref, g550.wing.MAC_c, g550.wing.span,
+ #        np.array([g550.wing.offset[0] + g550.wing.MAC_c*.5, 0, 0]), 0, g550, file='Aerodynamics/g550.avl')
+	# print runAVL(geo_file='Aerodynamics/g550.avl')
+
+	# # print runAVL(geo_file='j481.avl')
+
+	liftDistPlot(j481, 0.43)
+
 	print('done')
