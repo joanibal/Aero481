@@ -246,7 +246,16 @@ if __name__ == '__main__':
 			lines = [cruise,	takegearup,	takegeardownd,	landgearup,	landgeardown]
 			labels = [x._label for x in lines]
 
+
+
+
+
 			plt.legend(lines, labels)
 			plt.legend(loc='lower right')
+
+
+			plt.plot([0,(CD_0['cruise']+ CD_0['cruise'])*2], [0, 2*np.sqrt(CD_0['cruise']/j481.k['cruise'])  ], 'k--')
+			plt.plot([CD_0['cruise']+ CD_0['cruise']], [np.sqrt(CD_0['cruise']/j481.k['cruise'])  ], 'ro')
+			print 'max L/D ', np.sqrt(CD_0['cruise']/j481.k['cruise'])/(2*CD_0['cruise'])
 
 			plt.show()

@@ -8,7 +8,8 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import shelve
 # ==================== 481  Packages =============================== #
 
-import g550 as plane
+# import g550 as plane
+import j481 as plane
 
 
 
@@ -21,16 +22,23 @@ from TWconstraints import calcTWCeiling, calcTWClimb, calcTWCruise, calcTWTakeof
 # =================== Calculations ================================= #
 # for i in range(6)
 
-plt.plot([plane.Sref], [plane.thrust_req], 'ro', label='Design Point')
+plt.plot([plane.Sref], [plane.thrust_req], 'ro', label='CDR Design Point')
 # plt.plot([1080], [plane.thrust_req], 'ro', label='da design pnt')
 design_point_str = str(int(plane.Sref)) + ' ft^2, ' + str(plane.thrust_req) + ' lbs'
 plt.annotate(design_point_str, xy=(plane.Sref, plane.thrust_req), xytext=(plane.Sref+10, plane.thrust_req+100), weight = 'bold')
 
 
-itermax = 100
+plt.plot([1080], [18440], 'mo', label='PDR Design Point')
+# plt.plot([1080], [18440], 'ro', label='da design pnt')
+design_point_str = str(int(1080)) + ' ft^2, ' + str(18440) + ' lbs'
+plt.annotate(design_point_str, xy=(1080, 18440), xytext=(1080+10, 18440+100), weight = 'bold')
+
+
+itermax = 2000
 T_guess = 4400
 
-S = np.linspace(1200, 1500, 10)
+# S = np.linspace(1200, 1500, 10)
+S = np.linspace(800, 1400, 20)
 
 
 
@@ -70,12 +78,13 @@ Sref_landing = S.copy();
 
 
 
-tolerance = 20.0
+tolerance = 1.0
 
 
 W_S_landing = calcWSLanding(plane.runway_length,plane.CL['max']['landing'])
 
-T = np.linspace(10000,65000, len(S))
+
+T = np.linspace(10000,55000, len(S))
 for i in range(len(T)):
 	for j in range(itermax):
 
@@ -96,7 +105,7 @@ for i in range(len(T)):
 		raise ValueError(flightCond + ' didnt converge')
 
 for flightCond in contraints.keys():
-    	for i in range(len(S)):
+	for i in range(len(S)):
         		# print('i', S[i])
 		# S[i] = S[i-1]
 		T_lower = 0
@@ -181,7 +190,6 @@ for flightCond in contraints.keys():
 				W, _, plane = prelim_weight(S[i], thrustCon[flightCond][i], plane)
 				W_S = W / S[i]
 
-				print W, W_S, S[i],  plane.CL['max']['takeoff'], plane.runway_length
 				T_W = calcTWTakeoff(W_S, plane.CL['max']['takeoff'], plane.runway_length)
 				
 				T_new = T_W*W
@@ -196,7 +204,7 @@ for flightCond in contraints.keys():
     				raise ValueError(flightCond + ' didnt converge')
 
 # quit()
-X, Y, fuel_curves = fuel_weight(S, np.linspace(1000, T_guess*8, 10), plane)
+X, Y, fuel_curves = fuel_weight(S, np.linspace(0, 60000, 10), plane)
 
 # filename='/tmp/shelve4.out'
 # my_shelf = shelve.open(filename,'n') # 'n' for new
@@ -238,51 +246,76 @@ for climbCond in contraints['Climb']:
 
 labels = [ x._label for x in lines]
 
-# # a = np.logical_and(90000 >=thrustCon['Takeoff'],90000 >= thrustCon['Climb']['Balked Climb OEI'])
-# plt.fill_between(S,thrustCon['Takeoff'],90000, where=thrustCon['Takeoff'] > thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
-# plt.fill_between(S,thrustCon['Climb']['Balked Climb OEI'],90000, where=thrustCon['Takeoff'] < thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
+
+for i in range(len(Sref_landing)):
+
+	flightCond = 'Climb'
+	climbCond = 'Balked Climb OEI'
+	for j in range(itermax):
+    					
+		W,_ , plane = prelim_weight(Sref_landing[i] , thrustCon['Climb'][climbCond][i], plane)
+		# W_S = W/S[i]
+
+		# CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
+		# CD0['cruise'] = CD0['clean']
+		# k['cruise'] = k['clean'] 
+		T_W_climb = calcTWClimb(plane.CL['max'], plane.CD0, plane.k, plane.numEngines)[climbCond]
+
+		T_climb_new = T_W_climb*W
+		print(flightCond + " " + climbCond + " " +  str(i) + " " + str(np.abs(T_climb_new - thrustCon['Climb'][climbCond][i])))
+		if np.abs(T_climb_new - thrustCon['Climb'][climbCond][i]) <= tolerance:
+			notconverged = False
+			break
+
+		thrustCon['Climb'][climbCond][i] = T_climb_new
+
+	if notconverged:
+		raise ValueError(flightCond + ' ' + climbCond + ' didnt converge')
 
 
+for i in range(len(Sref_landing)):
 
-# for i in range(len(Sref_landing)):
+	flightCond = 'Takeoff'
+	for j in range(itermax):
 
-# 	flightCond = 'Climb'
-# 	climbCond = 'Balked Climb OEI'
-# 	for j in range(itermax):
+		W, _, plane = prelim_weight(Sref_landing[i], thrustCon[flightCond][i], plane)
+		W_S = W / Sref_landing[i]
+
+		T_W = calcTWTakeoff(W_S, plane.CL['max']['takeoff'], plane.runway_length)
 		
-# 		W = prelim_weight(Sref_landing[i] , thrustCon['Climb'][climbCond][i], plane)[0]
-# 		# W_S = W/S[i]
+		T_new = T_W*W
+		print(flightCond + " " +   str(i) + " " + str(np.abs(T_new - thrustCon[flightCond][i])))
+		if np.abs(T_new - thrustCon[flightCond][i]) <= tolerance:
+			notconverged = False
+			break
 
-# 		CD0, k = DragPolar(W)[0:2] # [0:2] <-- only use the first two ouputs
+		thrustCon[flightCond][i] = T_new
 
-# 		T_W_climb = calcTWClimb(plane.CL['max'], CD0, k, plane.numEngines)[climbCond]
-
-# 		T_climb_new = T_W_climb*W
-# 		print(flightCond + " " + climbCond + " " +  str(i) + " " + str(np.abs(T_climb_new - thrustCon['Climb'][climbCond][i])))
-# 		if np.abs(T_climb_new - thrustCon['Climb'][climbCond][i]) <= tolerance:
-# 			notconverged = False
-# 			break
-
-# 		thrustCon['Climb'][climbCond][i] = T_climb_new
-
-# 	if notconverged:
-# 		raise ValueError(flightCond + ' ' + climbCond + ' didnt converge')
+	if notconverged:
+			raise ValueError(flightCond + ' didnt converge')
 
 
-# print 'done' 
+print 'done' 
 
 
 
 
 
-plt.fill_between(Sref_landing, T,thrustCon['Climb']['Balked Climb OEI'], where=T > thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
+a = np.logical_and(T >=thrustCon['Takeoff'],thrustCon['Takeoff'] >= thrustCon['Climb']['Balked Climb OEI'])
+b = thrustCon['Climb']['Balked Climb OEI']>= thrustCon['Takeoff'] 
+plt.fill_between(Sref_landing,thrustCon['Climb']['Balked Climb OEI'],T, where=b, interpolate=True, color='b', alpha=0.5, edgecolor='none', linewidth=0.0)
+plt.fill_between(Sref_landing,thrustCon['Takeoff'], T, where=a, interpolate=True, color='b', alpha=0.5, edgecolor='none', linewidth=0.0)
+
+
+
+# plt.fill_between(Sref_landing, T,thrustCon['Climb']['Balked Climb OEI'], where=T > thrustCon['Climb']['Balked Climb OEI'], interpolate=True, color='b', alpha=0.5, edgecolor='none')
 
 plt.legend(lines, labels)
 plt.legend(loc = 'upper right')
 
-plt.ylabel('Thrust [lbs]')
-plt.xlabel('S [$ft^2$]')
+plt.ylabel('Thrust [lbs]', size='x-large')
+plt.xlabel('S [$ft^2$]', size='x-large')
 # plt.title('Thrust vs S and Fuel Burn')
-plt.axis((S[0], S[-1], 0, 25000))
+plt.axis((S[0], S[-1], 0, 30000))
 
 plt.show()
