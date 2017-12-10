@@ -365,7 +365,8 @@ if __name__ == '__main__':
 	import g550
 
 	w_0, w_f, plane = prelim_weight(j481.Sref, j481.thrust_req, j481)
-	print 'j481:',w_0, w_f
+	w_empty = w_0-w_f-plane.weight_payload
+	print 'j481:',w_0, w_f, w_empty
 
 	w_0, w_f, plane = prelim_weight(g550.Sref, g550.thrust_req, g550)
 	print 'g550:', w_0, w_f
