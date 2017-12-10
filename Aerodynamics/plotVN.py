@@ -29,8 +29,8 @@ C_Lmax = constants.CL['max']['cruise']			# Max CL
 C_Lmin = -0.8									# Without high-lift devices
 
 Sref = constants.Sref
-#weight = 55773.7757505						# lbs (mtow) 
-weight = 36495.9968901						# lbs (empty)
+weight = 53267						# lbs (mtow) 
+#weight = 34212						# lbs (empty)
 wing_loading = weight/Sref
 
 # max

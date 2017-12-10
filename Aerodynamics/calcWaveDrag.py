@@ -4,15 +4,15 @@ import os,sys,inspect
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import math
 import numpy as np
-import constants
+#import constants
 
 
 kappa = 0.95
-sweep = constants.sweep
+sweep = 36*math.pi/180
 #thickness = constants.surfaces['wing']['t/c']			#Average
-thickness = 0.16
-cruiseCL = constants.CL['cruise']
-M = constants.M
+thickness = 0.09
+cruiseCL = 0.56
+M = 0.85
 
 MDD = kappa/math.cos(sweep)-thickness/(math.cos(sweep)**2)-cruiseCL/(10*math.cos(sweep)**3)
 Mcrit = MDD-(0.1/80)**(1.0/3)
