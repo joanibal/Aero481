@@ -162,7 +162,7 @@ CL= {
     'cruise':  1.3,
     'landing': 2.7,
     },
-    'cruise': 0.57,
+    # 'cruise': 0.57,
     }
 CL['max']['balked landing'] = CL['max']['landing'] * 0.85
 
