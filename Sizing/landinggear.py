@@ -4,6 +4,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 import j481
 import numpy as np
+from Weight.weight_refined import prelim_weight
 
 def landinggear(Na, Nf, Ma, Mf, B, H, W, Wlanding, Vstall):
         #inputs: nose gear position, main gear position, forward CG position, aft CG position, height of CG, MTOW, landing weight, stall speed
@@ -41,8 +42,7 @@ if __name__ == '__main__':
     # from Weight.weight_buildup import prelim_weight
     from Aerodynamics.calcStall import stallSpeed
 
-    # w_0, w_fuel = prelim_weight(j481.Sref/0.09203, j481.thrust_req, j481)
-    w_0 = 55774.0
+    w_0,_,_ = prelim_weight(j481.Sref, j481.thrust_req, j481)				#Maximum Takeoff Weight
     print(w_0)
     weight_landing = 0.77*w_0
 

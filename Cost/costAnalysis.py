@@ -3,12 +3,13 @@ import os,sys,inspect
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import numpy as np
-from Weight.weight_estimation import calcWeights 
+from Weight.weight_refined import prelim_weight
+import j481
 
 #Define constants
 b_year = 1993					#Base year
 t_year = 2017					#Then year
-MTOW, _, W_f, _ = calcWeights((5000+200),15, 0.657, M=0.85)				#Maximum Takeoff Weight
+MTOW, W_f, plane = prelim_weight(j481.Sref, j481.thrust_req, j481)				#Maximum Takeoff Weight
 t_b = 10.5						#Estimated flight time (assuming 1 stage mission)
 nCrew = 2						#Number of crew members
 n_attd = 1						#Number of attendants
@@ -45,7 +46,7 @@ C_f = 1.02*W_f*P_f/rho_f
 print('Fuel Costs: $' + str(C_f))
 
 #Solve for oil cost
-C_oil = 1.02*W_oil*(P_oil/rho_oil)					
+C_oil = 1.02*W_oil*(P_oil/rho_oil)
 print('Oil Cost: $' + str(C_oil))
 
 #Solve for airport costs
@@ -60,7 +61,7 @@ CEF_nav = tCEF/bCEF_nav
 #Calculate nav fees
 C_nav = 0.5*CEF_nav*(1.852*R/t_b)*np.sqrt(0.00045359237*MTOW/50)
 print('Navigational Fees: $' + str(C_nav))
-						
+
 #Maintenance reference
 #https://www.avjobs.com/salaries-wages-pay/hourly-aviation-pay.asp
 
@@ -83,3 +84,6 @@ print('Total engine maintenance cost: $' + str(C_engMaint))
 #Total COC
 COC = (2*spCrew) + C_attd + C_f + C_oil + C_airport+ C_nav + C_airframeMaintenance + C_engMaint
 print('Total COC: $' + str(COC))
+
+COCpassnm = COC/(5200*8)
+print('COC/(passenger-nmi): $' + str(COCpassnm))

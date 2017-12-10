@@ -29,7 +29,7 @@ def fuel_fraction(c, CD, R, speed, CL):
 
 	ff6 = 0.99 		#descent
 	ff7 = 0.992		#landing
-	
+
 	cruiseFrac = np.exp(R*c*CD/(speed*CL))
 	ff5 = 1/cruiseFrac
 	ff = ff1*ff2*ff3*ff4*ff5*ff6*ff7
@@ -37,15 +37,15 @@ def fuel_fraction(c, CD, R, speed, CL):
 	return 1-ff
 
 def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, n, name):
-	
+
 	ff_startup = 1.0-c_sealevel*(15.0/60.0)*(T*0.05/w_0)	#startup/warmup/taxi
 	w_startup = ff_startup*w_0
 	# print 'startup '+str(ff_startup)
-	
+
 	ff_TO = 1.0-c_sealevel*(1/60.0)*(T/w_startup)
 	w_takeoff = ff_TO*w_startup
 	# print 'TO '+str(ff_TO)
-	
+
 	ff_climb = 0.98 #historical
 	w_climb = ff_climb*w_takeoff
 	# print 'climb '+str(ff_climb)
@@ -66,7 +66,7 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 		# CL = 2*w_0/(rho*(V*1.68781)**2*Sref)
 		# print rho, Sref, w_cruise_i
 		# print CL, rho
-		
+
 		# reverse altitude calculation
 		rho_solve = 2*w_0/(CL*(V*1.68781)**2*Sref)/0.00194032
 		p_solve = rho_solve/1000.0*(287.058*temp)
@@ -89,7 +89,7 @@ def fuel_fraction_update(c, c_sealevel, Sref, T, w_0, CD0, alt_cruise, V, R, K, 
 		# print 'altitude '+str(alt_cruise_i), 'CL step '+str(CL), 'weight '+str(w_cruise_i)
 		# print 'w_cruise_step '+str(w_cruise_i)
 		# print i, alt_cruise_i, R, n, R/n, rho
-		
+
 		alt_cruise_i += 2000.0 			#steps determined by ATC
 
 	ff_cruise = w_cruise_i/w_climb
@@ -108,7 +108,7 @@ def prelim_weight(Sref, T0, plane):
 	#Sref in ft^2, T0 in lbs
 	'''
 
-	# if plane.name === 
+	# if plane.name ===
 
 	# update plane with new Sizing info
 	plane.thrust = T0
@@ -153,7 +153,7 @@ def prelim_weight(Sref, T0, plane):
 		# plane.fuselage.comp = 1.0
 		# plane.propulsion.comp = 1.0
 		# gear_comp = 1.0
-		
+
 		plane.CD0 = compentCDMethod(plane, plane.mach, plane.mu_cruise, plane.speed_fps, plane.density_cruise)
 
 
@@ -189,7 +189,7 @@ def prelim_weight(Sref, T0, plane):
 	# # engine weight calculations (lbs)
 	w_eng_dry = 0.521*(T0)**0.9
 	w_eng_oil = 0.082*(T0)**0.65
-	w_eng_rev = 0.034*(T0)	
+	w_eng_rev = 0.034*(T0)
 	# w_eng_control = 0.26*(T0)**0.5
 	# w_eng_start = 9.33*(w_eng_dry/1000.0)**1.078
 	w_eng = w_eng_dry + w_eng_oil + w_eng_rev
@@ -197,7 +197,7 @@ def prelim_weight(Sref, T0, plane):
 				*(plane.load_factor**0.119)*(w_eng**0.611)*(plane.numEngines**0.984)\
 				*(plane.propulsion.wetted_area**0.224)	#cowl/duct
 	w_engcontrol = plane.Keco*(plane.fuselage.length*plane.numEngines)**0.792
-	
+
 	#starting systems
 	w_start_cp = 9.33*(plane.numEngines*w_eng*10**(-3))**1.078	#cartridge/pneumatic
 	w_start_elec = 38.93*(plane.numEngines*w_eng*10**(-3))**0.918	#electrical
@@ -270,7 +270,7 @@ def prelim_weight(Sref, T0, plane):
 
 		w_control_surfaces = 56.01*(w_0*plane.q_cruise*10**(-5))**0.576
 
-		
+
 		ff_step = fuel_fraction_update(plane.SFC, plane.SFC_sealevel, plane.Sref, T0, w_0, plane.CD0['cruise'] , plane.altitude, plane.speed_kts, plane.range_nMi, plane.k['cruise'], plane.cruise_steps, plane.name)
 		w_fuel = ff_step*w_0
 
@@ -297,7 +297,7 @@ def prelim_weight(Sref, T0, plane):
 		w_elec_fight = 426.17*((w_fuelcontrol*w_avionics)*10**(-3))**0.51 # fighter
 		w_elec = (w_elec_transport + w_elec_fight)/2.0
 
-		
+
 		w_0new = 0.
 		for name, part in vars(plane).iteritems():
     			if (type(part) == surface or type(part)==Object ):
@@ -306,7 +306,7 @@ def prelim_weight(Sref, T0, plane):
     				w_0new += part.weight
 
 		wight_main_comp = w_0new
-		# add the misc. things 
+		# add the misc. things
 		w_0new += w_avionics + w_interior + w_control_surfaces +\
 				 w_fuel + w_fuelcontrol + w_indicators + w_landing_gear +\
 				 w_miscfurnish  + w_elec
@@ -332,7 +332,7 @@ def prelim_weight(Sref, T0, plane):
 						'main_gear':w_main_gear,
 						'misc':w_miscfurnish,
 						'fuel': w_fuel,
-						'electronics':w_elec 
+						'electronics':w_elec
 						}
 		if abs(w_0new - w_0) <= tolerance:
 		# if True:
@@ -348,7 +348,7 @@ def prelim_weight(Sref, T0, plane):
 			# print 'canard:', plane.w_breakdown['canard']
 			# print 'landing gears', plane.w_breakdown['main_gear'], plane.w_breakdown['nose_gear']
 			# print 'engine(x2):', plane.w_breakdown['engine_total']
-		
+
 			return w_0, w_fuel, plane
 
 		w_0 += 1.0*(w_0new - w_0)
@@ -368,7 +368,4 @@ if __name__ == '__main__':
 	print 'j481:',w_0, w_f
 
 	w_0, w_f, plane = prelim_weight(g550.Sref, g550.thrust_req, g550)
-	print 'g550:', w_0, w_f	
-
-
-
+	print 'g550:', w_0, w_f
